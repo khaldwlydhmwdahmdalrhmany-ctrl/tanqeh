@@ -1,0 +1,6 @@
+{
+  "name": "مؤسسة نثال لتنقية المياه",
+  "description": "موقع مؤسسة نثال لتنقية وتحلية المياه والبرادات وأنظمة الرذاذ في الرياض - حلول متكاملة بجودة عالية وضمان ممتد",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

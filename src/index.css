@@ -1,0 +1,312 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@font-face {
+  font-family: 'DIN Next Arabic';
+  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-ULTRALIGHT-4.TTF') format('truetype');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DIN Next Arabic';
+  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-LIGHT-2-2.TTF') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DIN Next Arabic';
+  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-REGULAR-4.TTF') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DIN Next Arabic';
+  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-MEDIUM-4.TTF') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DIN Next Arabic';
+  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-BOLD-4.TTF') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DIN Next Arabic';
+  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-HEAVY-1.TTF') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'DIN Next Arabic';
+  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-BLACK-4.TTF') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+
+@theme {
+  --font-sans: "DIN Next Arabic", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  
+  --font-weight-thin: 200;
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 500; /* Map both semibold and medium to 500 for Arabic harmony */
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800; /* Map extrabold to 800 */
+  --font-weight-heavy: 800; /* Map heavy to 800 */
+  --font-weight-black: 900;
+
+  /* ==========================================================================
+     Harmonized Premium Brand Color Palette
+     ========================================================================== */
+  --color-brand-blue: #0072ff;
+  --color-brand-navy: #0a1e36;
+  --color-brand-dark: #051121;
+  --color-brand-gold: #d97706;
+  --color-brand-green: #059669;
+  --color-brand-light: #f8fafc;
+  --color-brand-ice: #f0f7ff;
+  --color-text-main: #1e293b;
+  --color-text-muted: #475569;
+  --color-text-dark: #0f172a;
+}
+
+/* ==========================================================================
+   Typography System & Element Overrides (Arabic Professional Tuning)
+   ========================================================================== */
+
+body {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  line-height: 1.85 !important;
+  letter-spacing: 0px !important;
+  word-spacing: 0.03em !important;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-brand-light);
+  color: var(--color-text-main);
+}
+
+h1, .h1 {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(2rem, 5vw, 2.85rem) !important;
+  font-weight: 900 !important;
+  line-height: 1.35 !important;
+  letter-spacing: 0px !important;
+  word-spacing: 0.02em !important;
+  color: var(--color-brand-navy) !important;
+}
+
+h2, .h2 {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(1.65rem, 4.2vw, 2.25rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.42 !important;
+  letter-spacing: 0px !important;
+  word-spacing: 0.02em !important;
+  color: var(--color-brand-navy) !important;
+}
+
+h3, .h3 {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(1.35rem, 3.2vw, 1.65rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.48 !important;
+  letter-spacing: 0px !important;
+  word-spacing: 0.02em !important;
+  color: var(--color-brand-navy) !important;
+}
+
+h4, .h4 {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(1.15rem, 2.4vw, 1.35rem) !important;
+  font-weight: 700 !important;
+  line-height: 1.52 !important;
+  letter-spacing: 0px !important;
+  word-spacing: 0.02em !important;
+  color: var(--color-brand-navy) !important;
+}
+
+/* Body / paragraphs */
+p, .body-text {
+  font-family: var(--font-sans) !important;
+  font-weight: 400 !important;
+  line-height: 1.85 !important;
+  letter-spacing: 0px !important;
+  max-width: 75ch;
+  color: var(--color-text-main) !important;
+}
+
+/* Force override all tracking classes for any Arabic elements */
+[dir="rtl"] *,
+[lang="ar"] * {
+  letter-spacing: 0px !important;
+}
+
+/* Unified Premium Typography Section Components */
+.section-subheading-tag {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(10px, 1.5vw, 12.5px) !important;
+  font-weight: 800 !important; /* DIN Heavy */
+  text-transform: uppercase;
+  color: var(--color-brand-blue) !important;
+  letter-spacing: 0px !important;
+  padding: 0.35rem 0.95rem;
+  background-color: rgba(0, 114, 255, 0.06);
+  border: 1px solid rgba(0, 114, 255, 0.12);
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: fit-content;
+}
+
+.section-heading-main {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(1.75rem, 4.5vw, 2.35rem) !important;
+  font-weight: 800 !important; /* DIN Heavy */
+  color: var(--color-brand-navy) !important;
+  line-height: 1.38 !important;
+  margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.lead-paragraph {
+  font-family: var(--font-sans) !important;
+  font-size: clamp(0.9rem, 2.2vw, 1.05rem) !important;
+  font-weight: 500 !important; /* DIN Medium */
+  color: var(--color-text-muted) !important;
+  line-height: 1.85 !important;
+  max-width: 68ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Buttons System */
+button, .btn, .button, a.button {
+  font-family: var(--font-sans) !important;
+  font-weight: 500 !important; /* DIN Medium 500 */
+  letter-spacing: 0px !important;
+}
+
+/* Specific Premium Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, #0052cc 0%, #0072ff 100%) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border: none !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 8px 20px -6px rgba(0, 114, 255, 0.3) !important;
+  cursor: pointer;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0047b3 0%, #005cd6 100%) !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 12px 26px -4px rgba(0, 114, 255, 0.4) !important;
+}
+.btn-primary:active {
+  transform: translateY(0px) !important;
+}
+
+.btn-secondary {
+  background-color: #ffffff !important;
+  color: var(--color-text-main) !important;
+  border: 1px solid #e2e8f0 !important;
+  font-weight: 700 !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  cursor: pointer;
+}
+.btn-secondary:hover {
+  background-color: var(--color-brand-ice) !important;
+  border-color: rgba(0, 114, 255, 0.25) !important;
+  color: var(--color-brand-blue) !important;
+  transform: translateY(-1.5px) !important;
+}
+.btn-secondary:active {
+  transform: translateY(0px) !important;
+}
+
+.btn-whatsapp {
+  background-color: var(--color-brand-green) !important;
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  border: none !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  box-shadow: 0 8px 20px -6px rgba(5, 150, 105, 0.25) !important;
+  cursor: pointer;
+}
+.btn-whatsapp:hover {
+  background-color: #047857 !important;
+  transform: translateY(-1.5px) !important;
+  box-shadow: 0 12px 26px -4px rgba(5, 150, 105, 0.35) !important;
+}
+.btn-whatsapp:active {
+  transform: translateY(0px) !important;
+}
+
+/* Colors & Contrast Helpers */
+.text-brand-blue { color: var(--color-brand-blue) !important; }
+.text-brand-navy { color: var(--color-brand-navy) !important; }
+.text-brand-dark { color: var(--color-brand-dark) !important; }
+.text-brand-gold { color: var(--color-brand-gold) !important; }
+.text-brand-green { color: var(--color-brand-green) !important; }
+.text-brand-main { color: var(--color-text-main) !important; }
+.text-brand-muted { color: var(--color-text-muted) !important; }
+.text-brand-contrast { color: var(--color-text-dark) !important; }
+
+.bg-brand-light { background-color: var(--color-brand-light) !important; }
+.bg-brand-ice { background-color: var(--color-brand-ice) !important; }
+.bg-brand-navy { background-color: var(--color-brand-navy) !important; }
+.bg-brand-dark { background-color: var(--color-brand-dark) !important; }
+
+/* Navigation Menu Items */
+header nav button, header nav a, .nav-item {
+  font-family: var(--font-sans) !important;
+  font-weight: 500 !important; /* DIN Medium 500 */
+  letter-spacing: 0px !important;
+}
+
+/* Badges / Tags */
+.badge, [class*="-badge"], .tag, [class*="-tag"] {
+  font-family: var(--font-sans) !important;
+  font-weight: 700 !important; /* DIN Bold 700 */
+  letter-spacing: 0px !important;
+}
+
+/* Statistics & Large Metrics */
+.statistic, .metric, [class*="metric"], [class*="achieve"] span {
+  font-family: var(--font-sans) !important;
+  font-weight: 800 !important; /* DIN Heavy 800 */
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
