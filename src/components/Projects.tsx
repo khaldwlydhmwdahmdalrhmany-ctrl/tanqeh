@@ -31,9 +31,18 @@ import {
 import projectV1Kitchen from '@/assets/projects/videos/project-v1-kitchen.mp4';
 import projectV2Cooler from '@/assets/projects/videos/project-v2-cooler.mp4';
 import projectV3Cafe from '@/assets/projects/videos/project-v3-cafe.mp4';
+import projectV4Apartment from '@/assets/projects/videos/project-v4-apartment.mp4';
+import projectV5Boiler from '@/assets/projects/videos/project-v5-boiler.mp4';
+import projectV6Maintenance from '@/assets/projects/videos/project-v6-maintenance.mp4';
+import projectV7GardenMist from '@/assets/projects/videos/project-v7-garden-mist.mp4';
+import projectV8Espresso from '@/assets/projects/videos/project-v8-espresso.mp4';
+import projectV9PalaceRo from '@/assets/projects/videos/project-v9-palace-ro.mp4';
+import projectV10RooftopJumbo from '@/assets/projects/videos/project-v10-rooftop-jumbo.mp4';
+import projectV11TripleJumbo from '@/assets/projects/videos/project-v11-triple-jumbo.mp4';
 
 import projectHomeFilterImg from '@/assets/projects/images/project-home-filter.jpg';
 import projectCommercialRoImg from '@/assets/projects/images/project-commercial-ro.jpg';
+import projectGardenMistImg from '@/assets/projects/images/project-garden-mist.jpg';
 
 interface FieldProject {
   id: string;
@@ -118,7 +127,7 @@ const FIELD_PROJECTS: FieldProject[] = [
     purityResult: 'ملوحة متوازنة صحية 72 PPM',
     notes: 'تركيب الوحدة المدمجة 6 مراحل تحت المجلى وتأمين المياه العذبة لصنبور الكروم الفريش لضمان مياه نقية وصحية للطهي والشراب اليومي للأطفال.',
     image: projectHomeFilterImg,
-    videoUrl: 'https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c02cba73b1dcc0e9b2f4f21d585d6811&profile_id=165&oauth2_token_id=57447761',
+    videoUrl: projectV4Apartment,
     rating: 5,
     tags: ['Reeboon تحلية', 'خزان ضغط تايواني', 'فلترة دقيقة']
   },
@@ -135,7 +144,7 @@ const FIELD_PROJECTS: FieldProject[] = [
     purityResult: 'مياه منقاة عالية التطهير بـ 68 PPM لضمان الطعم',
     notes: 'تأسيس صمامات ومحابس زرقاء مرنة لإيصال المياه لغلاية Bunn الاحترافية لضمان ثبات جودة بخار الماء ومنع تراكم الأملاح والصدأ بالأداة بشكل تام.',
     image: projectHomeFilterImg,
-    videoUrl: 'https://player.vimeo.com/external/435674703.sd.mp4?s=0fc0769dca6179373ed32f65f3d46777b7fccda1&profile_id=165&oauth2_token_id=57447761',
+    videoUrl: projectV5Boiler,
     rating: 5,
     tags: ['غلايات BUNN', 'فلترة بخارية نقية', 'محابس نانو زرقاء']
   },
@@ -152,7 +161,7 @@ const FIELD_PROJECTS: FieldProject[] = [
     purityResult: 'استئناف النقاء والتوازن لـ 65 PPM بعد الصيانة لـ 100%',
     notes: 'تظهر خدمات الصيانة الدورية من نثال؛ حيث يلتزم الفني بتبديل دقيق وتطهير الأنابيب مع وضع الملصق المعتمد وبه الهاتف الموحد للمؤسسة 0553033199.',
     image: projectHomeFilterImg,
-    videoUrl: 'https://player.vimeo.com/external/371433846.sd.mp4?s=236da2f3c02cba73b1dcc0e9b2f4f21d585d6811&profile_id=165&oauth2_token_id=57447761',
+    videoUrl: projectV6Maintenance,
     rating: 5,
     tags: ['هاتف صيانة 0553033199', 'تغيير شمعات مجدول', 'تنظيف الفلاتر']
   },
@@ -168,10 +177,78 @@ const FIELD_PROJECTS: FieldProject[] = [
     capacity: 'تغطية مساحة 100 متر مربع وضبط تشغيل بالثواني',
     purityResult: 'مياه فلترة كربونية مسبقة تمنع تماماً كلس الفوهات',
     notes: 'تجهيز خزان الخلط الدائري مع تركيب شبكة الأنابيب النايلون وفوهات السيراميك المضادة للتنقيط لتلطيف وهندسة هواء رطب ومريح في الصيف الحار.',
-    image: projectCommercialRoImg,
-    videoUrl: 'https://player.vimeo.com/external/553856114.sd.mp4?s=2e28a55ed2f7380962b9a7852c5c9ff8158d60c2&profile_id=165&oauth2_token_id=57447761',
+    image: projectGardenMistImg,
+    videoUrl: projectV7GardenMist,
     rating: 5,
     tags: ['رذاذ تبريد إيطالي', 'خزان خلط أبيض', 'تايمر بالثواني']
+  },
+  {
+    id: 'PRJ-NV08',
+    title: 'تركيب نظام فلترة وتمرير المياه لأجهزة الاسبرسو والمشروبات الساخنة والباردة',
+    category: 'filter',
+    categoryLabel: 'فلاتر وأجهزة تحلية سكنية',
+    location: 'الرياض، حي العليا - كافيه البن الفاخر',
+    customerName: 'مقهى ومطبعة دوز للنكهة',
+    date: 'أبريل 2026',
+    systemModel: 'فلتر تحلية ثنائي لآلات التبخير والقهوة المعتمدة',
+    capacity: 'حماية كاملة من انسداد الأنابيب الداخلية بالفحم المنشط والنانو',
+    purityResult: 'معدل ملوحة 60 PPM مطابق لقوانين القهوة SCA',
+    notes: 'ربط الفلتر مباشرة بمصدر مياه البلدية وفلترة الماء بـ 3 مراحل إضافية مدمجة لإزالة الكلور الكيميائي تماماً ومنح الاسبرسو طعمه الفريد.',
+    image: projectCommercialRoImg,
+    videoUrl: projectV8Espresso,
+    rating: 5,
+    tags: ['اسبرسو فلتر', 'متوافق مع SCA', 'كافيه دوز']
+  },
+  {
+    id: 'PRJ-NV09',
+    title: 'تجهيز وتأسيس محطة تحلية فندقية وتجارية عالية الطاقة مع خزان إيراني',
+    category: 'central',
+    categoryLabel: 'محطات مركزية وصناعية',
+    location: 'شمال الرياض، حي الياسمين - مجمع قصور وفيلل',
+    customerName: 'قصر آل ثاني وسكن الضيافة',
+    date: 'مارس 2026',
+    systemModel: 'محطة تحلية مياه مركزية RO إنتاجية ضخمة',
+    capacity: '800 جالون مياه مفلترة يومياً مع ضاغط صامت',
+    purityResult: 'مستوى أملاح ميكروني 60 PPM عذب مثالي',
+    notes: 'قامت مؤسسة نثال في هذا المشروع بتجهيز كامل للمحطة لقصور سكنية كبيرة لضمان تدفق عذب وصحي لجميع شبكات الاستحمام والغسيل والمطابخ بأنابيب نانو آمنة.',
+    image: projectCommercialRoImg,
+    videoUrl: projectV9PalaceRo,
+    rating: 5,
+    tags: ['محطة قصور مركزية', '800 جالون يومياً', 'أنظمة تحلية مياه']
+  },
+  {
+    id: 'PRJ-NV10',
+    title: 'تركيب محطة فلترة جامبو ثلاثية الخزان العلوي لحماية المبنى والغسالات من الرمل والشوائب',
+    category: 'central',
+    categoryLabel: 'محطات مركزية وصناعية',
+    location: 'الرياض، حي الملقا - عمارة سكنية عائلية',
+    customerName: 'مبنى الفيلل الفاخرة للعهد',
+    date: 'فبراير 2026',
+    systemModel: 'نظام الفلتر الجامبو (Jumbo) الثلاثي من نثال',
+    capacity: 'فلترة شاملة للشوائب الكبيرة والأتربة لخط المياه العلوي بالكامل',
+    purityResult: 'تنقية مذهلة من الألوان والصدأ والكلور المترسب',
+    notes: 'تم تجميع وتنصيب فلاتر جامبو على السطح بعد عداد المياه لحماية عيون الغسالات وخلاطات المطبخ والحمامات بالمبنى لزيادة عمرها وتفادي بقع الملابس البيضاء.',
+    image: projectHomeFilterImg,
+    videoUrl: projectV10RooftopJumbo,
+    rating: 5,
+    tags: ['فلتر جامبو ثلاثي', 'حماية الخزان العلوي', 'مكافحة الترسبات والصدأ']
+  },
+  {
+    id: 'PRJ-NV11',
+    title: 'توسيع وتأسيس نظام الفلترة الثلاثية المتقدم للمباني والمصانع التجارية الكبيرة',
+    category: 'central',
+    categoryLabel: 'محطات مركزية وصناعية',
+    location: 'الرياض، حي السلي - مستودع ومنشأة تجارية',
+    customerName: 'شركة النسيج الدولية للملبوسات',
+    date: 'يناير 2026',
+    systemModel: 'نظام نثال الصناعي العملاق لتنقية وتلطيف الهواء',
+    capacity: 'تركيب مضخات وقدرة تغذية على مدار 24 ساعة متواصلة',
+    purityResult: 'مياه غاية بالنقاوة لمنع انزلاقات الصدأ',
+    notes: 'تركيب النظام الثلاثي لضمان خروج ماء ناعم وخالي من الكالسيوم والمعادن الثقيلة لحماية الأفران البخارية والآلات الصناعية وغسالات الاستعمال الرياضي الكثيف.',
+    image: projectCommercialRoImg,
+    videoUrl: projectV11TripleJumbo,
+    rating: 5,
+    tags: ['فلترة صناعية', 'أنابيب ضغط إيطالي', 'حماية مستدامة']
   }
 ];
 

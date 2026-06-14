@@ -9,6 +9,7 @@ import guldenPro7Img from '@/assets/products/filters/gulden-pro-7.jpg';
 import soleAquaSmartImg from '@/assets/products/coolers/sole-aqua-smart.jpg';
 import maasRoCentralImg from '@/assets/products/ro-systems/maas-ro-central.jpg';
 import washerSedimentFilterImg from '@/assets/products/water-purifiers/washer-sediment-filter.jpg';
+import projectGardenMistImg from '@/assets/projects/images/project-garden-mist.jpg';
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
@@ -112,7 +113,7 @@ export const PRODUCTS: Product[] = [
     name: 'نظام رذاذ التبريد المخصص (للقصور والكافيهات)',
     brand: 'Nethal Mist Systems',
     type: 'mist',
-    image: maasRoCentralImg, // Fallback to powerful system representation or another high-quality system
+    image: projectGardenMistImg,
     tagline: 'اخفض درجة حرارة حديقتك أو كافيهك الخارجي حتى 15 درجة بنظام رذاذ ناعم يدوم طويلاً.',
     isPopular: false,
     warrantyYears: 2,
