@@ -60,14 +60,9 @@ export default function Header({ onOpenAdmin, adminCount }: HeaderProps) {
               className="flex items-center gap-3 cursor-pointer select-none group"
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             >
-              {/* Premium Logo Framing holding standard brand SVG */}
-              <div className="w-11 h-11 flex relative items-center justify-center p-1 bg-white rounded-xl shadow-sm border border-slate-100 transition-all duration-300 group-hover:scale-105 group-hover:shadow-md overflow-hidden">
-                <img 
-                  src={isScrolled ? logoDark : logoMain} 
-                  alt="مؤسسة نثال لتنقية المياه" 
-                  className="h-full w-auto object-contain transition-transform duration-300 group-hover:rotate-6" 
-                  referrerPolicy="no-referrer"
-                />
+<div className="w-11 h-11 flex items-center justify-center bg-blue-600 rounded-xl text-white font-black">
+  ن
+</div>
               </div>
               
               <div className="flex flex-col text-right">
@@ -222,13 +217,9 @@ export default function Header({ onOpenAdmin, adminCount }: HeaderProps) {
 
                   {/* Close button */}
                   <button
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-150"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+  <div className="w-8 h-8 flex items-center justify-center bg-blue-600 rounded-lg text-white font-black text-sm">
+  ن
+</div>
 
               {/* Navlinks Stack content */}
               <div className="flex-grow py-4 px-3 overflow-y-auto space-y-1">
