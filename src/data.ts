@@ -9,7 +9,7 @@ import guldenPro7Img from '@/assets/products/filters/gulden-pro-7.jpg';
 import soleAquaSmartImg from '@/assets/products/coolers/sole-aqua-smart.jpg';
 import maasRoCentralImg from '@/assets/products/ro-systems/maas-ro-central.jpg';
 import washerSedimentFilterImg from '@/assets/products/water-purifiers/washer-sediment-filter.jpg';
-import projectGardenMistImg from '@/assets/projects/images/project-garden-mist.jpg';
+import projectGardenMistImg from '@/assets/projects/images/project-commercial-ro.jpg';
 
 export const ACHIEVEMENTS: Achievement[] = [
   {

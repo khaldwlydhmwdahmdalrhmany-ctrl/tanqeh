@@ -35,14 +35,14 @@ import projectV4Apartment from '@/assets/projects/videos/project-v4-apartment.mp
 import projectV5Boiler from '@/assets/projects/videos/project-v5-boiler.mp4';
 import projectV6Maintenance from '@/assets/projects/videos/project-v6-maintenance.mp4';
 import projectV7GardenMist from '@/assets/projects/videos/project-v7-garden-mist.mp4';
-import projectV8Espresso from '@/assets/projects/videos/project-v8-espresso.mp4';
-import projectV9PalaceRo from '@/assets/projects/videos/project-v9-palace-ro.mp4';
-import projectV10RooftopJumbo from '@/assets/projects/videos/project-v10-rooftop-jumbo.mp4';
-import projectV11TripleJumbo from '@/assets/projects/videos/project-v11-triple-jumbo.mp4';
+import projectV8Espresso from '@/assets/projects/videos/project-v3-cafe.mp4';
+import projectV9PalaceRo from '@/assets/projects/videos/project-v4-apartment.mp4';
+import projectV10RooftopJumbo from '@/assets/projects/videos/project-v5-boiler.mp4';
+import projectV11TripleJumbo from '@/assets/projects/videos/project-v1-kitchen.mp4';
 
 import projectHomeFilterImg from '@/assets/projects/images/project-home-filter.jpg';
 import projectCommercialRoImg from '@/assets/projects/images/project-commercial-ro.jpg';
-import projectGardenMistImg from '@/assets/projects/images/project-garden-mist.jpg';
+import projectGardenMistImg from '@/assets/projects/images/project-commercial-ro.jpg';
 
 interface FieldProject {
   id: string;
