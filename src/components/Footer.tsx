@@ -21,7 +21,6 @@ export default function Footer() {
             <div className="flex items-center gap-3 select-none">
               <div className="w-12 h-12 flex relative items-center justify-center p-1 bg-white/5 rounded-xl border border-slate-800 shadow-inner overflow-hidden">
                 <img 
-                  src={logoWhite} 
        
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-semibold">
               شريكك الوطني الأول لحلول محطات التحلية المركزية، الفلاتر المنزلية، البرادات العائلية والتعليمية، وأنظمة الضباب الرطبة في الرياض وبأسرع وتيرة تنفيذ وصيانة بالمملكة.
