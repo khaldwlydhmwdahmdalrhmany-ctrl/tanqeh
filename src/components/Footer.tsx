@@ -5,7 +5,6 @@
 
 import React from 'react';
 import { MapPin, Phone, Mail, Clock, ShieldAlert, CheckCircle } from 'lucide-react';
-import logoWhite from '@/assets/brand/logo-white.svg';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
@@ -23,14 +22,7 @@ export default function Footer() {
               <div className="w-12 h-12 flex relative items-center justify-center p-1 bg-white/5 rounded-xl border border-slate-800 shadow-inner overflow-hidden">
                 <img 
                   src={logoWhite} 
-                  alt="شعار نثال الأبيض" 
-                  className="h-full w-auto object-contain" 
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-              <span className="text-lg font-extrabold text-white">مؤسسة نثـال لتنقية المياه</span>
-            </div>
-
+       
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-semibold">
               شريكك الوطني الأول لحلول محطات التحلية المركزية، الفلاتر المنزلية، البرادات العائلية والتعليمية، وأنظمة الضباب الرطبة في الرياض وبأسرع وتيرة تنفيذ وصيانة بالمملكة.
             </p>
