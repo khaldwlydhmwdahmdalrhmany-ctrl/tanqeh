@@ -6,8 +6,6 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, MessageSquare, Menu, X, ShieldCheck, Layers, BadgePercent, Image as ImageIcon, Sparkles, HelpCircle, FileText, ArrowLeft, Heart, Award, GlassWater, Package, Sliders } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import logoDark from '@/assets/brand/logo-dark.svg';
-
 interface HeaderProps {
   onOpenAdmin: () => void;
   adminCount: number;
