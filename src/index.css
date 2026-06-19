@@ -1,67 +1,64 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;700;800;900&family=Almarai:wght@300;400;700;800&family=Tajawal:wght@300;400;500;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
-@import url('https://db.onlinewebfonts.com/c/0bc376be8e11e869cf1639d424268e3a?family=DIN+Next+LT+Arabic');
 @import "tailwindcss";
 
 @font-face {
-  font-family: 'DIN Next Arabic';
-  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-ULTRALIGHT-4.TTF') format('truetype');
+  font-family: 'DIN Next LT Arabic';
+  src: url('../DIN/ARBFONTS-DINNEXTLTARABIC-ULTRALIGHT-4.TTF') format('truetype');
   font-weight: 200;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DIN Next Arabic';
-  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-LIGHT-2-2.TTF') format('truetype');
+  font-family: 'DIN Next LT Arabic';
+  src: url('../DIN/ARBFONTS-DINNEXTLTARABIC-LIGHT-2-2.TTF') format('truetype');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DIN Next Arabic';
-  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-REGULAR-4.TTF') format('truetype');
+  font-family: 'DIN Next LT Arabic';
+  src: url('../DIN/ARBFONTS-DINNEXTLTARABIC-REGULAR-4.TTF') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DIN Next Arabic';
-  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-MEDIUM-4.TTF') format('truetype');
+  font-family: 'DIN Next LT Arabic';
+  src: url('../DIN/ARBFONTS-DINNEXTLTARABIC-MEDIUM-4.TTF') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DIN Next Arabic';
-  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-BOLD-4.TTF') format('truetype');
+  font-family: 'DIN Next LT Arabic';
+  src: url('../DIN/ARBFONTS-DINNEXTLTARABIC-BOLD-4.TTF') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DIN Next Arabic';
-  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-HEAVY-1.TTF') format('truetype');
+  font-family: 'DIN Next LT Arabic';
+  src: url('../DIN/ARBFONTS-DINNEXTLTARABIC-HEAVY-1.TTF') format('truetype');
   font-weight: 800;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'DIN Next Arabic';
-  src: url('./assets/fonts/ARBFONTS-DINNEXTLTARABIC-BLACK-4.TTF') format('truetype');
+  font-family: 'DIN Next LT Arabic';
+  src: url('../DIN/ARBFONTS-DINNEXTLTARABIC-BLACK-4.TTF') format('truetype');
   font-weight: 900;
   font-style: normal;
   font-display: swap;
 }
 
-
 @theme {
-  --font-sans: "DIN Next LT Arabic", "DIN Next Arabic", "Cairo", "Almarai", "Tajawal", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-sans: "DIN Next LT Arabic", "DIN Next Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "DIN Next LT Arabic", "DIN Next Arabic", ui-sans-serif, system-ui, sans-serif;
   
   --font-weight-thin: 200;
   --font-weight-light: 300;
@@ -92,8 +89,13 @@
    Typography System & Element Overrides (Arabic Professional Tuning)
    ========================================================================== */
 
-body {
+html,
+body,
+#root {
   font-family: var(--font-sans);
+}
+
+body {
   font-weight: 400;
   line-height: 1.85 !important;
   letter-spacing: 0px !important;
@@ -198,6 +200,49 @@ p, .body-text {
   max-width: 68ch;
   margin-left: auto;
   margin-right: auto;
+}
+
+input,
+textarea,
+select,
+button {
+  font-family: var(--font-sans) !important;
+}
+
+/* Keep typography crisp on dark sections despite global heading/paragraph colors. */
+section.text-white h1,
+section.text-white h2,
+section.text-white h3,
+section.text-white h4,
+section.text-white p,
+section.text-white .section-heading-main,
+section.text-white .lead-paragraph,
+section[class*="bg-slate-900"] h1,
+section[class*="bg-slate-900"] h2,
+section[class*="bg-slate-900"] h3,
+section[class*="bg-slate-900"] h4,
+section[class*="bg-slate-900"] p,
+section[class*="bg-blue-900"] h1,
+section[class*="bg-blue-900"] h2,
+section[class*="bg-blue-900"] h3,
+section[class*="bg-blue-900"] h4,
+section[class*="bg-blue-900"] p,
+section[class*="bg-blue-950"] h1,
+section[class*="bg-blue-950"] h2,
+section[class*="bg-blue-950"] h3,
+section[class*="bg-blue-950"] h4,
+section[class*="bg-blue-950"] p,
+section [class*="bg-[#0b172a]"] h1,
+section [class*="bg-[#0b172a]"] h2,
+section [class*="bg-[#0b172a]"] h3,
+section [class*="bg-[#0b172a]"] h4,
+section [class*="bg-[#0b172a]"] p,
+footer[class*="bg-slate-900"] h1,
+footer[class*="bg-slate-900"] h2,
+footer[class*="bg-slate-900"] h3,
+footer[class*="bg-slate-900"] h4,
+footer[class*="bg-slate-900"] p {
+  color: #ffffff !important;
 }
 
 /* Buttons System */

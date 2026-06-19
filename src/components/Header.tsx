@@ -117,21 +117,8 @@ export default function Header({ onOpenAdmin, adminCount }: HeaderProps) {
               ))}
             </nav>
 
-            {/* QUICK CALL TO ACTIONS & CRM INBOX */}
+            {/* QUICK CALL TO ACTIONS */}
             <div className="hidden lg:flex items-center gap-2.5">
-              {adminCount > 0 && (
-                <button
-                  onClick={onOpenAdmin}
-                  className="relative bg-amber-50 hover:bg-amber-100 text-amber-800 text-[11px] font-bold px-3 py-2 rounded-xl border border-amber-200/60 transition-all duration-300 cursor-pointer flex items-center gap-1.5 hover:shadow-xs group"
-                  id="header-admin-btn"
-                >
-                  <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse relative">
-                    <span className="absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75 animate-ping"></span>
-                  </span>
-                  <span>الطلبات الواردة ({adminCount})</span>
-                </button>
-              )}
-
               {/* Verified Hot Dial Direct */}
               <a
                 href="tel:+966553033199"
@@ -155,16 +142,6 @@ export default function Header({ onOpenAdmin, adminCount }: HeaderProps) {
 
             {/* RESPONSIVE TOGGLES FOR MOBILE INTERACTIVE VIEWPORT */}
             <div className="flex items-center gap-2.5 md:hidden">
-              {adminCount > 0 && (
-                <button
-                  onClick={onOpenAdmin}
-                  className="bg-amber-50 text-amber-800 p-2 rounded-xl text-xs font-bold border border-amber-200/50 flex items-center gap-1"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping"></span>
-                  <span>{adminCount}</span>
-                </button>
-              )}
-
               <button
                 onClick={() => setIsMobileMenuOpen(true)}
                 className={`p-2.5 rounded-xl transition-all duration-300 border ${

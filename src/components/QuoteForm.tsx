@@ -73,32 +73,28 @@ export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteForm
 
     setIsLoading(true);
 
-    // Simulate network delay to make it feel extremely solid and professional
-    setTimeout(() => {
-      const ticketId = `NETHAL-${Math.floor(10000 + Math.random() * 90000)}`;
-      const newQuote: QuoteRequest = {
-        id: ticketId,
-        fullName: fullName.trim(),
-        phone: phone.trim(),
-        city: city.trim(),
-        serviceType: getServiceArabicLabel(serviceType),
-        details: details.trim() || `طلب الحصول على استشارة وتركيب ${preferredProduct || 'أحد الأجهزة المتاحة'}`,
-        productName: preferredProduct || undefined,
-        createdAt: new Date().toISOString(),
-        status: 'new'
-      };
+    const ticketId = `NETHAL-${Math.floor(10000 + Math.random() * 90000)}`;
+    const newQuote: QuoteRequest = {
+      id: ticketId,
+      fullName: fullName.trim(),
+      phone: phone.trim(),
+      city: city.trim(),
+      serviceType: getServiceArabicLabel(serviceType),
+      details: details.trim() || `طلب الحصول على استشارة وتركيب ${preferredProduct || 'أحد الأجهزة المتاحة'}`,
+      productName: preferredProduct || undefined,
+      createdAt: new Date().toISOString(),
+      status: 'new'
+    };
 
-      // Save to global and localStorage database
-      onAddQuote(newQuote);
-      setSubmittedRequest(newQuote);
-      setIsLoading(false);
+    onAddQuote(newQuote);
+    setSubmittedRequest(newQuote);
+    setIsLoading(false);
+    window.open(getWhatsappPreFilledLink(newQuote), '_blank', 'noopener,noreferrer');
 
-      // Scroll form wrapper to make sure they see success card
-      const formElement = document.getElementById('lead-form-section');
-      if (formElement) {
-        formElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
-    }, 1200);
+    const formElement = document.getElementById('lead-form-section');
+    if (formElement) {
+      formElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
   };
 
   const getServiceArabicLabel = (type: string) => {
@@ -173,7 +169,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                 </div>
 
                 <h3 className="text-2xl font-extrabold text-[#0a1e36]">
-                  تم إرسال طلبكم وتوليد تذكرتكم بنجاح!
+                  تم تجهيز طلبكم وفتح واتساب لإرساله!
                 </h3>
 
                 <div className="bg-slate-50 border border-slate-150 p-4.5 rounded-2xl w-full max-w-md text-right flex flex-col gap-2">
@@ -194,7 +190,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                 </div>
 
                 <p className="text-slate-700 text-xs sm:text-sm font-semibold max-w-lg leading-relaxed">
-                  سيتواصل معك مهندسو المعاينة والتركيب بمؤسسة نثال خلال دقائق عبر رقم الجوال المذكور لتأكيد الموعد وإرسال فحص الأملاح المجاني لبيتك.
+                  إذا لم يفتح واتساب تلقائياً، اضغط زر التأكيد أدناه لإرسال بيانات الطلب مباشرة إلى فريق نثال.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md pt-4">

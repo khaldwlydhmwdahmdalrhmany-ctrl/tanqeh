@@ -18,6 +18,7 @@ interface CatalogProps {
 
 export default function Catalog({ onSelectProductForQuote, selectedCategory, setSelectedCategory }: CatalogProps) {
   const [selectedProductDetails, setSelectedProductDetails] = useState<Product | null>(null);
+  const whatsappNumber = '966553033199';
 
   // Filter the products list
   const filteredProducts = PRODUCTS.filter((product) => {
@@ -33,21 +34,22 @@ export default function Catalog({ onSelectProductForQuote, selectedCategory, set
     { id: 'maintenance', label: 'إكسسوارات وحماية' }
   ];
 
-  const handleOrderProduct = (pName: string) => {
-    onSelectProductForQuote(pName);
-    const element = document.getElementById('lead-form-section');
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+  const getProductWhatsappLink = (product: Product) => {
+    const text = `السلام عليكم، أرغب بطلب هذا المنتج من مؤسسة نثال:
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
+- المنتج: ${product.name}
+- العلامة: ${product.brand}
+- نوع الطلب: تركيب أو عرض سعر
+
+يرجى التواصل معي لتأكيد التفاصيل.`;
+
+    return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
+  };
+
+  const handleOrderProduct = (product: Product) => {
+    const pName = product.name;
+    onSelectProductForQuote(pName);
+    window.open(getProductWhatsappLink(product), '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -140,7 +142,7 @@ export default function Catalog({ onSelectProductForQuote, selectedCategory, set
                 {/* Actions Row */}
                 <div className="flex items-center gap-2 mt-auto pt-4 border-t border-slate-50">
                   <button
-                    onClick={() => handleOrderProduct(product.name)}
+                    onClick={() => handleOrderProduct(product)}
                     className="btn-primary flex-grow rounded-xl py-3 text-xs font-bold text-center"
                   >
                     اطلب الآن
@@ -235,7 +237,7 @@ export default function Catalog({ onSelectProductForQuote, selectedCategory, set
                   <div className="flex flex-col sm:flex-row items-center gap-3 border-t border-slate-100 pt-6">
                     <button
                       onClick={() => {
-                        handleOrderProduct(selectedProductDetails.name);
+                        handleOrderProduct(selectedProductDetails);
                         setSelectedProductDetails(null);
                       }}
                       className="btn-primary w-full sm:flex-grow rounded-xl py-3 text-sm font-bold text-center"
