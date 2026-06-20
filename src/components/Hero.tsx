@@ -478,16 +478,22 @@ export default function Hero() {
 
             {/* Main Catchy Statement Block */}
             <div className="space-y-1">
-              <h1 className="text-3xl sm:text-4xl lg:text-[46px] font-black text-[#0c2340] leading-[1.32] tracking-tight">
-                روي عطش عصف عائلتك <br />
-                بأعلى معايير النقاوة مع{" "}
+              <h2 className="text-3xl sm:text-4xl lg:text-[46px] font-black text-[#0c2340] leading-[1.32] tracking-tight">
+                مياة نقية وصحية لكل منزل ومنشأة .. <br />
+                بأعلى معايير الجودة في المملكة{" "}
                 <span className="relative inline-block mt-1">
                   <span className="relative z-10 bg-gradient-to-r from-blue-600 via-[#0072ff] to-[#0052cc] bg-clip-text text-transparent px-1">
                     نثال الحياة لتنقية المياة
                   </span>
                   <span className="absolute left-0 bottom-1.5 h-3 w-full bg-blue-100/40 -z-10 rounded-full"></span>
                 </span>
-              </h1>
+              </h2>
+
+              <h3 className="text-3xl sm:text-4xl lg:text-[46px] font-black text-[#0c2340] leading-[1.32] tracking-tight">
+                في مؤسسة نثال الحياة ، نؤمن لك ولعملائك أفضل حلول التحلية
+                المركزية والمنزلية ،أنظمة الرذاذ، والبرادات . نخدمك من التصميم
+                وحتى التركيب والصيانة بضمان
+              </h3>
 
               <div className="h-2"></div>
 
