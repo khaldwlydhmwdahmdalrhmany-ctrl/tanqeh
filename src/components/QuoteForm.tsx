@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { QuoteRequest } from '../types';
+import { pushGtmEvent } from '../lib/gtm';
 import { User, Phone, MapPin, Sliders, FileText, CheckCircle2, MessageSquare, ArrowLeft, RefreshCcw } from 'lucide-react';
 
 interface QuoteFormProps {
@@ -89,6 +90,11 @@ export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteForm
     onAddQuote(newQuote);
     setSubmittedRequest(newQuote);
     setIsLoading(false);
+    pushGtmEvent('generate_lead', {
+      lead_type: newQuote.serviceType,
+      product_name: newQuote.productName || 'غير محدد',
+      contact_method: 'whatsapp',
+    });
     window.open(getWhatsappPreFilledLink(newQuote), '_blank', 'noopener,noreferrer');
 
     const formElement = document.getElementById('lead-form-section');
