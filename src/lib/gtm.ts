@@ -6,7 +6,7 @@ declare global {
   }
 }
 
-const containerId = import.meta.env.VITE_GTM_ID?.trim();
+const containerId = "GTM-5D8BVL37";
 
 export function initializeGtm() {
   if (!containerId || document.getElementById(`gtm-script-${containerId}`)) {
