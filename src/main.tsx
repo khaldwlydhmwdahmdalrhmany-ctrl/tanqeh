@@ -4,7 +4,7 @@ import App from './App.tsx';
 import {initializeGtm} from './lib/gtm.ts';
 import './index.css';
 
-initializeGtm();
+//initializeGtm();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
