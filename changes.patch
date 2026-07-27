@@ -1,0 +1,776 @@
+diff --git a/index.html b/index.html
+index cbb2486..269f9ef 100644
+--- a/index.html
++++ b/index.html
+@@ -5,8 +5,21 @@
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <title>مؤسسة نثال لتنقية المياه | محطات تحلية وأنظمة رذاذ بالرياض</title>
+     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='logoGrad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300c6ff'/%3E%3Cstop offset='100%25' stop-color='%230072ff'/%3E%3C/linearGradient%3E%3ClinearGradient id='rippleGrad' x1='100%25' y1='0%25' x2='0%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2300f2fe'/%3E%3Cstop offset='100%25' stop-color='%234facfe'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M72 48C75 32 64 12 40 12C28 12 18 20 18 20' stroke='url(%23logoGrad)' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M74 48C84 38 75 16 52 16C42 16 34 22 34 22' stroke='url(%23rippleGrad)' stroke-width='4' stroke-linecap='round'/%3E%3Cpath d='M76 48C88 42 82 22 64 22C54 22 46 28 46 28' stroke='url(%23logoGrad)' stroke-width='3' stroke-linecap='round'/%3E%3Cpath d='M22 38C22 38 10 40 10 48C10 54 15 58 20 58C25 58 29 54 29 48C29 40 22 38 22 38Z' fill='url(%23rippleGrad)'/%3E%3Cpath d='M64 52V76C64 76 66 84 74 84C82 84 84 76 84 76V52' stroke='url(%23logoGrad)' stroke-width='10' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M64 52C64 52 70 64 74 70C78 76 84 76 84 76' stroke='url(%23logoGrad)' stroke-width='8' stroke-linecap='round'/%3E%3C/svg%3E" />
++    <meta name="description" content="مؤسسة نثال لتنقية وتحلية المياه بالرياض - تركيب وصيانة فلاتر المياه، محطات التحلية، برادات المياه وأنظمة الرذاذ والتبريد الخارجي." />
++    <meta name="robots" content="index, follow" />
++    <!-- Google Tag Manager (official static snippet - do NOT inject via JS) -->
++    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
++    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
++    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
++    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
++    })(window,document,'script','dataLayer','GTM-5D8BVL37');</script>
++    <!-- End Google Tag Manager -->
+   </head>
+   <body>
++    <!-- Google Tag Manager (noscript) -->
++    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5D8BVL37"
++    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
++    <!-- End Google Tag Manager (noscript) -->
+     <div id="root"></div>
+     <script type="module" src="/src/main.tsx"></script>
+   </body>
+diff --git a/src/App.tsx b/src/App.tsx
+index 649a90b..89cedec 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -3,7 +3,7 @@
+  * SPDX-License-Identifier: Apache-2.0
+  */
+ 
+-import React, { useState, useEffect } from "react";
++import React, { useState } from "react";
+ import Header from "./components/Header";
+ import Hero from "./components/Hero";
+ import Achievements from "./components/Achievements";
+@@ -16,15 +16,13 @@ import Reviews from "./components/Reviews";
+ import FAQs from "./components/FAQs";
+ import QuoteForm from "./components/QuoteForm";
+ import Footer from "./components/Footer";
+-import AdminHub from "./components/AdminHub";
+-import { QuoteRequest } from "./types";
++import Legal, { useLegalHash } from "./components/Legal";
+ import {
+   MessageSquare,
+   Phone,
+   ShieldCheck,
+   Heart,
+   Sparkles,
+-  Sliders,
+   Home,
+   Building2,
+   Coffee,
+@@ -35,97 +33,11 @@ import tamaraLogo from "@/assets/payment-methods/tamara.svg";
+ import tabbyLogo from "@/assets/payment-methods/tabby.svg";
+ 
+ export default function App() {
+-  const [quotes, setQuotes] = useState<QuoteRequest[]>([]);
+   const [selectedProductName, setSelectedProductName] = useState<string>("");
+   const [selectedCategory, setSelectedCategory] = useState<
+     "filter" | "cooler" | "mist" | "maintenance" | "all"
+   >("all");
+-  const [isAdminHubOpen, setIsAdminHubOpen] = useState(false);
+-
+-  // Hydrate quotes database from localStorage on startup
+-  useEffect(() => {
+-    try {
+-      const stored = localStorage.getItem("nethal_quotes_db");
+-      if (stored) {
+-        setQuotes(JSON.parse(stored));
+-      } else {
+-        // Seeding initial simulated quotes to show the customer how the CRM works beautifully
+-        const sampleQuotes: QuoteRequest[] = [
+-          {
+-            id: "NETHAL-90812",
+-            fullName: "سعد بن ناصر الدوسري",
+-            phone: "0554109281",
+-            city: "الرياض - حي النرجس",
+-            serviceType: "أجهزة التصفية والتحلية",
+-            details:
+-              "أرغب في تركيب فلتر غولدن برو بمطبخ شقتي الجديدة وتوصيله بالثلاجة مباشرة.",
+-            productName: "جهاز تحلية غولدن برو (7 مراحل المتقدم)",
+-            createdAt: new Date(Date.now() - 3600000 * 2).toISOString(), // 2 hours ago
+-            status: "new",
+-          },
+-          {
+-            id: "NETHAL-81230",
+-            fullName: "عبدالله السديري",
+-            phone: "0557712101",
+-            city: "الرياض - حي الملقا",
+-            serviceType: "أنظمة الرذاذ والتبريد الخارجي",
+-            productName: "نظام رذاذ التبريد المخصص (للقصور والكافيهات)",
+-            details:
+-              "معاينة لتركيب رذاذ تبريد إيطالي لكافيه خارجي بمساحة 12*6 متر لجلسات الزوار.",
+-            createdAt: new Date(Date.now() - 3600000 * 24).toISOString(), // 24 hours ago
+-            status: "contacted",
+-          },
+-        ];
+-        localStorage.setItem("nethal_quotes_db", JSON.stringify(sampleQuotes));
+-        setQuotes(sampleQuotes);
+-      }
+-    } catch (e) {
+-      console.error("Error reading localStorage DB:", e);
+-    }
+-  }, []);
+-
+-  // Save changes to localStorage database
+-  const saveToLocalStorage = (newQuotes: QuoteRequest[]) => {
+-    try {
+-      localStorage.setItem("nethal_quotes_db", JSON.stringify(newQuotes));
+-      setQuotes(newQuotes);
+-    } catch (e) {
+-      console.error("Error saving to localStorage DB:", e);
+-    }
+-  };
+-
+-  const handleAddQuote = (quote: QuoteRequest) => {
+-    const updated = [quote, ...quotes];
+-    saveToLocalStorage(updated);
+-  };
+-
+-  const handleUpdateQuoteStatus = (
+-    id: string,
+-    status: "new" | "contacted" | "completed",
+-  ) => {
+-    const updated = quotes.map((q) => {
+-      if (q.id === id) {
+-        return { ...q, status };
+-      }
+-      return q;
+-    });
+-    saveToLocalStorage(updated);
+-  };
+-
+-  const handleDeleteQuote = (id: string) => {
+-    const updated = quotes.filter((q) => q.id !== id);
+-    saveToLocalStorage(updated);
+-  };
+-
+-  const handleClearAllQuotes = () => {
+-    if (
+-      window.confirm(
+-        "هل أنت متأكد من مسح جميع تذاكر المتابعة وقائمة العملاء والطلبات؟",
+-      )
+-    ) {
+-      saveToLocalStorage([]);
+-    }
+-  };
++  const legal = useLegalHash();
+ 
+   const handleProductSelectFromCatalog = (productName: string) => {
+     setSelectedProductName(productName);
+@@ -156,10 +68,7 @@ export default function App() {
+       dir="rtl"
+     >
+       {/* Navigation Header */}
+-      <Header
+-        onOpenAdmin={() => setIsAdminHubOpen(true)}
+-        adminCount={quotes.filter((q) => q.status === "new").length}
+-      />
++      <Header />
+ 
+       {/* Hero Header with Brand messaging */}
+       <Hero />
+@@ -317,45 +226,18 @@ export default function App() {
+       <FAQs />
+ 
+       {/* Core Leads Capture Form */}
+-      <QuoteForm
+-        selectedProductName={selectedProductName}
+-        onAddQuote={handleAddQuote}
+-      />
++      <QuoteForm selectedProductName={selectedProductName} />
+ 
+       {/* Map locator and base credentials details */}
+-      <Footer />
++      <Footer onOpenLegal={legal.open} />
+ 
+-      {/* Administrative CRM leads box (only visible when toggled) */}
+-      {isAdminHubOpen && (
+-        <AdminHub
+-          quotes={quotes}
+-          onClose={() => setIsAdminHubOpen(false)}
+-          onUpdateStatus={handleUpdateQuoteStatus}
+-          onDeleteQuote={handleDeleteQuote}
+-          onClearAll={handleClearAllQuotes}
+-        />
++      {/* Privacy policy / Terms (required by Google Ads for lead-capture sites) */}
++      {legal.openTab && (
++        <Legal tab={legal.openTab} onChangeTab={legal.open} onClose={legal.close} />
+       )}
+ 
+       {/* FLOATING ACTION CTA BAR - Critical for conversions */}
+       <div className="fixed bottom-6 left-6 z-40 flex flex-col gap-3">
+-        {/* Float Controls for evaluation: Admin Portal Hub */}
+-        {/* <button
+-          onClick={() => setIsAdminHubOpen(true)}
+-          className="bg-slate-900 hover:bg-slate-800 text-white p-3.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 border border-slate-700 cursor-pointer flex items-center justify-center relative group"
+-          title="معاينة لوحة تحكم الإداري ومتابعة التذاكر"
+-        >
+-          <Sliders className="w-5 h-5 text-sky-400" />
+-          {quotes.filter((q) => q.status === 'new').length > 0 && (
+-            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-605 text-[10px] font-bold text-white flex items-center justify-center border-2 border-white animate-bounce bg-red-600">
+-              {quotes.filter((q) => q.status === 'new').length}
+-            </span>
+-          )}
+-          
+-          <span className="absolute left-14 bg-slate-900 text-white rounded-lg text-xs font-bold px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
+-            لوحة الإداري (CRM)
+-          </span>
+-        </button> */}
+-
+         {/* Float 1: Direct Phone Connection */}
+         <a
+           href="tel:+966553033199"
+diff --git a/src/components/AdminHub.tsx b/src/components/AdminHub.tsx
+deleted file mode 100644
+index 79ca2b8..0000000
+--- a/src/components/AdminHub.tsx
++++ /dev/null
+@@ -1,355 +0,0 @@
+-/**
+- * @license
+- * SPDX-License-Identifier: Apache-2.0
+- */
+-
+-import React, { useState } from 'react';
+-import { QuoteRequest } from '../types';
+-import { X, Search, Trash2, Eye, ShieldCheck, MailOpen, UserCheck, Calendar, RefreshCcw, Download, MessageSquare } from 'lucide-react';
+-
+-interface AdminHubProps {
+-  quotes: QuoteRequest[];
+-  onClose: () => void;
+-  onUpdateStatus: (id: string, status: 'new' | 'contacted' | 'completed') => void;
+-  onDeleteQuote: (id: string) => void;
+-  onClearAll: () => void;
+-}
+-
+-export default function AdminHub({ quotes, onClose, onUpdateStatus, onDeleteQuote, onClearAll }: AdminHubProps) {
+-  const [searchTerm, setSearchTerm] = useState('');
+-  const [filterService, setFilterService] = useState('all');
+-  const [activeViewQuery, setActiveViewQuery] = useState<QuoteRequest | null>(null);
+-
+-  const getFilteredQuotes = () => {
+-    return quotes.filter((q) => {
+-      const matchSearch = q.fullName.toLowerCase().includes(searchTerm.toLowerCase()) || 
+-                          q.phone.includes(searchTerm) || 
+-                          q.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+-                          q.city.toLowerCase().includes(searchTerm.toLowerCase());
+-      
+-      const matchService = filterService === 'all' || q.serviceType.includes(filterService) || (q.productName && q.productName.includes(filterService));
+-      return matchSearch && matchService;
+-    });
+-  };
+-
+-  const filtered = getFilteredQuotes();
+-
+-  const handleExportJSON = () => {
+-    const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(quotes, null, 2));
+-    const downloadAnchor = document.createElement('a');
+-    downloadAnchor.setAttribute('href', dataStr);
+-    downloadAnchor.setAttribute('download', 'nethal_water_quotes_leads.json');
+-    document.body.appendChild(downloadAnchor);
+-    downloadAnchor.click();
+-    downloadAnchor.remove();
+-  };
+-
+-  const getStatusColor = (status: string) => {
+-    switch (status) {
+-      case 'new': return 'bg-red-50 text-red-700 border-red-200';
+-      case 'contacted': return 'bg-orange-50 text-orange-700 border-orange-200';
+-      case 'completed': return 'bg-emerald-50 text-emerald-700 border-emerald-200';
+-      default: return 'bg-slate-50 text-slate-700 border-slate-105';
+-    }
+-  };
+-
+-  const getStatusLabel = (status: string) => {
+-    switch (status) {
+-      case 'new': return 'جديد - في الانتظار';
+-      case 'contacted': return 'تم التواصل';
+-      case 'completed': return 'مكتمل ومغلق';
+-      default: return 'غير معروف';
+-    }
+-  };
+-
+-  return (
+-    <div className="fixed inset-0 z-[100] overflow-y-auto" dir="rtl">
+-      
+-      {/* Blurred cover backdrop */}
+-      <div 
+-        className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" 
+-        onClick={onClose}
+-      ></div>
+-
+-      <div className="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8">
+-        
+-        {/* Main Administrative Screen box */}
+-        <div className="relative bg-white rounded-3xl w-full max-w-5xl shadow-2xl overflow-hidden border border-slate-200 flex flex-col max-h-[85vh] text-slate-800">
+-          
+-          {/* Top Panel Title */}
+-          <div className="bg-gradient-to-r from-blue-900 to-blue-950 p-6 text-white flex items-center justify-between">
+-            <div className="flex items-center gap-3">
+-              <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+-                <ShieldCheck className="w-6 h-6 text-sky-400" />
+-              </div>
+-              <div className="flex flex-col text-right">
+-                <h3 className="text-lg font-extrabold leading-none">لوحة التحكم بالإداري ومتابعة طلبات المياه</h3>
+-                <span className="text-[10px] text-slate-300 font-semibold mt-1">مستودع المبيعات وطلبات أسعار مؤسسة نثال لتصفية وتحلية المياه</span>
+-              </div>
+-            </div>
+-
+-            <button 
+-              onClick={onClose}
+-              className="p-2 rounded-xl hover:bg-white/10 text-white/80 hover:text-white transition-colors focus:outline-none cursor-pointer"
+-            >
+-              <X className="w-6 h-6" />
+-            </button>
+-          </div>
+-
+-          {/* Quick Metrics Header */}
+-          <div className="grid grid-cols-2 sm:grid-cols-4 border-b border-slate-100 bg-slate-50 p-4 gap-4 text-center">
+-            <div className="bg-white p-3 rounded-2xl border border-slate-150">
+-              <span className="text-[10px] text-slate-400 font-bold block mb-0.5">إجمالي التذاكر المسجلة</span>
+-              <span className="text-xl font-extrabold text-blue-900 font-mono">{quotes.length}</span>
+-            </div>
+-
+-            <div className="bg-white p-3 rounded-2xl border border-slate-150">
+-              <span className="text-[10px] text-slate-400 font-bold block mb-0.5">تذاكر جديدة قيد الانتظار</span>
+-              <span className="text-xl font-extrabold text-red-600 font-mono">
+-                {quotes.filter(q => q.status === 'new').length}
+-              </span>
+-            </div>
+-
+-            <div className="bg-white p-3 rounded-2xl border border-slate-150">
+-              <span className="text-[10px] text-slate-400 font-bold block mb-0.5">عملاء تم التواصل معهم</span>
+-              <span className="text-xl font-extrabold text-orange-600 font-mono">
+-                {quotes.filter(q => q.status === 'contacted').length}
+-              </span>
+-            </div>
+-
+-            <div className="bg-white p-3 rounded-2xl border border-slate-150">
+-              <span className="text-[10px] text-slate-400 font-bold block mb-0.5">تركيبات وأعمال مكتملة</span>
+-              <span className="text-xl font-extrabold text-emerald-600 font-mono">
+-                {quotes.filter(q => q.status === 'completed').length}
+-              </span>
+-            </div>
+-          </div>
+-
+-          {/* Search, filters, tools banner */}
+-          <div className="p-4 bg-white border-b border-slate-150 flex flex-col sm:flex-row items-center gap-4 justify-between">
+-            <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto">
+-              {/* Search text box */}
+-              <div className="relative w-full sm:w-64">
+-                <Search className="absolute right-3 top-3 w-4 h-4 text-slate-400" />
+-                <input
+-                  type="text"
+-                  placeholder="ابحث بالاسم، الجوال، التذكرة..."
+-                  value={searchTerm}
+-                  onChange={(e) => setSearchTerm(e.target.value)}
+-                  className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 rounded-xl py-2.5 pr-10 pl-4 text-xs font-semibold outline-none"
+-                />
+-              </div>
+-
+-              {/* Service custom drop filter */}
+-              <select
+-                value={filterService}
+-                onChange={(e) => setFilterService(e.target.value)}
+-                className="w-full sm:w-auto bg-slate-50 border border-slate-200 focus:border-blue-500 rounded-xl py-2.5 px-3 text-xs font-semibold outline-none"
+-              >
+-                <option value="all">كل الخدمات والأجهزة</option>
+-                <option value="أجهزة">أجهزة تحلية ومحطات</option>
+-                <option value="برادات">برادات وموزعات مياه</option>
+-                <option value="رذاذ">أنظمة רذاذ وتبريد</option>
+-                <option value="صيانة">صيانة وإكسسوارات</option>
+-              </select>
+-            </div>
+-
+-            {/* Clear database or export elements */}
+-            <div className="flex items-center gap-2 w-full sm:w-auto justify-end">
+-              <button
+-                onClick={handleExportJSON}
+-                disabled={quotes.length === 0}
+-                className="bg-slate-100 hover:bg-slate-200 disabled:bg-slate-50 disabled:text-slate-300 text-slate-700 hover:text-blue-900 border border-slate-200 rounded-xl px-4 py-2 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+-                title="تصدير جهات الاتصال والطلبات كمصفوفة بيانات"
+-              >
+-                <Download className="w-3.5 h-3.5" />
+-                <span>تصدير البيانات</span>
+-              </button>
+-
+-              <button
+-                onClick={onClearAll}
+-                disabled={quotes.length === 0}
+-                className="bg-red-50 hover:bg-red-100 disabled:bg-slate-50 disabled:text-slate-300 text-red-600 border border-red-100 rounded-xl px-4 py-2 text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+-                title="مسح المعارضة والأرصدة بالمتصفح"
+-              >
+-                <Trash2 className="w-3.5 h-3.5" />
+-                <span>مسح كل السجلات</span>
+-              </button>
+-            </div>
+-          </div>
+-
+-          {/* Active Data table listing */}
+-          <div className="flex-grow overflow-y-auto p-4 sm:p-6 bg-slate-50/50">
+-            {filtered.length === 0 ? (
+-              <div className="text-center py-16 flex flex-col items-center justify-center gap-4 text-slate-400">
+-                <div className="text-5xl">📥</div>
+-                <h4 className="text-sm font-extrabold text-slate-705">لا توجد طلبات أو تذاكر مطابقة حالياً</h4>
+-                <p className="text-[11px] text-slate-400 max-w-sm leading-relaxed text-center">
+-                  سجلّات الطلبات التي يسجلها المستخدمون في نموذج "اطلب عرض سعر" ستظهر فوراً هنا مع كامل التفاصيل وهيكل المتابعة.
+-                </p>
+-              </div>
+-            ) : (
+-              <div className="space-y-4">
+-                {filtered.map((quote) => (
+-                  <div
+-                    key={quote.id}
+-                    className="bg-white rounded-2xl p-4.5 border border-slate-200 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 text-right"
+-                  >
+-                    {/* Customer metrics */}
+-                    <div className="flex flex-col gap-1.5 max-w-md">
+-                      <div className="flex items-center gap-2">
+-                        <span className="text-[10px] font-mono font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-lg">
+-                          {quote.id}
+-                        </span>
+-                        
+-                        <span className="text-sm font-extrabold text-[#0a1e36]">{quote.fullName}</span>
+-                        
+-                        <span className={`text-[10px] font-bold border rounded-lg px-2 py-0.5 ${getStatusColor(quote.status)}`}>
+-                          {getStatusLabel(quote.status)}
+-                        </span>
+-                      </div>
+-
+-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-slate-500 font-semibold pt-1">
+-                        <span>📱 الجوال: <a href={`tel:${quote.phone}`} className="font-mono text-blue-600 hover:underline">{quote.phone}</a></span>
+-                        <span>📍 المنطقة: {quote.city}</span>
+-                        <span>🛠️ الخدمة: {quote.serviceType}</span>
+-                      </div>
+-
+-                      {quote.productName && (
+-                        <span className="text-[11px] text-blue-700 font-extrabold bg-blue-50/50 self-start px-2 py-0.5 rounded border border-dashed border-blue-200 mt-1">
+-                          نوع الجهاز: {quote.productName}
+-                        </span>
+-                      )}
+-                    </div>
+-
+-                    {/* Operational Actions */}
+-                    <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 md:border-0 pt-3 md:pt-0">
+-                      
+-                      {/* View Query Details */}
+-                      <button
+-                        onClick={() => setActiveViewQuery(quote)}
+-                        className="bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-blue-900 border border-slate-250 p-2.5 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer"
+-                        title="معاينة تفاصيل الشكوى والطلب بالكامل"
+-                      >
+-                        <Eye className="w-4 h-4" />
+-                        <span className="hidden sm:inline">تفاصيل الطلب</span>
+-                      </button>
+-
+-                      {/* Status selectors toggle directly */}
+-                      <div className="flex items-center bg-slate-100 rounded-xl p-0.5 border border-slate-200">
+-                        <button
+-                          onClick={() => onUpdateStatus(quote.id, 'new')}
+-                          className={`text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer ${quote.status === 'new' ? 'bg-red-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+-                        >
+-                          قيد الانتظار
+-                        </button>
+-                        <button
+-                          onClick={() => onUpdateStatus(quote.id, 'contacted')}
+-                          className={`text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer ${quote.status === 'contacted' ? 'bg-orange-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+-                        >
+-                          تم التواصل
+-                        </button>
+-                        <button
+-                          onClick={() => onUpdateStatus(quote.id, 'completed')}
+-                          className={`text-[10px] font-bold px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer ${quote.status === 'completed' ? 'bg-emerald-500 text-white shadow-sm' : 'text-slate-500 hover:text-slate-800'}`}
+-                        >
+-                          أنجز
+-                        </button>
+-                      </div>
+-
+-                      {/* Delete Lead record */}
+-                      <button
+-                        onClick={() => onDeleteQuote(quote.id)}
+-                        className="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 border border-red-200/50 p-2.5 rounded-xl transition-all cursor-pointer"
+-                        title="حذف هذا السجل الفردي"
+-                      >
+-                        <Trash2 className="w-4 h-4" />
+-                      </button>
+-
+-                    </div>
+-                  </div>
+-                ))}
+-              </div>
+-            )}
+-          </div>
+-
+-        </div>
+-      </div>
+-
+-      {/* Internal Details modal overview */}
+-      {activeViewQuery && (
+-        <div className="fixed inset-0 z-[120] overflow-y-auto" dir="rtl">
+-          <div className="fixed inset-0 bg-slate-950/50 backdrop-blur-xs" onClick={() => setActiveViewQuery(null)}></div>
+-          <div className="flex items-center justify-center min-h-screen p-4">
+-            <div className="bg-white rounded-3xl w-full max-w-lg p-6 sm:p-8 shadow-2xl relative border border-slate-150 text-right">
+-              
+-              <h4 className="text-lg font-extrabold text-[#0a1e36] mb-4 border-b border-slate-100 pb-3 flex items-center gap-2">
+-                <MailOpen className="w-5 h-5 text-blue-500" />
+-                <span>تفاصيل تذكرة: {activeViewQuery.id}</span>
+-              </h4>
+-
+-              <div className="space-y-4 text-sm font-semibold mb-6">
+-                <div>
+-                  <span className="text-[10px] text-slate-400 font-bold block mb-0.5">اسم العميل:</span>
+-                  <p className="text-slate-800 font-extrabold">{activeViewQuery.fullName}</p>
+-                </div>
+-
+-                <div>
+-                  <span className="text-[10px] text-slate-400 font-bold block mb-0.5">رقم الاتصال والجوال المعالَج:</span>
+-                  <a href={`tel:${activeViewQuery.phone}`} className="text-blue-600 font-mono text-base hover:underline">{activeViewQuery.phone}</a>
+-                </div>
+-
+-                <div className="grid grid-cols-2 gap-4">
+-                  <div>
+-                    <span className="text-[10px] text-slate-400 font-bold block mb-0.5">المدينة والحي:</span>
+-                    <p className="text-slate-800">{activeViewQuery.city}</p>
+-                  </div>
+-                  <div>
+-                    <span className="text-[10px] text-slate-400 font-bold block mb-0.5">نوع تذكرة الخدمة:</span>
+-                    <p className="text-slate-800">{activeViewQuery.serviceType}</p>
+-                  </div>
+-                </div>
+-
+-                <div>
+-                  <span className="text-[10px] text-slate-400 font-bold block mb-0.5">تفاصيل الملاحظات المسجلة:</span>
+-                  <p className="bg-slate-50 p-4 rounded-2xl border border-slate-150 text-slate-650 leading-relaxed font-semibold">
+-                    {activeViewQuery.details}
+-                  </p>
+-                </div>
+-
+-                <div>
+-                  <span className="text-[10px] text-slate-400 font-bold block mb-0.5">تاريخ التقديم والزمن:</span>
+-                  <div className="flex items-center gap-2 text-xs text-slate-500 font-mono mt-0.5">
+-                    <Calendar className="w-3.5 h-3.5" />
+-                    <span>{new Date(activeViewQuery.createdAt).toLocaleString('ar-SA')}</span>
+-                  </div>
+-                </div>
+-              </div>
+-
+-              <div className="flex items-center gap-2.5">
+-                <a
+-                  href={`https://wa.me/${activeViewQuery.phone.replace(/[\s-+]/g, '')}`}
+-                  target="_blank"
+-                  rel="noreferrer"
+-                  className="flex-grow bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl py-3 text-xs font-bold text-center flex items-center justify-center gap-2"
+-                >
+-                  <MessageSquare className="w-4 h-4" />
+-                  <span>مراسلة العميل في الواتساب</span>
+-                </a>
+-
+-                <button
+-                  onClick={() => setActiveViewQuery(null)}
+-                  className="bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl px-5 py-3 text-xs font-bold"
+-                >
+-                  إغلاق
+-                </button>
+-              </div>
+-
+-            </div>
+-          </div>
+-        </div>
+-      )}
+-
+-    </div>
+-  );
+-}
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+index 01fc3a5..f5b06ea 100644
+--- a/src/components/Footer.tsx
++++ b/src/components/Footer.tsx
+@@ -14,7 +14,11 @@ import {
+ } from "lucide-react";
+ import logoWhite from "@/assets/brand/logo-white.svg";
+ 
+-export default function Footer() {
++interface FooterProps {
++  onOpenLegal: (tab: 'privacy' | 'terms') => void;
++}
++
++export default function Footer({ onOpenLegal }: FooterProps) {
+   const currentYear = new Date().getFullYear();
+ 
+   return (
+@@ -162,9 +166,26 @@ export default function Footer() {
+               © {currentYear} مؤسسة نثـال لتنقية وتحلية ومحطات المياه والبرادات.
+               جميع الحقوق محفوظة ومسجلة بالمملكة العربية السعودية.
+             </span>
++            {/* عند توفر الرقم الضريبي أضفه هنا بنفس النمط:
++                &nbsp;|&nbsp; الرقم الضريبي: 3xxxxxxxxxxxxx3 */}
+             <span className="text-[10px] text-slate-400">
+-              ترخيص تجاري معتمد وخدمات تخضع للشروط والأحكام.
++              السجل التجاري: 1010654172
+             </span>
++            <div className="flex items-center gap-3 pt-1.5 text-[11px] font-bold">
++              <button
++                onClick={() => onOpenLegal('privacy')}
++                className="text-slate-200 hover:text-sky-400 underline underline-offset-4 cursor-pointer"
++              >
++                سياسة الخصوصية
++              </button>
++              <span className="text-slate-600">|</span>
++              <button
++                onClick={() => onOpenLegal('terms')}
++                className="text-slate-200 hover:text-sky-400 underline underline-offset-4 cursor-pointer"
++              >
++                الشروط والأحكام
++              </button>
++            </div>
+           </div>
+ 
+           <div className="flex items-center gap-4 text-[11px] font-bold">
+diff --git a/src/components/Header.tsx b/src/components/Header.tsx
+index 366bdf3..af67f3c 100644
+--- a/src/components/Header.tsx
++++ b/src/components/Header.tsx
+@@ -9,12 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
+ import logoMain from '@/assets/brand/logo-main.svg';
+ import logoDark from '@/assets/brand/logo-dark.svg';
+ 
+-interface HeaderProps {
+-  onOpenAdmin: () => void;
+-  adminCount: number;
+-}
+-
+-export default function Header({ onOpenAdmin, adminCount }: HeaderProps) {
++export default function Header() {
+   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+   const [isScrolled, setIsScrolled] = useState(false);
+   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+diff --git a/src/components/QuoteForm.tsx b/src/components/QuoteForm.tsx
+index c2a75c3..0476c5c 100644
+--- a/src/components/QuoteForm.tsx
++++ b/src/components/QuoteForm.tsx
+@@ -10,10 +10,9 @@ import { User, Phone, MapPin, Sliders, FileText, CheckCircle2, MessageSquare, Ar
+ 
+ interface QuoteFormProps {
+   selectedProductName: string;
+-  onAddQuote: (quote: QuoteRequest) => void;
+ }
+ 
+-export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteFormProps) {
++export default function QuoteForm({ selectedProductName }: QuoteFormProps) {
+   const [fullName, setFullName] = useState('');
+   const [phone, setPhone] = useState('');
+   const [city, setCity] = useState('الرياض');
+@@ -87,7 +86,9 @@ export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteForm
+       status: 'new'
+     };
+ 
+-    onAddQuote(newQuote);
++    // NOTE: No data is stored in the browser and nothing is sent to a third
++    // party. The request is only handed to the user so THEY can send it to us
++    // over WhatsApp with an explicit click. No automatic pop-ups.
+     setSubmittedRequest(newQuote);
+     setIsLoading(false);
+     pushGtmEvent('generate_lead', {
+@@ -95,7 +96,6 @@ export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteForm
+       product_name: newQuote.productName || 'غير محدد',
+       contact_method: 'whatsapp',
+     });
+-    window.open(getWhatsappPreFilledLink(newQuote), '_blank', 'noopener,noreferrer');
+ 
+     const formElement = document.getElementById('lead-form-section');
+     if (formElement) {
+@@ -175,7 +175,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
+                 </div>
+ 
+                 <h3 className="text-2xl font-extrabold text-[#0a1e36]">
+-                  تم تجهيز طلبكم وفتح واتساب لإرساله!
++                  تم تجهيز طلبك — اضغط الزر لإرساله عبر واتساب
+                 </h3>
+ 
+                 <div className="bg-slate-50 border border-slate-150 p-4.5 rounded-2xl w-full max-w-md text-right flex flex-col gap-2">
+@@ -196,7 +196,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
+                 </div>
+ 
+                 <p className="text-slate-700 text-xs sm:text-sm font-semibold max-w-lg leading-relaxed">
+-                  إذا لم يفتح واتساب تلقائياً، اضغط زر التأكيد أدناه لإرسال بيانات الطلب مباشرة إلى فريق نثال.
++                  لم نحفظ بياناتك على الموقع ولم نرسلها لأي جهة. اضغط الزر أدناه لإرسال الطلب بنفسك إلى فريق نثال عبر واتساب.
+                 </p>
+ 
+                 <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md pt-4">
+@@ -353,7 +353,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
+ 
+                 <div className="text-center pt-2">
+                   <span className="text-[10px] text-slate-600 font-bold block">
+-                    ⚙️ نحن نحمي خصوصية بياناتك بنسبة 100%. لن يتم تأجير أو بيع معلومات جوالك لأي أطراف خارجية.
++                    بالضغط على "أرسل الطلب" فإنك توافق على سياسة الخصوصية. بياناتك تُستخدم فقط للتواصل معك بخصوص طلبك ولا تُباع أو تُشارك مع أي طرف ثالث.
+                   </span>
+                 </div>
+ 
+diff --git a/src/lib/gtm.ts b/src/lib/gtm.ts
+index 5a09aab..1925fff 100644
+--- a/src/lib/gtm.ts
++++ b/src/lib/gtm.ts
+@@ -1,3 +1,16 @@
++/**
++ * Google Tag Manager helper.
++ *
++ * IMPORTANT: The GTM container itself is loaded by the OFFICIAL static snippet
++ * placed directly inside index.html (<head> + <noscript> in <body>).
++ * We deliberately do NOT inject <script> tags at runtime from JavaScript,
++ * because dynamic script injection is one of the strongest heuristics used by
++ * Google Ads / Safe Browsing automated scanners to classify a site as
++ * "compromised" or "injecting unknown scripts".
++ *
++ * This file only pushes events into the existing dataLayer.
++ */
++
+ type GtmEvent = Record<string, unknown>;
+ 
+ declare global {
+@@ -6,31 +19,8 @@ declare global {
+   }
+ }
+ 
+-const containerId = "GTM-5D8BVL37";
+-
+-export function initializeGtm() {
+-  if (!containerId || document.getElementById(`gtm-script-${containerId}`)) {
+-    return;
+-  }
+-
+-  window.dataLayer = window.dataLayer || [];
+-  window.dataLayer.push({
+-    'gtm.start': Date.now(),
+-    event: 'gtm.js',
+-  });
+-
+-  const script = document.createElement('script');
+-  script.id = `gtm-script-${containerId}`;
+-  script.async = true;
+-  script.src = `https://www.googletagmanager.com/gtm.js?id=${encodeURIComponent(containerId)}`;
+-  document.head.appendChild(script);
+-}
+-
+ export function pushGtmEvent(event: string, parameters: GtmEvent = {}) {
+-  if (!containerId) {
+-    return;
+-  }
+-
++  if (typeof window === 'undefined') return;
+   window.dataLayer = window.dataLayer || [];
+   window.dataLayer.push({ event, ...parameters });
+ }
+diff --git a/src/main.tsx b/src/main.tsx
+index e65bff2..dcf08c3 100644
+--- a/src/main.tsx
++++ b/src/main.tsx
+@@ -1,11 +1,8 @@
+-import {StrictMode} from 'react';
+-import {createRoot} from 'react-dom/client';
++import { StrictMode } from 'react';
++import { createRoot } from 'react-dom/client';
+ import App from './App.tsx';
+-import {initializeGtm} from './lib/gtm.ts';
+ import './index.css';
+ 
+-//initializeGtm();
+-
+ createRoot(document.getElementById('root')!).render(
+   <StrictMode>
+     <App />
