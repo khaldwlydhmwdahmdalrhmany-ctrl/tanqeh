@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import Achievements from "./components/Achievements";
@@ -16,15 +16,13 @@ import Reviews from "./components/Reviews";
 import FAQs from "./components/FAQs";
 import QuoteForm from "./components/QuoteForm";
 import Footer from "./components/Footer";
-import AdminHub from "./components/AdminHub";
-import { QuoteRequest } from "./types";
+import Legal, { useLegalHash } from "./components/Legal";
 import {
   MessageSquare,
   Phone,
   ShieldCheck,
   Heart,
   Sparkles,
-  Sliders,
   Home,
   Building2,
   Coffee,
@@ -35,97 +33,11 @@ import tamaraLogo from "@/assets/payment-methods/tamara.svg";
 import tabbyLogo from "@/assets/payment-methods/tabby.svg";
 
 export default function App() {
-  const [quotes, setQuotes] = useState<QuoteRequest[]>([]);
   const [selectedProductName, setSelectedProductName] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<
     "filter" | "cooler" | "mist" | "maintenance" | "all"
   >("all");
-  const [isAdminHubOpen, setIsAdminHubOpen] = useState(false);
-
-  // Hydrate quotes database from localStorage on startup
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem("nethal_quotes_db");
-      if (stored) {
-        setQuotes(JSON.parse(stored));
-      } else {
-        // Seeding initial simulated quotes to show the customer how the CRM works beautifully
-        const sampleQuotes: QuoteRequest[] = [
-          {
-            id: "NETHAL-90812",
-            fullName: "سعد بن ناصر الدوسري",
-            phone: "0554109281",
-            city: "الرياض - حي النرجس",
-            serviceType: "أجهزة التصفية والتحلية",
-            details:
-              "أرغب في تركيب فلتر غولدن برو بمطبخ شقتي الجديدة وتوصيله بالثلاجة مباشرة.",
-            productName: "جهاز تحلية غولدن برو (7 مراحل المتقدم)",
-            createdAt: new Date(Date.now() - 3600000 * 2).toISOString(), // 2 hours ago
-            status: "new",
-          },
-          {
-            id: "NETHAL-81230",
-            fullName: "عبدالله السديري",
-            phone: "0557712101",
-            city: "الرياض - حي الملقا",
-            serviceType: "أنظمة الرذاذ والتبريد الخارجي",
-            productName: "نظام رذاذ التبريد المخصص (للقصور والكافيهات)",
-            details:
-              "معاينة لتركيب رذاذ تبريد إيطالي لكافيه خارجي بمساحة 12*6 متر لجلسات الزوار.",
-            createdAt: new Date(Date.now() - 3600000 * 24).toISOString(), // 24 hours ago
-            status: "contacted",
-          },
-        ];
-        localStorage.setItem("nethal_quotes_db", JSON.stringify(sampleQuotes));
-        setQuotes(sampleQuotes);
-      }
-    } catch (e) {
-      console.error("Error reading localStorage DB:", e);
-    }
-  }, []);
-
-  // Save changes to localStorage database
-  const saveToLocalStorage = (newQuotes: QuoteRequest[]) => {
-    try {
-      localStorage.setItem("nethal_quotes_db", JSON.stringify(newQuotes));
-      setQuotes(newQuotes);
-    } catch (e) {
-      console.error("Error saving to localStorage DB:", e);
-    }
-  };
-
-  const handleAddQuote = (quote: QuoteRequest) => {
-    const updated = [quote, ...quotes];
-    saveToLocalStorage(updated);
-  };
-
-  const handleUpdateQuoteStatus = (
-    id: string,
-    status: "new" | "contacted" | "completed",
-  ) => {
-    const updated = quotes.map((q) => {
-      if (q.id === id) {
-        return { ...q, status };
-      }
-      return q;
-    });
-    saveToLocalStorage(updated);
-  };
-
-  const handleDeleteQuote = (id: string) => {
-    const updated = quotes.filter((q) => q.id !== id);
-    saveToLocalStorage(updated);
-  };
-
-  const handleClearAllQuotes = () => {
-    if (
-      window.confirm(
-        "هل أنت متأكد من مسح جميع تذاكر المتابعة وقائمة العملاء والطلبات؟",
-      )
-    ) {
-      saveToLocalStorage([]);
-    }
-  };
+  const legal = useLegalHash();
 
   const handleProductSelectFromCatalog = (productName: string) => {
     setSelectedProductName(productName);
@@ -156,10 +68,7 @@ export default function App() {
       dir="rtl"
     >
       {/* Navigation Header */}
-      <Header
-        onOpenAdmin={() => setIsAdminHubOpen(true)}
-        adminCount={quotes.filter((q) => q.status === "new").length}
-      />
+      <Header />
 
       {/* Hero Header with Brand messaging */}
       <Hero />
@@ -317,45 +226,18 @@ export default function App() {
       <FAQs />
 
       {/* Core Leads Capture Form */}
-      <QuoteForm
-        selectedProductName={selectedProductName}
-        onAddQuote={handleAddQuote}
-      />
+      <QuoteForm selectedProductName={selectedProductName} />
 
       {/* Map locator and base credentials details */}
-      <Footer />
+      <Footer onOpenLegal={legal.open} />
 
-      {/* Administrative CRM leads box (only visible when toggled) */}
-      {isAdminHubOpen && (
-        <AdminHub
-          quotes={quotes}
-          onClose={() => setIsAdminHubOpen(false)}
-          onUpdateStatus={handleUpdateQuoteStatus}
-          onDeleteQuote={handleDeleteQuote}
-          onClearAll={handleClearAllQuotes}
-        />
+      {/* Privacy policy / Terms (required by Google Ads for lead-capture sites) */}
+      {legal.openTab && (
+        <Legal tab={legal.openTab} onChangeTab={legal.open} onClose={legal.close} />
       )}
 
       {/* FLOATING ACTION CTA BAR - Critical for conversions */}
       <div className="fixed bottom-6 left-6 z-40 flex flex-col gap-3">
-        {/* Float Controls for evaluation: Admin Portal Hub */}
-        {/* <button
-          onClick={() => setIsAdminHubOpen(true)}
-          className="bg-slate-900 hover:bg-slate-800 text-white p-3.5 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 border border-slate-700 cursor-pointer flex items-center justify-center relative group"
-          title="معاينة لوحة تحكم الإداري ومتابعة التذاكر"
-        >
-          <Sliders className="w-5 h-5 text-sky-400" />
-          {quotes.filter((q) => q.status === 'new').length > 0 && (
-            <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-605 text-[10px] font-bold text-white flex items-center justify-center border-2 border-white animate-bounce bg-red-600">
-              {quotes.filter((q) => q.status === 'new').length}
-            </span>
-          )}
-          
-          <span className="absolute left-14 bg-slate-900 text-white rounded-lg text-xs font-bold px-3 py-1.5 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
-            لوحة الإداري (CRM)
-          </span>
-        </button> */}
-
         {/* Float 1: Direct Phone Connection */}
         <a
           href="tel:+966553033199"
