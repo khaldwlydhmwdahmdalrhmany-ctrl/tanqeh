@@ -9,12 +9,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import logoMain from '@/assets/brand/logo-main.svg';
 import logoDark from '@/assets/brand/logo-dark.svg';
 
-interface HeaderProps {
-  onOpenAdmin: () => void;
-  adminCount: number;
-}
-
-export default function Header({ onOpenAdmin, adminCount }: HeaderProps) {
+export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);

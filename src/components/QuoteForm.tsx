@@ -10,10 +10,9 @@ import { User, Phone, MapPin, Sliders, FileText, CheckCircle2, MessageSquare, Ar
 
 interface QuoteFormProps {
   selectedProductName: string;
-  onAddQuote: (quote: QuoteRequest) => void;
 }
 
-export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteFormProps) {
+export default function QuoteForm({ selectedProductName }: QuoteFormProps) {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('الرياض');
@@ -87,7 +86,9 @@ export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteForm
       status: 'new'
     };
 
-    onAddQuote(newQuote);
+    // NOTE: No data is stored in the browser and nothing is sent to a third
+    // party. The request is only handed to the user so THEY can send it to us
+    // over WhatsApp with an explicit click. No automatic pop-ups.
     setSubmittedRequest(newQuote);
     setIsLoading(false);
     pushGtmEvent('generate_lead', {
@@ -95,7 +96,6 @@ export default function QuoteForm({ selectedProductName, onAddQuote }: QuoteForm
       product_name: newQuote.productName || 'غير محدد',
       contact_method: 'whatsapp',
     });
-    window.open(getWhatsappPreFilledLink(newQuote), '_blank', 'noopener,noreferrer');
 
     const formElement = document.getElementById('lead-form-section');
     if (formElement) {
@@ -175,7 +175,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                 </div>
 
                 <h3 className="text-2xl font-extrabold text-[#0a1e36]">
-                  تم تجهيز طلبكم وفتح واتساب لإرساله!
+                  تم تجهيز طلبك — اضغط الزر لإرساله عبر واتساب
                 </h3>
 
                 <div className="bg-slate-50 border border-slate-150 p-4.5 rounded-2xl w-full max-w-md text-right flex flex-col gap-2">
@@ -196,7 +196,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                 </div>
 
                 <p className="text-slate-700 text-xs sm:text-sm font-semibold max-w-lg leading-relaxed">
-                  إذا لم يفتح واتساب تلقائياً، اضغط زر التأكيد أدناه لإرسال بيانات الطلب مباشرة إلى فريق نثال.
+                  لم نحفظ بياناتك على الموقع ولم نرسلها لأي جهة. اضغط الزر أدناه لإرسال الطلب بنفسك إلى فريق نثال عبر واتساب.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md pt-4">
@@ -353,7 +353,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
 
                 <div className="text-center pt-2">
                   <span className="text-[10px] text-slate-600 font-bold block">
-                    ⚙️ نحن نحمي خصوصية بياناتك بنسبة 100%. لن يتم تأجير أو بيع معلومات جوالك لأي أطراف خارجية.
+                    بالضغط على "أرسل الطلب" فإنك توافق على سياسة الخصوصية. بياناتك تُستخدم فقط للتواصل معك بخصوص طلبك ولا تُباع أو تُشارك مع أي طرف ثالث.
                   </span>
                 </div>
 

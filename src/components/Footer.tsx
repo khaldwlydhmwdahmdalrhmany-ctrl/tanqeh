@@ -14,7 +14,11 @@ import {
 } from "lucide-react";
 import logoWhite from "@/assets/brand/logo-white.svg";
 
-export default function Footer() {
+interface FooterProps {
+  onOpenLegal: (tab: 'privacy' | 'terms') => void;
+}
+
+export default function Footer({ onOpenLegal }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -162,9 +166,26 @@ export default function Footer() {
               © {currentYear} مؤسسة نثـال لتنقية وتحلية ومحطات المياه والبرادات.
               جميع الحقوق محفوظة ومسجلة بالمملكة العربية السعودية.
             </span>
+            {/* عند توفر الرقم الضريبي أضفه هنا بنفس النمط:
+                &nbsp;|&nbsp; الرقم الضريبي: 3xxxxxxxxxxxxx3 */}
             <span className="text-[10px] text-slate-400">
-              ترخيص تجاري معتمد وخدمات تخضع للشروط والأحكام.
+              السجل التجاري: 1010654172
             </span>
+            <div className="flex items-center gap-3 pt-1.5 text-[11px] font-bold">
+              <button
+                onClick={() => onOpenLegal('privacy')}
+                className="text-slate-200 hover:text-sky-400 underline underline-offset-4 cursor-pointer"
+              >
+                سياسة الخصوصية
+              </button>
+              <span className="text-slate-600">|</span>
+              <button
+                onClick={() => onOpenLegal('terms')}
+                className="text-slate-200 hover:text-sky-400 underline underline-offset-4 cursor-pointer"
+              >
+                الشروط والأحكام
+              </button>
+            </div>
           </div>
 
           <div className="flex items-center gap-4 text-[11px] font-bold">
