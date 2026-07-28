@@ -95,7 +95,7 @@
 //             >
 //               <Award className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
 //               <span>
-//                 مؤسسة سعودية معتمدة ومرخصة سِجِل تجاري رقم: 1010620807
+//                 مؤسسة سعودية معتمدة ومرخصة سِجِل تجاري رقم: 1010654172
 //               </span>
 //             </motion.div>
 
@@ -472,7 +472,7 @@ export default function Hero() {
             >
               <Award className="w-3.5 h-3.5 text-blue-600 animate-pulse" />
               <span>
-                مؤسسة سعودية معتمدة ومرخصة سِجِل تجاري رقم: 1010620807
+                مؤسسة سعودية معتمدة ومرخصة سِجِل تجاري رقم: 1010654172
               </span>
             </motion.div>
 
