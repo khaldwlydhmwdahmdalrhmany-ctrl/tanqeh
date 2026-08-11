@@ -6,6 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Phone, MessageSquare, Menu, X, ShieldCheck, Layers, BadgePercent, Image as ImageIcon, Sparkles, HelpCircle, FileText, ArrowLeft, Heart, Award, GlassWater, Package, Sliders } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logoMain from '@/assets/brand/logo-main.svg';
 import logoDark from '@/assets/brand/logo-dark.svg';
 
@@ -21,6 +22,28 @@ export default function Header() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+
+  /**
+   * Nav items now carry either a real `path` (its own URL, its own <title> —
+   * what Google Ads scores) or an in-page `id` to scroll to on the home page.
+   */
+  const handleNav = (link: { id?: string; path?: string }) => {
+    setIsMobileMenuOpen(false);
+    if (link.path) {
+      navigate(link.path);
+      return;
+    }
+    if (!link.id) return;
+    if (pathname !== '/') {
+      navigate('/', { state: { scrollTo: link.id } });
+      setTimeout(() => scrollToSection(link.id!), 120);
+      return;
+    }
+    scrollToSection(link.id);
+  };
 
   const scrollToSection = (id: string) => {
     setIsMobileMenuOpen(false);
@@ -56,7 +79,7 @@ export default function Header() {
             {/* BRAND LOGO & CORPORATE IDENTITY */}
             <div 
               className="flex items-center gap-3 cursor-pointer select-none group"
-              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              onClick={() => navigate('/')}
             >
               {/* Premium Logo Framing holding standard brand SVG */}
               <div className="w-11 h-11 flex relative items-center justify-center p-1 bg-white rounded-xl shadow-sm border border-slate-100 transition-all duration-300 group-hover:scale-105 group-hover:shadow-md overflow-hidden">
@@ -85,7 +108,7 @@ export default function Header() {
               {navLinks.map((link, idx) => (
                 <button
                   key={link.id}
-                  onClick={() => scrollToSection(link.id)}
+                  onClick={() => handleNav(link)}
                   onMouseEnter={() => setHoveredIdx(idx)}
                   onMouseLeave={() => setHoveredIdx(null)}
                   className={`relative px-3.5 py-2 text-[13px] font-semibold transition-all duration-300 rounded-lg cursor-pointer select-none flex items-center gap-1.5 ${
@@ -126,7 +149,7 @@ export default function Header() {
 
               {/* Main Luxury Free Quote CTA */}
               <button
-                onClick={() => scrollToSection('lead-form-section')}
+                onClick={() => navigate('/quote')}
                 className="btn-primary px-5 py-2.5 rounded-xl text-xs font-black flex items-center gap-2 group"
                 id="header-quote-btn"
               >
@@ -211,7 +234,7 @@ export default function Header() {
                 {navLinks.map((link, idx) => (
                   <button
                     key={link.id}
-                    onClick={() => scrollToSection(link.id)}
+                    onClick={() => handleNav(link)}
                     className="w-full text-right px-4 py-3 rounded-xl text-xs font-bold text-slate-700 hover:text-[#0072ff] hover:bg-blue-50/50 flex items-center justify-between transition-colors group"
                   >
                     <div className="flex items-center gap-3">
@@ -248,7 +271,7 @@ export default function Header() {
                 </div>
 
                 <button
-                  onClick={() => scrollToSection('lead-form-section')}
+                  onClick={() => navigate('/quote')}
                   className="btn-primary w-full text-center py-3.5 rounded-xl text-xs font-black flex items-center justify-center gap-2"
                 >
                   <ShieldCheck className="w-4 h-4" />
@@ -270,14 +293,14 @@ export default function Header() {
 }
 
 // Interactive navigation list with contextual micro-icons for modern intuitive layout structure
-const navLinks = [
-  { id: 'about-section', label: 'عن نثال', icon: <Award className="w-4 h-4" /> },
-  { id: 'services-section', label: 'خدماتنا والتركيب', icon: <GlassWater className="w-4 h-4" /> },
-  { id: 'products-section', label: 'كتالوج الأجهزة', icon: <Package className="w-4 h-4" /> },
-  { id: 'projects-section', label: 'أعمالنا ومشاريعنا', icon: <ImageIcon className="w-4 h-4" /> },
-  { id: 'before-after-section', label: 'مقارنة قبل وبعد', icon: <Sliders className="w-4 h-4" /> },
-  { id: 'process-section', label: 'خطة وجدول العمل', icon: <Sparkles className="w-4 h-4" /> },
+const navLinks: { id?: string; path?: string; label: string; icon: React.ReactNode }[] = [
+  { path: '/about', label: 'عن نثال', icon: <Award className="w-4 h-4" /> },
+  { path: '/filters', label: 'فلاتر وأجهزة تحلية', icon: <GlassWater className="w-4 h-4" /> },
+  { path: '/coolers', label: 'برادات وموزعات', icon: <Package className="w-4 h-4" /> },
+  { path: '/mist', label: 'أنظمة رذاذ وتبريد', icon: <Sparkles className="w-4 h-4" /> },
+  { path: '/maintenance', label: 'الصيانة وقطع الغيار', icon: <Sliders className="w-4 h-4" /> },
+  { path: '/projects', label: 'أعمالنا ومشاريعنا', icon: <ImageIcon className="w-4 h-4" /> },
   { id: 'faq-section', label: 'الأسئلة والضمانات', icon: <HelpCircle className="w-4 h-4" /> },
-  { id: 'lead-form-section', label: 'احجز زيارة مجانية', icon: <ShieldCheck className="w-4 h-4" /> }
+  { path: '/quote', label: 'احجز زيارة مجانية', icon: <ShieldCheck className="w-4 h-4" /> }
 ];
 
