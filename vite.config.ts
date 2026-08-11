@@ -5,7 +5,9 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
   return {
-    base: process.env.NODE_ENV === 'production' ? './' : '/',
+    // MUST stay '/' — relative './' breaks asset loading on sub-routes
+    // such as /product/gulden-pro-7.
+    base: '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
