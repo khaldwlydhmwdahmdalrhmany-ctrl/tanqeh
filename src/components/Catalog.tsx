@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { PRODUCTS } from '../data';
 import { Product } from '../types';
 import { ShieldCheck, Info, CheckCircle2, Bookmark, Sliders, ChevronDown } from 'lucide-react';
@@ -46,10 +47,9 @@ export default function Catalog({ onSelectProductForQuote, selectedCategory, set
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
   };
 
+  // No automatic window.open — the user clicks the WhatsApp link themselves.
   const handleOrderProduct = (product: Product) => {
-    const pName = product.name;
-    onSelectProductForQuote(pName);
-    window.open(getProductWhatsappLink(product), '_blank', 'noopener,noreferrer');
+    onSelectProductForQuote(product.name);
   };
 
   return (
