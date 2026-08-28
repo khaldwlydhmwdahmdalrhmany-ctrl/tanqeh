@@ -12,6 +12,7 @@ import maasRoCentralImg from '@/assets/products/ro-systems/maas-ro-central.jpg';
 import maasRoCentralImg11 from '@/assets/products/ro-systems/maas-ro-central11.jpg';
 import washerSedimentFilterImg from '@/assets/products/water-purifiers/washer-sediment-filter.jpg';
 import projectGardenMistImg12 from '@/assets/projects/images/project-commercial-ro12.jpg';
+import coolerOfficeSmartImg from 'image: soleAquaSmartImg,';
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
@@ -230,9 +231,33 @@ export const PRODUCTS: Product[] = [
       { label: 'سهولة التركيب والصيانة', value: 'يستغرق تركيبه 10 دقائق فقط بخراطيم مرنة مدمجة' },
       { label: 'دورية تغيير الشمعة', value: 'كل 3 إلى 6 أشهر اعتماداً على نقاوة مصدر الماء الأساسي' },
       { label: 'التوصية الفنية', value: 'يفضل تركيبه لجميع غسالات الملابس الأوتوماتيكية وغسالات الصحون' }
+    ] ]
+  },
+  {
+    id: 'cooler-office-smart',
+    name: 'برادة مياه ذكية للمكاتب',
+    brand: 'اسم العلامة التجارية',
+    type: 'cooler',
+    image: soleAquaSmartImg,
+    tagline: 'برادة عملية للمكاتب والمنشآت توفر الماء البارد والساخن بسهولة طوال اليوم.',
+    stagesCount: 5,
+    isPopular: false,
+    warrantyYears: 2,
+    videoUrl: '',
+    features: [
+      'توصيل مباشر بشبكة المياه دون الحاجة لقوارير خارجية',
+      'فلترة داخلية للمياه تساعد على تحسين الطعم وتقليل الشوائب',
+      'خيارات ماء بارد وساخن ومعتدل للاستخدام اليومي',
+      'تصميم مناسب للمكاتب والعيادات والاستراحات',
+      'سهولة في التشغيل والصيانة الدورية'
+    ],
+    specs: [
+      { label: 'نوع الاستخدام', value: 'المكاتب والعيادات والمنشآت التجارية' },
+      { label: 'خيارات المياه', value: 'بارد، ساخن، ومعتدل' },
+      { label: 'نظام التغذية', value: 'توصيل مباشر بشبكة المياه' },
+      { label: 'الضمان', value: 'سنتان حسب شروط الضمان' }
     ]
   }
-
 ];
 
 export const TESTIMONIALS: Testimonial[] = [
