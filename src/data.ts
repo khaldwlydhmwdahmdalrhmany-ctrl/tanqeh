@@ -12,8 +12,7 @@ import maasRoCentralImg from '@/assets/products/ro-systems/maas-ro-central.jpg';
 import maasRoCentralImg11 from '@/assets/products/ro-systems/maas-ro-central11.jpg';
 import washerSedimentFilterImg from '@/assets/products/water-purifiers/washer-sediment-filter.jpg';
 import projectGardenMistImg12 from '@/assets/projects/images/project-commercial-ro12.jpg';
-import coolerOfficeSmartImg from '@/assets/cooler-office-smart.jpg';
-
+import coolerOfficeSmartImg from '@/assets/products/coolers/cooler-office-smart.jpg';
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'exp',
