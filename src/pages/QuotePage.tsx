@@ -36,7 +36,7 @@ export default function QuotePage() {
         </div>
       </section>
 
-      <QuoteForm selectedProductName="" />
+      <QuoteForm pageType="quote_page" />
       <Process />
       <Achievements />
     </div>
