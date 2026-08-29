@@ -31,7 +31,6 @@ import { useSeo, getCategoryByKey } from "../lib/seo";
 import { ORGANIZATION_SCHEMA } from "../lib/schema";
 
 export default function HomePage() {
-  const [selectedProductName, setSelectedProductName] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<
     "filter" | "cooler" | "mist" | "maintenance" | "all"
   >("all");
@@ -53,17 +52,6 @@ export default function HomePage() {
 
     return () => window.cancelAnimationFrame(frame);
   }, [location.pathname, location.state, navigate]);
-
-  const handleProductSelectFromCatalog = (productName: string) => {
-    setSelectedProductName(productName);
-    window.requestAnimationFrame(() => {
-      const element = document.getElementById("lead-form-section");
-      if (element) {
-        const top = element.getBoundingClientRect().top + window.scrollY - 85;
-        window.scrollTo({ top, behavior: "smooth" });
-      }
-    });
-  };
 
   // Services cards route to a dedicated category landing page — this gives
   // each Google Ads ad group its own URL and its own title/description.
@@ -100,7 +88,6 @@ export default function HomePage() {
 
       {/* Interactive Products Gallery / Details Catalog */}
       <Catalog
-        onSelectProductForQuote={handleProductSelectFromCatalog}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
@@ -242,7 +229,7 @@ export default function HomePage() {
       <FAQs />
 
       {/* Core Leads Capture Form */}
-      <QuoteForm selectedProductName={selectedProductName} />
+      <QuoteForm />
 
     </>
   );
