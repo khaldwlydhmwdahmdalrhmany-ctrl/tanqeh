@@ -23,8 +23,28 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsMobileMenuOpen(false);
+    };
+
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [isMobileMenuOpen]);
+
   const navigate = useNavigate();
   const { pathname } = useLocation();
+
+  const handleLogoClick = () => {
+    setIsMobileMenuOpen(false);
+    if (pathname === '/') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    navigate('/');
+  };
 
   /**
    * Nav items now carry either a real `path` (its own URL, its own <title> —
@@ -39,7 +59,6 @@ export default function Header() {
     if (!link.id) return;
     if (pathname !== '/') {
       navigate('/', { state: { scrollTo: link.id } });
-      setTimeout(() => scrollToSection(link.id!), 120);
       return;
     }
     scrollToSection(link.id);
@@ -79,7 +98,15 @@ export default function Header() {
             {/* BRAND LOGO & CORPORATE IDENTITY */}
             <div 
               className="flex items-center gap-3 cursor-pointer select-none group"
-              onClick={() => navigate('/')}
+              onClick={handleLogoClick}
+              role="link"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  handleLogoClick();
+                }
+              }}
             >
               {/* Premium Logo Framing holding standard brand SVG */}
               <div className="w-11 h-11 flex relative items-center justify-center p-1 bg-white rounded-xl shadow-sm border border-slate-100 transition-all duration-300 group-hover:scale-105 group-hover:shadow-md overflow-hidden">
@@ -200,6 +227,9 @@ export default function Header() {
               className="fixed top-0 right-0 h-full w-[85%] max-w-[340px] bg-white z-50 shadow-2xl flex flex-col justify-between border-l border-slate-100 overflow-hidden"
               id="mobile-nav-panel"
               dir="rtl"
+              role="dialog"
+              aria-modal="true"
+              aria-label="قائمة التنقل"
             >
               {/* Drawer Top Header info */}
               <div className="p-5 border-b border-slate-100 bg-linear-to-b from-blue-50/30 to-transparent">
@@ -222,6 +252,7 @@ export default function Header() {
                   <button
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="p-2 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-150"
+                    aria-label="إغلاق قائمة التنقل"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -303,4 +334,3 @@ const navLinks: { id?: string; path?: string; label: string; icon: React.ReactNo
   { id: 'faq-section', label: 'الأسئلة والضمانات', icon: <HelpCircle className="w-4 h-4" /> },
   { path: '/quote', label: 'احجز زيارة مجانية', icon: <ShieldCheck className="w-4 h-4" /> }
 ];
-
