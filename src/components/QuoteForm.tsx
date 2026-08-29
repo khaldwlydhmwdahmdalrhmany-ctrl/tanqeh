@@ -9,14 +9,16 @@ import { pushGtmEvent } from '../lib/gtm';
 import { User, Phone, MapPin, Sliders, FileText, CheckCircle2, MessageSquare, ArrowLeft, RefreshCcw } from 'lucide-react';
 
 interface QuoteFormProps {
-  selectedProductName: string;
+  selectedProductName?: string;
+  serviceType?: 'filter' | 'cooler' | 'mist' | 'maintenance';
+  pageType?: string;
 }
 
-export default function QuoteForm({ selectedProductName }: QuoteFormProps) {
+export default function QuoteForm({ selectedProductName = '', serviceType: fixedServiceType, pageType = 'general' }: QuoteFormProps) {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('الرياض');
-  const [serviceType, setServiceType] = useState('filter');
+  const [serviceType, setServiceType] = useState(fixedServiceType || 'filter');
   const [details, setDetails] = useState('');
   const [preferredProduct, setPreferredProduct] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -25,6 +27,10 @@ export default function QuoteForm({ selectedProductName }: QuoteFormProps) {
 
   // Handle auto-population of selected product from catalog clicks
   useEffect(() => {
+    if (fixedServiceType) {
+      setServiceType(fixedServiceType);
+      return;
+    }
     if (selectedProductName) {
       setPreferredProduct(selectedProductName);
       // Auto-set service type based on product name keyword
@@ -38,7 +44,7 @@ export default function QuoteForm({ selectedProductName }: QuoteFormProps) {
         setServiceType('filter');
       }
     }
-  }, [selectedProductName]);
+  }, [selectedProductName, fixedServiceType]);
 
   const validatePhone = (p: string) => {
     // Saudi phone formats: 05xxxxxxxx, 9665xxxxxxxx, +9665xxxxxxxx or at least 9-10 digits
@@ -95,6 +101,9 @@ export default function QuoteForm({ selectedProductName }: QuoteFormProps) {
       lead_type: newQuote.serviceType,
       product_name: newQuote.productName || 'غير محدد',
       contact_method: 'whatsapp',
+      page_type: pageType,
+      service_type: serviceType,
+      cta_location: 'quote_form',
     });
 
     const formElement = document.getElementById('lead-form-section');
@@ -117,7 +126,7 @@ export default function QuoteForm({ selectedProductName }: QuoteFormProps) {
     setFullName('');
     setPhone('');
     setCity('الرياض');
-    setServiceType('filter');
+    setServiceType(fixedServiceType || 'filter');
     setDetails('');
     setPreferredProduct('');
     setSubmittedRequest(null);
@@ -204,6 +213,10 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                     href={getWhatsappPreFilledLink(submittedRequest)}
                     target="_blank"
                     rel="noreferrer"
+                    data-page-type={pageType}
+                    data-service-type={serviceType}
+                    data-product-name={submittedRequest.productName}
+                    data-cta-location="quote_form_confirmation"
                     className="btn-whatsapp flex-grow rounded-xl py-3.5 text-xs font-bold flex items-center justify-center gap-2"
                   >
                     <MessageSquare className="w-4 h-4" />
@@ -290,7 +303,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                   </div>
 
                   {/* Service Type Selection */}
-                  <div className="flex flex-col gap-2">
+                  {!fixedServiceType ? <div className="flex flex-col gap-2">
                     <label className="text-xs font-extrabold text-slate-750 flex items-center gap-1.5">
                       <Sliders className="w-4.5 h-4.5 text-blue-500" />
                       <span>نوع الخدمة المطلوبة <span className="text-red-500">*</span></span>
@@ -305,7 +318,17 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                       <option value="mist">تركيب أنظمة رذاذ وتلطيف ضباب خارجي</option>
                       <option value="maintenance">صيانة دورية / تبديل شمعات فلاتر / صيانة طارئة</option>
                     </select>
-                  </div>
+                  </div> : (
+                    <div className="flex flex-col gap-2">
+                      <label className="text-xs font-extrabold text-slate-750 flex items-center gap-1.5">
+                        <Sliders className="w-4.5 h-4.5 text-blue-500" />
+                        <span>الخدمة المطلوبة</span>
+                      </label>
+                      <div className="w-full bg-blue-50 border border-blue-100 p-4.5 rounded-2xl text-sm font-extrabold text-blue-900">
+                        {getServiceArabicLabel(fixedServiceType)}
+                      </div>
+                    </div>
+                  )}
 
                 </div>
 
