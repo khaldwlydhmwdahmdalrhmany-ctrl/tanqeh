@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, CheckCircle2, FileText, MapPin, MessageSquare, Phone, Sliders, User } from 'lucide-react';
+import { ArrowLeft, FileText, MapPin, Phone, Sliders, User } from 'lucide-react';
 import { QuoteRequest } from '../types';
 import { pushGtmEvent } from '../lib/gtm';
 
@@ -32,7 +32,6 @@ export default function QuoteForm({
   const [preferredProduct, setPreferredProduct] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [preparedQuote, setPreparedQuote] = useState<QuoteRequest | null>(null);
 
   useEffect(() => {
     if (fixedServiceType) {
@@ -80,7 +79,7 @@ export default function QuoteForm({
 
   const getWhatsappPreFilledLink = (quote: QuoteRequest) => {
     const text = `السلام عليكم ورحمة الله وبركاته،
-أود متابعة طلب الاستشارة من مؤسسة نثال.
+أود إرسال طلب استشارة من مؤسسة نثال.
 
 *معلومات الطلب:*
 - *الرقم المرجعي:* ${quote.id}
@@ -130,6 +129,8 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
       status: 'new',
     };
 
+    const whatsappHref = getWhatsappPreFilledLink(newQuote);
+
     pushGtmEvent('generate_lead', {
       lead_type: newQuote.serviceType,
       product_name: newQuote.productName || 'غير محدد',
@@ -139,31 +140,27 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
       cta_location: 'quote_form',
     });
 
-    setPreparedQuote(newQuote);
-    setIsLoading(false);
-  };
-
-  const handleWhatsappHandoff = () => {
-    if (!preparedQuote) return;
-
     pushGtmEvent('whatsapp_lead_handoff', {
-      lead_id: preparedQuote.id,
-      lead_type: preparedQuote.serviceType,
-      product_name: preparedQuote.productName || 'غير محدد',
+      lead_id: newQuote.id,
+      lead_type: newQuote.serviceType,
+      product_name: newQuote.productName || 'غير محدد',
       page_type: pageType,
       service_type: serviceType,
-      cta_location: 'quote_form_confirmation',
+      cta_location: 'quote_form_submit',
     });
 
     navigate('/thank-you', {
       state: {
-        quote: preparedQuote,
-        whatsappHref: getWhatsappPreFilledLink(preparedQuote),
+        quote: newQuote,
         pageType,
         serviceType,
         whatsappHandoff: true,
       },
     });
+
+    window.setTimeout(() => {
+      window.location.href = whatsappHref;
+    }, 120);
   };
 
   return (
@@ -183,111 +180,70 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
             احصل على عرض سعر مناسب لاحتياجك
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm font-bold leading-7 text-blue-100">
-            املأ البيانات الأساسية، ثم أرسل الطلب إلى فريق نثال عبر واتساب. بعد فتح واتساب ستبقى صفحة الشكر جاهزة لك عند العودة للموقع.
+            املأ البيانات واضغط إرسال الطلب. سننقلك مباشرة إلى واتساب برسالة جاهزة، وعند رجوعك للموقع ستجد صفحة الشكر.
           </p>
         </div>
 
         <div className="mx-auto max-w-4xl rounded-[28px] border border-white/10 bg-white p-5 shadow-2xl sm:p-8 md:p-10">
-          {preparedQuote ? (
-            <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
-                <CheckCircle2 className="h-9 w-9" />
-              </div>
-              <span className="mt-5 text-xs font-extrabold text-emerald-700">تم تجهيز الطلب بنجاح</span>
-              <h3 className="mt-2 text-2xl font-extrabold text-blue-950 sm:text-3xl">باقي خطوة واحدة: إرسال الطلب عبر واتساب</h3>
-              <p className="mt-3 max-w-xl text-sm font-bold leading-7 text-slate-600">
-                اضغط الزر أدناه لفتح واتساب برسالة الطلب الجاهزة. عند رجوعك للموقع ستجد صفحة الشكر بدل إعادة تأكيد الطلب مرة أخرى.
-              </p>
-
-              <div className="mt-6 grid w-full max-w-xl gap-3 rounded-2xl border border-slate-100 bg-slate-50 p-4 sm:grid-cols-2">
-                <div className="text-center">
-                  <div className="text-[10px] font-extrabold text-slate-500">رقم الطلب</div>
-                  <div className="mt-1 text-sm font-extrabold text-blue-950">{preparedQuote.id}</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-[10px] font-extrabold text-slate-500">الخدمة</div>
-                  <div className="mt-1 text-sm font-extrabold text-blue-950">{preparedQuote.serviceType}</div>
-                </div>
-              </div>
-
-              <a
-                href={getWhatsappPreFilledLink(preparedQuote)}
-                target="_blank"
-                rel="noreferrer"
-                onClick={handleWhatsappHandoff}
-                data-page-type={pageType}
-                data-service-type={serviceType}
-                data-product-name={preparedQuote.productName}
-                data-cta-location="quote_form_confirmation"
-                className="btn-whatsapp mt-6 flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold"
-              >
-                <MessageSquare className="h-5 w-5" />
-                فتح واتساب وإرسال الطلب
-              </a>
+          {errorMessage && (
+            <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-center text-xs font-extrabold text-red-700">
+              {errorMessage}
             </div>
-          ) : (
-            <>
-              {errorMessage && (
-                <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-center text-xs font-extrabold text-red-700">
-                  {errorMessage}
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6" id="quote-request-form">
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                  <FieldLabel icon={<User className="h-4 w-4" />} label="الاسم بالكامل" required>
-                    <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="مثال: خالد أحمد" className={CONTROL_CLASS} />
-                  </FieldLabel>
-
-                  <FieldLabel icon={<Phone className="h-4 w-4" />} label="رقم الجوال" required>
-                    <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="مثال: 0553033199" className={`${CONTROL_CLASS} text-right font-mono`} />
-                  </FieldLabel>
-                </div>
-
-                <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-                  <FieldLabel icon={<MapPin className="h-4 w-4" />} label="المدينة / الحي" required>
-                    <input type="text" required value={city} onChange={(e) => setCity(e.target.value)} placeholder="مثال: الرياض، حي الياسمين" className={CONTROL_CLASS} />
-                  </FieldLabel>
-
-                  <FieldLabel icon={<Sliders className="h-4 w-4" />} label="الخدمة المطلوبة" required={!fixedServiceType}>
-                    {fixedServiceType ? (
-                      <div className="flex min-h-[54px] items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 px-4 text-center text-sm font-extrabold text-blue-950">
-                        {getServiceArabicLabel(fixedServiceType)}
-                      </div>
-                    ) : (
-                      <select value={serviceType} onChange={(e) => setServiceType(e.target.value)} className={CONTROL_CLASS}>
-                        <option value="filter">فلاتر وأجهزة تحلية المياه</option>
-                        <option value="cooler">برادات وموزعات المياه</option>
-                        <option value="mist">أنظمة الرذاذ والتبريد الخارجي</option>
-                        <option value="maintenance">الصيانة وقطع الغيار</option>
-                      </select>
-                    )}
-                  </FieldLabel>
-                </div>
-
-                {preferredProduct && (
-                  <div className="rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 text-center">
-                    <span className="text-xs font-bold text-slate-600">المنتج المحدد</span>
-                    <div className="mt-1 text-sm font-extrabold text-blue-800">{preferredProduct}</div>
-                  </div>
-                )}
-
-                <FieldLabel icon={<FileText className="h-4 w-4" />} label="تفاصيل إضافية (اختياري)">
-                  <textarea rows={4} value={details} onChange={(e) => setDetails(e.target.value)} placeholder="اكتب أي تفاصيل تساعدنا على تجهيز العرض المناسب لك..." className={`${CONTROL_CLASS} resize-none`} />
-                </FieldLabel>
-
-                <button type="submit" disabled={isLoading} id="submit-proposal-btn" className="btn-primary mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl py-4 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70">
-                  <span>{isLoading ? 'جاري تجهيز الطلب...' : 'متابعة لإرسال الطلب عبر واتساب'}</span>
-                  {!isLoading && <ArrowLeft className="h-4 w-4" />}
-                </button>
-
-                <p className="mx-auto max-w-2xl text-center text-[10px] font-bold leading-5 text-slate-500">
-                  بالضغط على «متابعة» فإنك توافق على{' '}
-                  <a href="#privacy" className="font-extrabold text-blue-700 underline underline-offset-2">سياسة الخصوصية</a>. نستخدم بياناتك فقط للتواصل معك بخصوص طلبك.
-                </p>
-              </form>
-            </>
           )}
+
+          <form onSubmit={handleSubmit} className="space-y-6" id="quote-request-form">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <FieldLabel icon={<User className="h-4 w-4" />} label="الاسم بالكامل" required>
+                <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="مثال: خالد أحمد" className={CONTROL_CLASS} />
+              </FieldLabel>
+
+              <FieldLabel icon={<Phone className="h-4 w-4" />} label="رقم الجوال" required>
+                <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="مثال: 0553033199" className={`${CONTROL_CLASS} text-right font-mono`} />
+              </FieldLabel>
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <FieldLabel icon={<MapPin className="h-4 w-4" />} label="المدينة / الحي" required>
+                <input type="text" required value={city} onChange={(e) => setCity(e.target.value)} placeholder="مثال: الرياض، حي الياسمين" className={CONTROL_CLASS} />
+              </FieldLabel>
+
+              <FieldLabel icon={<Sliders className="h-4 w-4" />} label="الخدمة المطلوبة" required={!fixedServiceType}>
+                {fixedServiceType ? (
+                  <div className="flex min-h-[54px] items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 px-4 text-center text-sm font-extrabold text-blue-950">
+                    {getServiceArabicLabel(fixedServiceType)}
+                  </div>
+                ) : (
+                  <select value={serviceType} onChange={(e) => setServiceType(e.target.value)} className={CONTROL_CLASS}>
+                    <option value="filter">فلاتر وأجهزة تحلية المياه</option>
+                    <option value="cooler">برادات وموزعات المياه</option>
+                    <option value="mist">أنظمة الرذاذ والتبريد الخارجي</option>
+                    <option value="maintenance">الصيانة وقطع الغيار</option>
+                  </select>
+                )}
+              </FieldLabel>
+            </div>
+
+            {preferredProduct && (
+              <div className="rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 text-center">
+                <span className="text-xs font-bold text-slate-600">المنتج المحدد</span>
+                <div className="mt-1 text-sm font-extrabold text-blue-800">{preferredProduct}</div>
+              </div>
+            )}
+
+            <FieldLabel icon={<FileText className="h-4 w-4" />} label="تفاصيل إضافية (اختياري)">
+              <textarea rows={4} value={details} onChange={(e) => setDetails(e.target.value)} placeholder="اكتب أي تفاصيل تساعدنا على تجهيز العرض المناسب لك..." className={`${CONTROL_CLASS} resize-none`} />
+            </FieldLabel>
+
+            <button type="submit" disabled={isLoading} id="submit-proposal-btn" className="btn-primary mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl py-4 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70">
+              <span>{isLoading ? 'جاري تحويلك إلى واتساب...' : 'إرسال الطلب عبر واتساب'}</span>
+              {!isLoading && <ArrowLeft className="h-4 w-4" />}
+            </button>
+
+            <p className="mx-auto max-w-2xl text-center text-[10px] font-bold leading-5 text-slate-500">
+              بالضغط على «إرسال الطلب» فإنك توافق على{' '}
+              <a href="#privacy" className="font-extrabold text-blue-700 underline underline-offset-2">سياسة الخصوصية</a>. نستخدم بياناتك فقط للتواصل معك بخصوص طلبك.
+            </p>
+          </form>
         </div>
       </div>
     </section>
