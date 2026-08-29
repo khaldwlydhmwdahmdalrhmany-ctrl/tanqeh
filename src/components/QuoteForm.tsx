@@ -3,10 +3,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { ArrowLeft, FileText, MapPin, Phone, Sliders, User } from 'lucide-react';
 import { QuoteRequest } from '../types';
 import { pushGtmEvent } from '../lib/gtm';
-import { User, Phone, MapPin, Sliders, FileText, CheckCircle2, MessageSquare, ArrowLeft, RefreshCcw } from 'lucide-react';
 
 interface QuoteFormProps {
   selectedProductName?: string;
@@ -14,7 +15,12 @@ interface QuoteFormProps {
   pageType?: string;
 }
 
-export default function QuoteForm({ selectedProductName = '', serviceType: fixedServiceType, pageType = 'general' }: QuoteFormProps) {
+export default function QuoteForm({
+  selectedProductName = '',
+  serviceType: fixedServiceType,
+  pageType = 'general',
+}: QuoteFormProps) {
+  const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('الرياض');
@@ -22,58 +28,86 @@ export default function QuoteForm({ selectedProductName = '', serviceType: fixed
   const [details, setDetails] = useState('');
   const [preferredProduct, setPreferredProduct] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [submittedRequest, setSubmittedRequest] = useState<QuoteRequest | null>(null);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // Handle auto-population of selected product from catalog clicks
   useEffect(() => {
     if (fixedServiceType) {
       setServiceType(fixedServiceType);
       return;
     }
-    if (selectedProductName) {
-      setPreferredProduct(selectedProductName);
-      // Auto-set service type based on product name keyword
-      if (selectedProductName.includes('برادة') || selectedProductName.includes('سول أكوا')) {
-        setServiceType('cooler');
-      } else if (selectedProductName.includes('رذاذ') || selectedProductName.includes('ضباب')) {
-        setServiceType('mist');
-      } else if (selectedProductName.includes('صيانة') || selectedProductName.includes('فلتر الغسالات') || selectedProductName.includes('حماية')) {
-        setServiceType('maintenance');
-      } else {
-        setServiceType('filter');
-      }
+
+    if (!selectedProductName) return;
+
+    setPreferredProduct(selectedProductName);
+    if (selectedProductName.includes('برادة') || selectedProductName.includes('سول أكوا')) {
+      setServiceType('cooler');
+    } else if (selectedProductName.includes('رذاذ') || selectedProductName.includes('ضباب')) {
+      setServiceType('mist');
+    } else if (
+      selectedProductName.includes('صيانة') ||
+      selectedProductName.includes('فلتر الغسالات') ||
+      selectedProductName.includes('حماية')
+    ) {
+      setServiceType('maintenance');
+    } else {
+      setServiceType('filter');
     }
   }, [selectedProductName, fixedServiceType]);
 
-  const validatePhone = (p: string) => {
-    // Saudi phone formats: 05xxxxxxxx, 9665xxxxxxxx, +9665xxxxxxxx or at least 9-10 digits
-    const cleaned = p.replace(/[\s-+]/g, '');
+  const getServiceArabicLabel = (type: string) => {
+    switch (type) {
+      case 'filter':
+        return 'أجهزة التصفية والتحلية';
+      case 'cooler':
+        return 'برادات وموزعات المياه';
+      case 'mist':
+        return 'أنظمة الرذاذ والتبريد الخارجي';
+      case 'maintenance':
+        return 'الصيانة الدورية وقطع الغيار';
+      default:
+        return 'طلب استشارة مخصصة';
+    }
+  };
+
+  const validatePhone = (value: string) => {
+    const cleaned = value.replace(/[\s-+]/g, '');
     return cleaned.length >= 9 && /^\d+$/.test(cleaned);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const getWhatsappPreFilledLink = (quote: QuoteRequest) => {
+    const text = `السلام عليكم ورحمة الله وبركاته،
+أود متابعة طلب الاستشارة من مؤسسة نثال.
+
+*معلومات الطلب:*
+- *الرقم المرجعي:* ${quote.id}
+- *الاسم:* ${quote.fullName}
+- *الجوال:* ${quote.phone}
+- *المدينة:* ${quote.city}
+- *الخدمة:* ${quote.serviceType}
+${quote.productName ? `- *الجهاز:* ${quote.productName}` : ''}
+${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
+
+يرجى التواصل معي لتأكيد التفاصيل والموعد المناسب.`;
+
+    return `https://wa.me/966553033199?text=${encodeURIComponent(text)}`;
+  };
+
+  const handleSubmit = (event: React.FormEvent) => {
+    event.preventDefault();
     setErrorMessage('');
 
-    // Field checkups
     if (!fullName.trim() || fullName.trim().length < 3) {
-      setErrorMessage('الرجاء إدخال اسمك الكامل بشكل صحيح (أكثر من حرفين)');
+      setErrorMessage('الرجاء إدخال الاسم الكامل بشكل صحيح.');
       return;
     }
 
-    if (!phone.trim()) {
-      setErrorMessage('رقم الجوال مطلوب للتواصل وإرسال التسعيرة');
-      return;
-    }
-
-    if (!validatePhone(phone)) {
-      setErrorMessage('الرجاء إدخال رقم جوال سعودي صحيح ومكون من أرقام فقط (مثال: 0553033199)');
+    if (!phone.trim() || !validatePhone(phone)) {
+      setErrorMessage('الرجاء إدخال رقم جوال صحيح للتواصل معك.');
       return;
     }
 
     if (!city.trim()) {
-      setErrorMessage('الرجاء تحديد مدينتك أو الحي السكني لإرسال المندوب');
+      setErrorMessage('الرجاء تحديد المدينة أو الحي.');
       return;
     }
 
@@ -86,17 +120,12 @@ export default function QuoteForm({ selectedProductName = '', serviceType: fixed
       phone: phone.trim(),
       city: city.trim(),
       serviceType: getServiceArabicLabel(serviceType),
-      details: details.trim() || `طلب الحصول على استشارة وتركيب ${preferredProduct || 'أحد الأجهزة المتاحة'}`,
+      details: details.trim() || `طلب استشارة بخصوص ${preferredProduct || getServiceArabicLabel(serviceType)}`,
       productName: preferredProduct || undefined,
       createdAt: new Date().toISOString(),
-      status: 'new'
+      status: 'new',
     };
 
-    // NOTE: No data is stored in the browser and nothing is sent to a third
-    // party. The request is only handed to the user so THEY can send it to us
-    // over WhatsApp with an explicit click. No automatic pop-ups.
-    setSubmittedRequest(newQuote);
-    setIsLoading(false);
     pushGtmEvent('generate_lead', {
       lead_type: newQuote.serviceType,
       product_name: newQuote.productName || 'غير محدد',
@@ -106,287 +135,164 @@ export default function QuoteForm({ selectedProductName = '', serviceType: fixed
       cta_location: 'quote_form',
     });
 
-    const formElement = document.getElementById('lead-form-section');
-    if (formElement) {
-      formElement.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-  };
+    const whatsappHref = getWhatsappPreFilledLink(newQuote);
 
-  const getServiceArabicLabel = (type: string) => {
-    switch (type) {
-      case 'filter': return 'أجهزة التصفية والتحلية';
-      case 'cooler': return 'برادات وموزعات المياه';
-      case 'mist': return 'أنظمة الرذاذ والتبريد الخارجي';
-      case 'maintenance': return 'الصيانة الدورية وقطع الغيار';
-      default: return 'طلب استشارة مخصصة';
-    }
-  };
-
-  const handleResetForm = () => {
-    setFullName('');
-    setPhone('');
-    setCity('الرياض');
-    setServiceType(fixedServiceType || 'filter');
-    setDetails('');
-    setPreferredProduct('');
-    setSubmittedRequest(null);
-  };
-
-  const getWhatsappPreFilledLink = (quote: QuoteRequest) => {
-    const text = `السلام عليكم ورحمة الله وبركاته،
-أود تأكيد طلب الاستشارة وفحص الأملاح المجاني من نثال لتحلية المياه بالرياض.
-
-*معلومات تذكرة الطلب:*
-- *الرقم المرجعي:* ${quote.id}
-- *الاسم:* ${quote.fullName}
-- *الجوال:* ${quote.phone}
-- *المدينة:* ${quote.city}
-- *الخدمة:* ${quote.serviceType}
-${quote.productName ? `- *الجهاز:* ${quote.productName}` : ''}
-${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
-
-يرجى التواصل وتأكيد الموعد الأنسب.`;
-    return `https://wa.me/966553033199?text=${encodeURIComponent(text)}`;
+    navigate('/thank-you', {
+      state: {
+        quote: newQuote,
+        whatsappHref,
+        pageType,
+        serviceType,
+      },
+    });
   };
 
   return (
-    <section id="lead-form-section" className="py-20 md:py-24 bg-gradient-to-br from-blue-900 to-blue-950 text-white relative overflow-hidden" dir="rtl">
-      
-      {/* Wave SVG or drop shapes */}
-      <div className="absolute top-0 left-0 right-0 h-4 bg-sky-200/10"></div>
-      <div className="absolute -bottom-10 -left-10 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl -z-5"></div>
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-4xl mx-auto">
-          
-          {/* Upper Title */}
-          <div className="text-center max-w-2xl mx-auto mb-12 flex flex-col items-center gap-2">
-            <span className="section-subheading-tag text-sky-400 bg-sky-400/10 border-sky-400/25">
-              احصل على السعر فوراً
-            </span>
-            <h2 className="section-heading-main !text-white">
-              ابدأ خطوتك نحو مياه أنقى.. اطلب استشارتك وعرض السعر المجاني الآن
-            </h2>
-            <p className="lead-paragraph !text-blue-100">
-              بضع ثوانٍ تفصلك عن مياه صحية ونقية 100%. املأ بياناتك البسيطة لتتحرك أقرب سيارات المهندسين والفنيين إليك بالرياض.
-            </p>
-            <div className="w-16 h-1 bg-gradient-to-r from-sky-400 to-blue-400 rounded-full mt-3"></div>
-          </div>
+    <section
+      id="lead-form-section"
+      className="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-950 py-16 md:py-20"
+      dir="rtl"
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(56,189,248,0.12),transparent_42%)]" />
 
-          {/* Master Card container */}
-          <div className="bg-white text-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl border border-white/10">
-            
-            {submittedRequest ? (
-              /* SUCCESS FEEDBACK CARD */
-              <div className="text-center py-6 flex flex-col items-center gap-6" id="quote-success-panel">
-                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600 mb-2">
-                  <CheckCircle2 className="w-12 h-12 stroke-[2.5]" />
-                </div>
+      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <span className="section-subheading-tag border-sky-300/20 bg-sky-400/10 text-sky-300">
+            طلب سريع وواضح
+          </span>
+          <h2 className="mt-4 text-3xl font-extrabold leading-tight text-white sm:text-4xl">
+            احصل على عرض سعر مناسب لاحتياجك
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm font-bold leading-7 text-blue-100">
+            املأ البيانات الأساسية، وبعد الإرسال سننقلك إلى صفحة تأكيد مستقلة برابط واضح ليسهل قياس التحويل بدقة.
+          </p>
+        </div>
 
-                <h3 className="text-2xl font-extrabold text-[#0a1e36]">
-                  تم تجهيز طلبك — اضغط الزر لإرساله عبر واتساب
-                </h3>
+        <div className="mx-auto max-w-4xl rounded-[28px] border border-white/10 bg-white p-5 shadow-2xl sm:p-8 md:p-10">
+          {errorMessage && (
+            <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-center text-xs font-extrabold text-red-700">
+              {errorMessage}
+            </div>
+          )}
 
-                <div className="bg-slate-50 border border-slate-150 p-4.5 rounded-2xl w-full max-w-md text-right flex flex-col gap-2">
-                  <div className="flex justify-between border-b border-slate-100 pb-2">
-                    <span className="text-xs text-slate-600 font-bold">رقم تذكرة المتابعة:</span>
-                    <span className="text-xs font-mono font-bold text-blue-600">{submittedRequest.id}</span>
+          <form onSubmit={handleSubmit} className="space-y-6" id="quote-request-form">
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <FieldLabel icon={<User className="h-4 w-4" />} label="الاسم بالكامل" required>
+                <input
+                  type="text"
+                  required
+                  value={fullName}
+                  onChange={(event) => setFullName(event.target.value)}
+                  placeholder="مثال: خالد أحمد"
+                  className="form-control"
+                />
+              </FieldLabel>
+
+              <FieldLabel icon={<Phone className="h-4 w-4" />} label="رقم الجوال" required>
+                <input
+                  type="tel"
+                  required
+                  value={phone}
+                  onChange={(event) => setPhone(event.target.value)}
+                  placeholder="مثال: 0553033199"
+                  className="form-control text-right font-mono"
+                />
+              </FieldLabel>
+            </div>
+
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+              <FieldLabel icon={<MapPin className="h-4 w-4" />} label="المدينة / الحي" required>
+                <input
+                  type="text"
+                  required
+                  value={city}
+                  onChange={(event) => setCity(event.target.value)}
+                  placeholder="مثال: الرياض، حي الياسمين"
+                  className="form-control"
+                />
+              </FieldLabel>
+
+              <FieldLabel icon={<Sliders className="h-4 w-4" />} label="الخدمة المطلوبة" required={!fixedServiceType}>
+                {fixedServiceType ? (
+                  <div className="flex min-h-[54px] items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 px-4 text-center text-sm font-extrabold text-blue-950">
+                    {getServiceArabicLabel(fixedServiceType)}
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs text-slate-600 font-bold">مقدم الطلب:</span>
-                    <span className="text-xs font-bold text-slate-800">{submittedRequest.fullName}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-xs text-slate-600 font-bold">نوع الخدمة والمنتج:</span>
-                    <span className="text-xs font-bold text-slate-800">
-                      {submittedRequest.serviceType} {submittedRequest.productName ? `(${submittedRequest.productName})` : ''}
-                    </span>
-                  </div>
-                </div>
-
-                <p className="text-slate-700 text-xs sm:text-sm font-semibold max-w-lg leading-relaxed">
-                  لم نحفظ بياناتك على الموقع ولم نرسلها لأي جهة. اضغط الزر أدناه لإرسال الطلب بنفسك إلى فريق نثال عبر واتساب.
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-3 w-full max-w-md pt-4">
-                  <a
-                    href={getWhatsappPreFilledLink(submittedRequest)}
-                    target="_blank"
-                    rel="noreferrer"
-                    data-page-type={pageType}
-                    data-service-type={serviceType}
-                    data-product-name={submittedRequest.productName}
-                    data-cta-location="quote_form_confirmation"
-                    className="btn-whatsapp flex-grow rounded-xl py-3.5 text-xs font-bold flex items-center justify-center gap-2"
+                ) : (
+                  <select
+                    value={serviceType}
+                    onChange={(event) => setServiceType(event.target.value)}
+                    className="form-control"
                   >
-                    <MessageSquare className="w-4 h-4" />
-                    <span>تأكيد المتابعة عبر واتس اب الآن</span>
-                  </a>
+                    <option value="filter">فلاتر وأجهزة تحلية المياه</option>
+                    <option value="cooler">برادات وموزعات المياه</option>
+                    <option value="mist">أنظمة الرذاذ والتبريد الخارجي</option>
+                    <option value="maintenance">الصيانة وقطع الغيار</option>
+                  </select>
+                )}
+              </FieldLabel>
+            </div>
 
-                  <button
-                    onClick={handleResetForm}
-                    className="btn-secondary px-5 py-3.5 text-xs font-bold flex items-center justify-center gap-2 rounded-xl"
-                  >
-                    <RefreshCcw className="w-3.5 h-3.5" />
-                    <span>تسجيل طلب جديد</span>
-                  </button>
-                </div>
+            {preferredProduct && (
+              <div className="rounded-2xl border border-blue-100 bg-blue-50 px-5 py-4 text-center">
+                <span className="text-xs font-bold text-slate-600">المنتج المحدد</span>
+                <div className="mt-1 text-sm font-extrabold text-blue-800">{preferredProduct}</div>
               </div>
-            ) : (
-              /* ACTIVE ENTRY FORM */
-              <form onSubmit={handleSubmit} className="space-y-6 text-right" dir="rtl" id="quote-request-form">
-                
-                {errorMessage && (
-                  <div className="bg-red-50 text-red-700 p-4 rounded-2xl text-xs font-semibold border border-red-100 flex items-start gap-2 animate-bounce">
-                    <span className="text-sm mt-0.5">⚠️</span>
-                    <span>{errorMessage}</span>
-                  </div>
-                )}
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
-                  {/* Full name field */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-extrabold text-slate-750 flex items-center gap-1.5">
-                      <User className="w-4.5 h-4.5 text-blue-500" />
-                      <span>الاسم بالكامل <span className="text-red-500">*</span></span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        placeholder="مثال: خالد وليد القحطاني"
-                        required
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white p-4.5 pr-4 pl-4 rounded-2xl text-sm font-semibold transition-all outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Telephone field */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-extrabold text-slate-755 flex items-center gap-1.5">
-                      <Phone className="w-4.5 h-4.5 text-blue-500" />
-                      <span>رقم الجوال الفعّال <span className="text-red-500">*</span></span>
-                    </label>
-                    <div className="relative">
-                      <input
-                        type="tel"
-                        placeholder="مثال: 0553033199"
-                        required
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                        className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white p-4.5 pr-4 pl-4 rounded-2xl text-sm font-semibold transition-all font-mono outline-none text-right"
-                      />
-                    </div>
-                    <span className="text-[10px] text-slate-600 font-semibold">سنتصل بك على هذا الرقم أو نرسل عرض السعر واتساب.</span>
-                  </div>
-
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  
-                  {/* City field */}
-                  <div className="flex flex-col gap-2">
-                    <label className="text-xs font-extrabold text-slate-750 flex items-center gap-1.5">
-                      <MapPin className="w-4.5 h-4.5 text-blue-500" />
-                      <span>المدينة / الحي السكني <span className="text-red-500">*</span></span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={city}
-                      onChange={(e) => setCity(e.target.value)}
-                      placeholder="مثال: الرياض، حي الياسمين"
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white p-4.5 rounded-2xl text-sm font-semibold transition-all outline-none"
-                    />
-                  </div>
-
-                  {/* Service Type Selection */}
-                  {!fixedServiceType ? <div className="flex flex-col gap-2">
-                    <label className="text-xs font-extrabold text-slate-750 flex items-center gap-1.5">
-                      <Sliders className="w-4.5 h-4.5 text-blue-500" />
-                      <span>نوع الخدمة المطلوبة <span className="text-red-500">*</span></span>
-                    </label>
-                    <select
-                      value={serviceType}
-                      onChange={(e) => setServiceType(e.target.value)}
-                      className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white p-4.5 rounded-2xl text-sm font-semibold transition-all outline-none"
-                    >
-                      <option value="filter">تركيب / صيانة فلاتر وأجهزة تحلية المياه المنزلية</option>
-                      <option value="cooler">تركيب برادات المياه وثلاجات الموزعات</option>
-                      <option value="mist">تركيب أنظمة رذاذ وتلطيف ضباب خارجي</option>
-                      <option value="maintenance">صيانة دورية / تبديل شمعات فلاتر / صيانة طارئة</option>
-                    </select>
-                  </div> : (
-                    <div className="flex flex-col gap-2">
-                      <label className="text-xs font-extrabold text-slate-750 flex items-center gap-1.5">
-                        <Sliders className="w-4.5 h-4.5 text-blue-500" />
-                        <span>الخدمة المطلوبة</span>
-                      </label>
-                      <div className="w-full bg-blue-50 border border-blue-100 p-4.5 rounded-2xl text-sm font-extrabold text-blue-900">
-                        {getServiceArabicLabel(fixedServiceType)}
-                      </div>
-                    </div>
-                  )}
-
-                </div>
-
-                {/* Selected product if clicked */}
-                {preferredProduct && (
-                  <div className="bg-blue-50 rounded-2xl p-4 border border-blue-100 flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-600">تم اختيار الجهاز التلقائي:</span>
-                    <span className="text-xs font-extrabold text-blue-700 bg-white border border-blue-200 px-3 py-1.5 rounded-xl">
-                      {preferredProduct}
-                    </span>
-                  </div>
-                )}
-
-                {/* Inquiry Details */}
-                <div className="flex flex-col gap-2">
-                  <label className="text-xs font-extrabold text-slate-750 flex items-center gap-1.5">
-                    <FileText className="w-4.5 h-4.5 text-blue-500" />
-                    <span>تفاصيل الطلب أو ملاحظات خاصة (اختياري)</span>
-                  </label>
-                  <textarea
-                    rows={3}
-                    value={details}
-                    onChange={(e) => setDetails(e.target.value)}
-                    placeholder="مثال: يرجى إحضار جهاز فحص الأملاح، الفلتر مطلوب تركيبه أسفل مجلى المطبخ وتوصيله بصنبور إضافي..."
-                    className="w-full bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white p-4.5 rounded-2xl text-sm font-semibold transition-all outline-none resize-none"
-                  ></textarea>
-                </div>
-
-                {/* Submission Button */}
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="btn-primary w-full rounded-2xl py-4.5 text-sm flex items-center justify-center gap-2"
-                  id="submit-proposal-btn"
-                >
-                  {isLoading ? (
-                    <div className="w-5 h-5 rounded-full border-2 border-white border-t-transparent animate-spin"></div>
-                  ) : (
-                    <>
-                      <span>أرسل الطلب واحصل على عرض السعر مجاناً</span>
-                      <ArrowLeft className="w-4.5 h-4.5" />
-                    </>
-                  )}
-                </button>
-
-                <div className="text-center pt-2">
-                  <span className="text-[10px] text-slate-600 font-bold block">
-                    بالضغط على "أرسل الطلب" فإنك توافق على <a href="#privacy" className="underline underline-offset-2 hover:text-white">سياسة الخصوصية</a>. بياناتك تُستخدم فقط للتواصل معك بخصوص طلبك ولا تُباع أو تُشارك مع أي طرف ثالث.
-                  </span>
-                </div>
-
-              </form>
             )}
 
-          </div>
+            <FieldLabel icon={<FileText className="h-4 w-4" />} label="تفاصيل إضافية (اختياري)">
+              <textarea
+                rows={4}
+                value={details}
+                onChange={(event) => setDetails(event.target.value)}
+                placeholder="اكتب أي تفاصيل تساعدنا على تجهيز العرض المناسب لك..."
+                className="form-control resize-none"
+              />
+            </FieldLabel>
 
+            <button
+              type="submit"
+              disabled={isLoading}
+              id="submit-proposal-btn"
+              className="btn-primary mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl py-4 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70"
+            >
+              <span>{isLoading ? 'جاري تجهيز الطلب...' : 'إرسال الطلب ومتابعة التأكيد'}</span>
+              {!isLoading && <ArrowLeft className="h-4 w-4" />}
+            </button>
+
+            <p className="mx-auto max-w-2xl text-center text-[10px] font-bold leading-5 text-slate-500">
+              بالضغط على «إرسال الطلب» فإنك توافق على{' '}
+              <a href="#privacy" className="font-extrabold text-blue-700 underline underline-offset-2">
+                سياسة الخصوصية
+              </a>
+              . نستخدم بياناتك فقط للتواصل معك بخصوص طلبك.
+            </p>
+          </form>
         </div>
       </div>
     </section>
+  );
+}
+
+function FieldLabel({
+  icon,
+  label,
+  required = false,
+  children,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  required?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex flex-col gap-2 text-right">
+      <span className="flex items-center gap-2 text-xs font-extrabold text-slate-700">
+        <span className="text-blue-600">{icon}</span>
+        <span>
+          {label} {required && <span className="text-red-500">*</span>}
+        </span>
+      </span>
+      {children}
+    </label>
   );
 }
