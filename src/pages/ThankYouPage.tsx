@@ -107,10 +107,6 @@ export default function ThankYouPage() {
               العودة إلى الصفحة الرئيسية
             </Link>
           </div>
-
-          <p className="mt-6 text-center text-xs font-bold leading-6 text-slate-500">
-            رابط هذه الصفحة هو <span className="font-mono text-slate-700">/thank-you</span> ويمكن استخدامه كإشارة إضافية لقياس اكتمال النموذج، بينما يبقى حدث <span className="font-mono text-slate-700">generate_lead</span> هو حدث التحويل الأساسي.
-          </p>
         </div>
       </section>
     </div>
