@@ -13,11 +13,11 @@ import maasRoCentralImg11 from '@/assets/products/ro-systems/maas-ro-central11.j
 import washerSedimentFilterImg from '@/assets/products/water-purifiers/washer-sediment-filter.jpg';
 import projectGardenMistImg12 from '@/assets/projects/images/project-commercial-ro12.jpg';
 import coolerOfficeSmartImg from '@/assets/products/coolers/cooler-office-smart.jpg';
-import purenaRo7StandImg from '@/assets/products/filters/purena-ro-7-stand.webp';
-import purenaRo7Img from '@/assets/products/filters/purena-ro-7.webp';
-import purenaJumboDualImg from '@/assets/products/filters/purena-jumbo-dual.webp';
-import purenaSelfCleaningBlackImg from '@/assets/products/coolers/purena-self-cleaning-black.webp';
-import purenaSelfCleaningSilverImg from '@/assets/products/coolers/purena-self-cleaning-silver.webp';
+import purenaRo7StandImg from '@/assets/products/filters/purena-ro-7-stand.jpg';
+import purenaRo7Img from '@/assets/products/filters/purena-ro-7.jpg';
+import purenaJumboDualImg from '@/assets/products/filters/purena-jumbo-dual.jpg';
+import purenaSelfCleaningBlackImg from '@/assets/products/coolers/purena-self-cleaning-black.jpg';
+import purenaSelfCleaningSilverImg from '@/assets/products/coolers/purena-self-cleaning-silver.jpg';
 
 export const ACHIEVEMENTS: Achievement[] = [
   {
