@@ -17,10 +17,10 @@ export default function App() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
 
-        <Route path="/filters" element={<CategoryPage categoryKey="filters" />} />
-        <Route path="/coolers" element={<CategoryPage categoryKey="coolers" />} />
-        <Route path="/mist" element={<CategoryPage categoryKey="mist" />} />
-        <Route path="/maintenance" element={<CategoryPage categoryKey="maintenance" />} />
+        <Route path="/filters" element={<CategoryPage />} />
+        <Route path="/coolers" element={<CategoryPage />} />
+        <Route path="/mist" element={<CategoryPage />} />
+        <Route path="/maintenance" element={<CategoryPage />} />
 
         <Route path="/product/:productId" element={<ProductPage />} />
 
