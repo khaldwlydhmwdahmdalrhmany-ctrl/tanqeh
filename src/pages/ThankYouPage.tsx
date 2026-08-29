@@ -5,14 +5,13 @@
 
 import React, { useEffect } from 'react';
 import { Link, Navigate, useLocation } from 'react-router-dom';
-import { CheckCircle2, Home, MessageSquare, Phone } from 'lucide-react';
+import { CheckCircle2, Home, Phone } from 'lucide-react';
 import { QuoteRequest } from '../types';
 import { pushGtmEvent } from '../lib/gtm';
 import { useSeo } from '../lib/seo';
 
 type ThankYouState = {
   quote?: QuoteRequest;
-  whatsappHref?: string;
   pageType?: string;
   serviceType?: string;
   whatsappHandoff?: boolean;
@@ -26,7 +25,7 @@ export default function ThankYouPage() {
 
   useSeo({
     title: 'شكراً لتواصلك — نثال',
-    description: 'تم الانتقال إلى واتساب لمتابعة طلبك لدى مؤسسة نثال.',
+    description: 'تم تحويل طلبك إلى واتساب لمتابعته مع فريق مؤسسة نثال.',
     path: '/thank-you',
   });
 
@@ -48,12 +47,6 @@ export default function ThankYouPage() {
     return <Navigate to="/quote" replace />;
   }
 
-  const whatsappHref =
-    state.whatsappHref ||
-    `https://wa.me/966553033199?text=${encodeURIComponent(
-      'السلام عليكم، أرغب في متابعة طلبي لدى مؤسسة نثال.',
-    )}`;
-
   return (
     <div dir="rtl" className="bg-slate-50">
       <section className="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-700 py-20 text-white md:py-28">
@@ -63,13 +56,13 @@ export default function ThankYouPage() {
             <CheckCircle2 className="h-11 w-11" />
           </div>
           <span className="mt-6 inline-flex rounded-full border border-sky-300/20 bg-sky-400/10 px-4 py-2 text-xs font-extrabold text-sky-200">
-            تم الانتقال إلى واتساب
+            تم تحويلك إلى واتساب
           </span>
           <h1 className="mx-auto mt-5 max-w-2xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
-            شكراً لك، طلبك جاهز للمتابعة مع فريق نثال
+            شكراً لك، تم تجهيز طلبك للمتابعة
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-sm font-bold leading-7 text-blue-100 sm:text-base">
-            تم فتح محادثة واتساب الخاصة بطلبك. عند عودتك إلى الموقع ستبقى هذه الصفحة كصفحة شكر وتأكيد للمتابعة، بدون طلب تأكيد إضافي.
+            تم تحويلك إلى محادثة واتساب برسالة الطلب الجاهزة. عند عودتك إلى الموقع تظهر لك هذه الصفحة فقط كتأكيد للانتقال، بدون أي خطوة إرسال إضافية.
           </p>
         </div>
       </section>
@@ -85,23 +78,14 @@ export default function ThankYouPage() {
             </div>
 
             <p className="mx-auto max-w-xl text-sm font-bold leading-7 text-slate-600">
-              لا تحتاج إلى تأكيد الطلب مرة أخرى من هذه الصفحة. إذا لم يفتح واتساب أو احتجت للرجوع إلى نفس الرسالة، يمكنك استخدام الزر أدناه فقط عند الحاجة.
+              انتهت خطوات الإرسال من الموقع. سيقوم فريق نثال بمتابعة رسالتك عبر واتساب، ويمكنك العودة إلى الموقع أو الاتصال مباشرة عند الحاجة.
             </p>
 
             <div className="mx-auto mt-6 flex max-w-xl flex-col gap-3 sm:flex-row">
-              <a
-                href={whatsappHref}
-                target="_blank"
-                rel="noreferrer"
-                data-page-type="thank_you"
-                data-service-type={state.serviceType}
-                data-product-name={quote.productName}
-                data-cta-location="thank_you_reopen_whatsapp"
-                className="btn-whatsapp flex flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold"
-              >
-                <MessageSquare className="h-5 w-5" />
-                فتح واتساب مرة أخرى
-              </a>
+              <Link to="/" className="btn-primary flex flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold">
+                <Home className="h-5 w-5" />
+                العودة إلى الصفحة الرئيسية
+              </Link>
 
               <a
                 href="tel:+966553033199"
@@ -111,11 +95,6 @@ export default function ThankYouPage() {
                 الاتصال مباشرة
               </a>
             </div>
-
-            <Link to="/" className="mx-auto mt-7 inline-flex items-center justify-center gap-2 text-sm font-extrabold text-blue-700 hover:text-blue-900">
-              <Home className="h-4 w-4" />
-              العودة إلى الصفحة الرئيسية
-            </Link>
           </div>
         </div>
       </section>
