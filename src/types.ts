@@ -17,7 +17,7 @@ export interface Product {
     value: string;
   }[];
   isPopular?: boolean;
-  warrantyYears: number;
+  warrantyYears?: number;
   videoUrl?: string;
 }
 

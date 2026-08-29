@@ -13,6 +13,12 @@ import maasRoCentralImg11 from '@/assets/products/ro-systems/maas-ro-central11.j
 import washerSedimentFilterImg from '@/assets/products/water-purifiers/washer-sediment-filter.jpg';
 import projectGardenMistImg12 from '@/assets/projects/images/project-commercial-ro12.jpg';
 import coolerOfficeSmartImg from '@/assets/products/coolers/cooler-office-smart.jpg';
+import purenaRo7StandImg from '@/assets/products/filters/purena-ro-7-stand.jpg';
+import purenaRo7Img from '@/assets/products/filters/purena-ro-7.jpg';
+import purenaJumboDualImg from '@/assets/products/filters/purena-jumbo-dual.jpg';
+import purenaSelfCleaningBlackImg from '@/assets/products/coolers/purena-self-cleaning-black.jpg';
+import purenaSelfCleaningSilverImg from '@/assets/products/coolers/purena-self-cleaning-silver.jpg';
+
 export const ACHIEVEMENTS: Achievement[] = [
   {
     id: 'exp',
@@ -60,7 +66,6 @@ export const PRODUCTS: Product[] = [
       { label: 'ملحقات الصندوق', value: 'خزان ضغط 40 لتر، حنفية تحلية، طقم خراطيم وتوصيلات، مفتاح الفلاتر' }
     ]
   },
-
   {
     id: 'sole-aqua-smart',
     name: 'برادة سول أكوا الذكية (فلتر تحلية داخلي)',
@@ -86,7 +91,6 @@ export const PRODUCTS: Product[] = [
       { label: 'ميزات استثنائية', value: 'هيكل مضاد للبكتيريا وموفر ذكي للطاقة بمستشعر ذكي' }
     ]
   },
-
   {
     id: 'maas-ro-central',
     name: 'محطة التحلية المركزية MAAS للفلترة الشاملة',
@@ -136,7 +140,6 @@ export const PRODUCTS: Product[] = [
       { label: 'مستوى خفض الحرارة', value: 'تقليل محسوس ومريح للحرارة المحيطة بمعدل 10 إلى 15 درجة مئوية' }
     ]
   },
-  
   {
     id: 'gulden-pro-6',
     name: 'جهاز تحلية غولدن برو 6 مراحل',
@@ -207,7 +210,8 @@ export const PRODUCTS: Product[] = [
       { label: 'الإنتاجية', value: 'تحدد حسب احتياج المنشأة' },
       { label: 'الخدمة', value: 'توريد وتركيب وصيانة دورية' }
     ]
-  },  {
+  },
+  {
     id: 'washer-sediment-filter',
     name: 'فلتر حماية الغسالات المزدوج من الشوائب والصدأ',
     brand: 'Nethal Care',
@@ -255,8 +259,121 @@ export const PRODUCTS: Product[] = [
       { label: 'نظام التغذية', value: 'توصيل مباشر بشبكة المياه' },
       { label: 'الضمان', value: 'سنتان حسب شروط الضمان' }
     ]
+  },
+  {
+    id: 'purena-ro-7-stand',
+    name: 'فلتر ماء بيورينا 7 مراحل ستاند فيتنامي',
+    brand: 'PureRena',
+    type: 'filter',
+    image: purenaRo7StandImg,
+    tagline: 'جهاز تحلية 7 مراحل بتصميم ستاند مرتب ومكونات ظاهرة لسهولة المتابعة والصيانة اليومية.',
+    stagesCount: 7,
+    isPopular: true,
+    features: [
+      'نظام تحلية متعدد المراحل بتقنية التناضح العكسي RO لمياه الشرب',
+      'تصميم ستاند يجمع مراحل الفلترة بصورة مرتبة ويسهل الوصول إلى الشمعات',
+      'مزود بخزان تخزين مستقل وحنفية مخصصة لمياه الشرب',
+      'عداد ضغط أمامي لمتابعة حالة تشغيل النظام',
+      'علامة PureRena ومكونات تحمل إشارة التصنيع الفيتنامي الظاهرة على الجهاز'
+    ],
+    specs: [
+      { label: 'عدد المراحل', value: '7 مراحل فلترة وتحلية' },
+      { label: 'تقنية المعالجة', value: 'تناضح عكسي RO مع مراحل ترشيح ومعالجة لاحقة' },
+      { label: 'التجهيزات الظاهرة', value: 'ستاند، خزان تخزين، حنفية، عداد ضغط ومراحل فلترة متعددة' },
+      { label: 'بلد التصنيع الظاهر على الجهاز', value: 'فيتنام' }
+    ]
+  },
+  {
+    id: 'purena-self-cleaning-black',
+    name: 'برادة بيورينا صيانة ذاتية لون أسود',
+    brand: 'PureRena',
+    type: 'cooler',
+    image: purenaSelfCleaningBlackImg,
+    tagline: 'برادة PureRena بتصميم أسود أنيق وخيارات ماء حار وبارد وعادي للاستخدام اليومي في المنزل أو المكتب.',
+    isPopular: true,
+    features: [
+      'ثلاثة خيارات للمياه: حار، بارد وعادي من واجهة واحدة',
+      'تصميم أمامي بسيط بمؤشرات تشغيل واضحة وسهل الاستخدام',
+      'لون أسود حديث مناسب للمطابخ والمكاتب ومساحات الضيافة',
+      'تجهيزات التوصيل مرفقة كما تظهر في صورة المنتج',
+      'خيار مناسب لمن يريد الاستغناء عن البرادات التقليدية ذات القوارير'
+    ],
+    specs: [
+      { label: 'اللون', value: 'أسود' },
+      { label: 'خيارات المياه', value: 'حار، بارد، وعادي' },
+      { label: 'نوع الاستخدام', value: 'منزلي ومكتبي' },
+      { label: 'العلامة التجارية', value: 'PureRena' }
+    ]
+  },
+  {
+    id: 'purena-self-cleaning-silver',
+    name: 'برادة بيورينا صيانة ذاتية لون رصاصي',
+    brand: 'PureRena',
+    type: 'cooler',
+    image: purenaSelfCleaningSilverImg,
+    tagline: 'نسخة رصاصية أنيقة من برادة PureRena بخيارات حار وبارد وعادي وتصميم مناسب للمساحات الحديثة.',
+    isPopular: false,
+    features: [
+      'ثلاثة مخارج واضحة للماء الحار والبارد والعادي',
+      'واجهة رصاصية مع جزء علوي أسود يمنح الجهاز مظهراً عصرياً',
+      'مؤشرات تشغيل أمامية لمتابعة أوضاع الماء بسهولة',
+      'تجهيزات التوصيل ظاهرة ضمن ملحقات المنتج',
+      'مناسبة للمنازل والمكاتب والعيادات ومساحات الاستقبال'
+    ],
+    specs: [
+      { label: 'اللون', value: 'رصاصي / فضي مع واجهة علوية سوداء' },
+      { label: 'خيارات المياه', value: 'حار، بارد، وعادي' },
+      { label: 'نوع الاستخدام', value: 'منزلي ومكتبي وتجاري خفيف' },
+      { label: 'العلامة التجارية', value: 'PureRena' }
+    ]
+  },
+  {
+    id: 'purena-jumbo-dual',
+    name: 'جامبو ثنائي بيورينا للمحلات والمطاعم والمنازل',
+    brand: 'PureRena',
+    type: 'filter',
+    image: purenaJumboDualImg,
+    tagline: 'فلتر جامبو ثنائي للترشيح الأولي عالي السعة، مناسب للمنازل والمطاعم والمحلات التي تحتاج تدفقاً مستقراً وحماية أفضل للشبكة.',
+    isPopular: false,
+    features: [
+      'مرحلتان كبيرتان للترشيح الأولي قبل وصول المياه إلى نقاط الاستخدام أو أنظمة التحلية',
+      'شمعة PP للحد من الرواسب والعوالق الظاهرة في المياه',
+      'شمعة CTO كربونية للمساعدة في تحسين خصائص المياه وتقليل الروائح والكلور',
+      'عدادا ضغط علويان لمراقبة الضغط قبل وبعد مراحل الترشيح',
+      'مناسب للاستخدامات المنزلية والتجارية مثل المطاعم والمحلات'
+    ],
+    specs: [
+      { label: 'نوع النظام', value: 'جامبو ثنائي بمرحلتين' },
+      { label: 'المراحل الظاهرة', value: 'PP.F + CTO' },
+      { label: 'الاستخدامات', value: 'منازل، مطاعم، محلات ومنشآت صغيرة' },
+      { label: 'أدوات المتابعة', value: 'عدادا ضغط لمراقبة فرق الضغط وحالة الفلاتر' }
+    ]
+  },
+  {
+    id: 'purena-ro-7',
+    name: 'فلتر ماء 7 مراحل بيورينا فيتنامي',
+    brand: 'PureRena',
+    type: 'filter',
+    image: purenaRo7Img,
+    tagline: 'جهاز تحلية PureRena منزلي 7 مراحل بتقنية RO مع خزان وحنفية، مصمم لتوفير مياه شرب معالجة بشكل عملي ومدمج.',
+    stagesCount: 7,
+    isPopular: true,
+    features: [
+      'سبع مراحل لمعالجة مياه الشرب تشمل الترشيح الأولي وتقنية التناضح العكسي RO',
+      'هيكل مدمج مناسب للتركيب المنزلي أسفل أو بجانب حوض المطبخ',
+      'خزان تخزين مستقل يساعد على توفير المياه عند الطلب',
+      'حنفية مخصصة لمياه الشرب ضمن تجهيزات النظام',
+      'مكونات PureRena تحمل إشارات التصنيع الفيتنامي الظاهرة في الصورة'
+    ],
+    specs: [
+      { label: 'عدد المراحل', value: '7 مراحل' },
+      { label: 'تقنية التحلية', value: 'التناضح العكسي RO' },
+      { label: 'التجهيزات الظاهرة', value: 'خزان تخزين، حنفية، مضخة ومراحل فلترة متعددة' },
+      { label: 'بلد التصنيع الظاهر على الجهاز', value: 'فيتنام' }
+    ]
   }
 ];
+
 export const TESTIMONIALS: Testimonial[] = [
   {
     id: 'test-1',

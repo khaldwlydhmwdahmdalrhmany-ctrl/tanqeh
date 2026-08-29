@@ -3,8 +3,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Hero from "../components/Hero";
 import Achievements from "../components/Achievements";
 import Services from "../components/Services";
@@ -31,15 +31,27 @@ import { useSeo, getCategoryByKey } from "../lib/seo";
 import { ORGANIZATION_SCHEMA } from "../lib/schema";
 
 export default function HomePage() {
-  const [selectedProductName, setSelectedProductName] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<
     "filter" | "cooler" | "mist" | "maintenance" | "all"
   >("all");
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleProductSelectFromCatalog = (productName: string) => {
-    setSelectedProductName(productName);
-  };
+  useEffect(() => {
+    const scrollTo = (location.state as { scrollTo?: string } | null)?.scrollTo;
+    if (!scrollTo) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const element = document.getElementById(scrollTo);
+      if (element) {
+        const top = element.getBoundingClientRect().top + window.scrollY - 90;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+      navigate(location.pathname, { replace: true, state: null });
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [location.pathname, location.state, navigate]);
 
   // Services cards route to a dedicated category landing page — this gives
   // each Google Ads ad group its own URL and its own title/description.
@@ -76,7 +88,6 @@ export default function HomePage() {
 
       {/* Interactive Products Gallery / Details Catalog */}
       <Catalog
-        onSelectProductForQuote={handleProductSelectFromCatalog}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
       />
@@ -218,7 +229,7 @@ export default function HomePage() {
       <FAQs />
 
       {/* Core Leads Capture Form */}
-      <QuoteForm selectedProductName={selectedProductName} />
+      <QuoteForm />
 
     </>
   );
