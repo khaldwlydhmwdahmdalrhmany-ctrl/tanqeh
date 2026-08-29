@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { CheckCircle2, Home, MessageSquare, Phone } from 'lucide-react';
 import { QuoteRequest } from '../types';
 import { pushGtmEvent } from '../lib/gtm';
@@ -15,21 +15,23 @@ type ThankYouState = {
   whatsappHref?: string;
   pageType?: string;
   serviceType?: string;
+  whatsappHandoff?: boolean;
 };
 
 export default function ThankYouPage() {
   const location = useLocation();
   const state = (location.state as ThankYouState | null) || {};
   const quote = state.quote;
+  const isValidHandoff = Boolean(quote && state.whatsappHandoff);
 
   useSeo({
-    title: 'تم استلام طلبك — نثال',
-    description: 'تم تجهيز طلبك لدى مؤسسة نثال. يمكنك الآن متابعة الطلب عبر واتساب أو العودة إلى الموقع.',
+    title: 'شكراً لتواصلك — نثال',
+    description: 'تم الانتقال إلى واتساب لمتابعة طلبك لدى مؤسسة نثال.',
     path: '/thank-you',
   });
 
   useEffect(() => {
-    if (!quote) return;
+    if (!isValidHandoff || !quote) return;
 
     pushGtmEvent('thank_you_view', {
       lead_id: quote.id,
@@ -38,13 +40,19 @@ export default function ThankYouPage() {
       page_type: state.pageType || 'general',
       service_type: state.serviceType || undefined,
       page_path: '/thank-you',
+      whatsapp_handoff: true,
     });
-  }, [quote, state.pageType, state.serviceType]);
+  }, [isValidHandoff, quote, state.pageType, state.serviceType]);
 
-  const fallbackWhatsapp = `https://wa.me/966553033199?text=${encodeURIComponent(
-    'السلام عليكم، قمت بتعبئة طلب على موقع مؤسسة نثال وأرغب في متابعة الطلب.',
-  )}`;
-  const whatsappHref = state.whatsappHref || fallbackWhatsapp;
+  if (!isValidHandoff || !quote) {
+    return <Navigate to="/quote" replace />;
+  }
+
+  const whatsappHref =
+    state.whatsappHref ||
+    `https://wa.me/966553033199?text=${encodeURIComponent(
+      'السلام عليكم، أرغب في متابعة طلبي لدى مؤسسة نثال.',
+    )}`;
 
   return (
     <div dir="rtl" className="bg-slate-50">
@@ -55,13 +63,13 @@ export default function ThankYouPage() {
             <CheckCircle2 className="h-11 w-11" />
           </div>
           <span className="mt-6 inline-flex rounded-full border border-sky-300/20 bg-sky-400/10 px-4 py-2 text-xs font-extrabold text-sky-200">
-            تم إرسال النموذج بنجاح
+            تم الانتقال إلى واتساب
           </span>
           <h1 className="mx-auto mt-5 max-w-2xl text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
-            شكراً لك، تم تجهيز طلبك بنجاح
+            شكراً لك، طلبك جاهز للمتابعة مع فريق نثال
           </h1>
           <p className="mx-auto mt-5 max-w-xl text-sm font-bold leading-7 text-blue-100 sm:text-base">
-            الخطوة التالية هي إرسال تفاصيل الطلب عبر واتساب حتى يتمكن فريق نثال من تأكيد السعر والموعد معك مباشرة.
+            تم فتح محادثة واتساب الخاصة بطلبك. عند عودتك إلى الموقع ستبقى هذه الصفحة كصفحة شكر وتأكيد للمتابعة، بدون طلب تأكيد إضافي.
           </p>
         </div>
       </section>
@@ -69,28 +77,30 @@ export default function ThankYouPage() {
       <section className="py-12 md:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="rounded-[28px] border border-slate-200 bg-white p-6 text-center shadow-sm sm:p-8 md:p-10">
-            {quote && (
-              <div className="mx-auto mb-8 grid max-w-2xl gap-4 sm:grid-cols-2">
-                <SummaryCard label="رقم الطلب" value={quote.id} />
-                <SummaryCard label="الخدمة" value={quote.serviceType} />
-                <SummaryCard label="الاسم" value={quote.fullName} />
-                <SummaryCard label="المدينة" value={quote.city} />
-              </div>
-            )}
+            <div className="mx-auto mb-8 grid max-w-2xl gap-4 sm:grid-cols-2">
+              <SummaryCard label="رقم الطلب" value={quote.id} />
+              <SummaryCard label="الخدمة" value={quote.serviceType} />
+              <SummaryCard label="الاسم" value={quote.fullName} />
+              <SummaryCard label="المدينة" value={quote.city} />
+            </div>
 
-            <div className="mx-auto flex max-w-xl flex-col gap-3 sm:flex-row">
+            <p className="mx-auto max-w-xl text-sm font-bold leading-7 text-slate-600">
+              لا تحتاج إلى تأكيد الطلب مرة أخرى من هذه الصفحة. إذا لم يفتح واتساب أو احتجت للرجوع إلى نفس الرسالة، يمكنك استخدام الزر أدناه فقط عند الحاجة.
+            </p>
+
+            <div className="mx-auto mt-6 flex max-w-xl flex-col gap-3 sm:flex-row">
               <a
                 href={whatsappHref}
                 target="_blank"
                 rel="noreferrer"
                 data-page-type="thank_you"
                 data-service-type={state.serviceType}
-                data-product-name={quote?.productName}
-                data-cta-location="thank_you_primary"
+                data-product-name={quote.productName}
+                data-cta-location="thank_you_reopen_whatsapp"
                 className="btn-whatsapp flex flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-sm font-extrabold"
               >
                 <MessageSquare className="h-5 w-5" />
-                متابعة الطلب عبر واتساب
+                فتح واتساب مرة أخرى
               </a>
 
               <a
