@@ -32,7 +32,12 @@ export function useLegalHash() {
     }
   };
 
-  return { openTab, open: (t: Tab) => setOpenTab(t), close };
+  const open = (tab: Tab) => {
+    setOpenTab(tab);
+    history.replaceState(null, '', `${window.location.pathname}${window.location.search}#${tab}`);
+  };
+
+  return { openTab, open, close };
 }
 
 interface LegalProps {
@@ -42,8 +47,23 @@ interface LegalProps {
 }
 
 export default function Legal({ tab, onChangeTab, onClose }: LegalProps) {
+  useEffect(() => {
+    const closeOnEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') onClose();
+    };
+
+    document.addEventListener('keydown', closeOnEscape);
+    return () => document.removeEventListener('keydown', closeOnEscape);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-[130] overflow-y-auto" dir="rtl">
+    <div
+      className="fixed inset-0 z-[130] overflow-y-auto"
+      dir="rtl"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="legal-dialog-title"
+    >
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm" onClick={onClose}></div>
 
       <div className="flex items-start justify-center min-h-screen p-4 py-10">
@@ -51,6 +71,7 @@ export default function Legal({ tab, onChangeTab, onClose }: LegalProps) {
           <div className="bg-gradient-to-r from-blue-900 to-blue-950 p-5 text-white flex items-center justify-between rounded-t-3xl">
             <div className="flex items-center gap-2">
               <button
+                id={tab === 'privacy' ? 'legal-dialog-title' : undefined}
                 onClick={() => onChangeTab('privacy')}
                 className={`text-xs font-extrabold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${tab === 'privacy' ? 'bg-white text-blue-950' : 'bg-white/10 text-white/80 hover:bg-white/20'}`}
               >
@@ -58,6 +79,7 @@ export default function Legal({ tab, onChangeTab, onClose }: LegalProps) {
                 سياسة الخصوصية
               </button>
               <button
+                id={tab === 'terms' ? 'legal-dialog-title' : undefined}
                 onClick={() => onChangeTab('terms')}
                 className={`text-xs font-extrabold px-4 py-2 rounded-xl flex items-center gap-1.5 transition-colors ${tab === 'terms' ? 'bg-white text-blue-950' : 'bg-white/10 text-white/80 hover:bg-white/20'}`}
               >
@@ -66,7 +88,7 @@ export default function Legal({ tab, onChangeTab, onClose }: LegalProps) {
               </button>
             </div>
 
-            <button onClick={onClose} className="p-2 rounded-xl hover:bg-white/10 text-white/80 hover:text-white">
+            <button onClick={onClose} aria-label="إغلاق النافذة" className="p-2 rounded-xl hover:bg-white/10 text-white/80 hover:text-white">
               <X className="w-5 h-5" />
             </button>
           </div>
