@@ -130,6 +130,12 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
     };
 
     const whatsappHref = getWhatsappPreFilledLink(newQuote);
+    const handoffState = {
+      quote: newQuote,
+      pageType,
+      serviceType,
+      whatsappHandoff: true,
+    };
 
     pushGtmEvent('generate_lead', {
       lead_type: newQuote.serviceType,
@@ -149,18 +155,20 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
       cta_location: 'quote_form_submit',
     });
 
-    navigate('/thank-you', {
-      state: {
-        quote: newQuote,
-        pageType,
-        serviceType,
-        whatsappHandoff: true,
-      },
-    });
+    try {
+      window.sessionStorage.setItem('nethal_whatsapp_handoff', JSON.stringify(handoffState));
+    } catch {
+      // Continue even when sessionStorage is unavailable.
+    }
 
-    window.setTimeout(() => {
-      window.location.href = whatsappHref;
-    }, 120);
+    // Open WhatsApp in a separate browser tab/app from the user's submit gesture.
+    // The current website tab remains ours and is moved to the thank-you URL.
+    window.open(whatsappHref, '_blank', 'noopener,noreferrer');
+
+    navigate('/thank-you', {
+      replace: true,
+      state: handoffState,
+    });
   };
 
   return (
@@ -180,7 +188,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
             احصل على عرض سعر مناسب لاحتياجك
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm font-bold leading-7 text-blue-100">
-            املأ البيانات واضغط إرسال الطلب. سننقلك مباشرة إلى واتساب برسالة جاهزة، وعند رجوعك للموقع ستجد صفحة الشكر.
+            املأ البيانات واضغط إرسال الطلب. يفتح واتساب في تبويب أو تطبيق منفصل، بينما تبقى صفحة الموقع على شاشة الشكر لتجدها عند الرجوع.
           </p>
         </div>
 
@@ -235,7 +243,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
             </FieldLabel>
 
             <button type="submit" disabled={isLoading} id="submit-proposal-btn" className="btn-primary mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl py-4 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70">
-              <span>{isLoading ? 'جاري تحويلك إلى واتساب...' : 'إرسال الطلب عبر واتساب'}</span>
+              <span>{isLoading ? 'جاري فتح واتساب...' : 'إرسال الطلب عبر واتساب'}</span>
               {!isLoading && <ArrowLeft className="h-4 w-4" />}
             </button>
 
