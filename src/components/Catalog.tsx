@@ -7,17 +7,16 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PRODUCTS } from '../data';
 import { Product } from '../types';
-import { ShieldCheck, Info, CheckCircle2, Bookmark, Sliders, ChevronDown } from 'lucide-react';
+import { Info, CheckCircle2, Sliders } from 'lucide-react';
 import tamaraLogo from '@/assets/payment-methods/tamara.svg';
 import tabbyLogo from '@/assets/payment-methods/tabby.svg';
 
 interface CatalogProps {
-  onSelectProductForQuote: (productName: string) => void;
   selectedCategory: 'filter' | 'cooler' | 'mist' | 'maintenance' | 'all';
   setSelectedCategory: (cat: 'filter' | 'cooler' | 'mist' | 'maintenance' | 'all') => void;
 }
 
-export default function Catalog({ onSelectProductForQuote, selectedCategory, setSelectedCategory }: CatalogProps) {
+export default function Catalog({ selectedCategory, setSelectedCategory }: CatalogProps) {
   const [selectedProductDetails, setSelectedProductDetails] = useState<Product | null>(null);
   const whatsappNumber = '966553033199';
 
@@ -39,17 +38,11 @@ export default function Catalog({ onSelectProductForQuote, selectedCategory, set
     const text = `السلام عليكم، أرغب بطلب هذا المنتج من مؤسسة نثال:
 
 - المنتج: ${product.name}
-- العلامة: ${product.brand}
-- نوع الطلب: تركيب أو عرض سعر
+${product.brand ? `- العلامة التجارية: ${product.brand}\n` : ''}- أرغب في الطلب أو معرفة السعر وخيارات التركيب
 
 يرجى التواصل معي لتأكيد التفاصيل.`;
 
     return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`;
-  };
-
-  // No automatic window.open — the user clicks the WhatsApp link themselves.
-  const handleOrderProduct = (product: Product) => {
-    onSelectProductForQuote(product.name);
   };
 
   useEffect(() => {
@@ -152,12 +145,19 @@ export default function Catalog({ onSelectProductForQuote, selectedCategory, set
 
                 {/* Actions Row */}
                 <div className="flex items-center gap-2 mt-auto pt-4 border-t border-slate-50">
-                  <button
-                    onClick={() => handleOrderProduct(product)}
+                  <a
+                    href={getProductWhatsappLink(product)}
+                    target="_blank"
+                    rel="noreferrer"
+                    data-product-id={product.id}
+                    data-product-name={product.name}
+                    data-service-type={product.type}
+                    data-page-type="home"
+                    data-cta-location="catalog_product_card"
                     className="btn-primary flex-grow rounded-xl py-3 text-xs font-bold text-center"
                   >
                     اطلب الآن
-                  </button>
+                  </a>
 
                   <button
                     onClick={() => setSelectedProductDetails(product)}
@@ -246,15 +246,19 @@ export default function Catalog({ onSelectProductForQuote, selectedCategory, set
 
                   {/* Manual Actions inside modal */}
                   <div className="flex flex-col sm:flex-row items-center gap-3 border-t border-slate-100 pt-6">
-                    <button
-                      onClick={() => {
-                        handleOrderProduct(selectedProductDetails);
-                        setSelectedProductDetails(null);
-                      }}
+                    <a
+                      href={getProductWhatsappLink(selectedProductDetails)}
+                      target="_blank"
+                      rel="noreferrer"
+                      data-product-id={selectedProductDetails.id}
+                      data-product-name={selectedProductDetails.name}
+                      data-service-type={selectedProductDetails.type}
+                      data-page-type="home"
+                      data-cta-location="catalog_product_modal"
                       className="btn-primary w-full sm:flex-grow rounded-xl py-3 text-sm font-bold text-center"
                     >
                       اطلب هذا الجهاز الآن
-                    </button>
+                    </a>
                     
                     <button
                       onClick={() => setSelectedProductDetails(null)}
