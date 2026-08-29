@@ -18,6 +18,11 @@ function ScrollToTop() {
     if (hash) return;
     window.scrollTo({ top: 0, behavior: 'auto' });
   }, [pathname, hash]);
+  return null;
+}
+
+export default function Layout() {
+  const legal = useLegalHash();
 
   useEffect(() => {
     const trackContactClick = (event: MouseEvent) => {
@@ -44,12 +49,6 @@ function ScrollToTop() {
     document.addEventListener('click', trackContactClick);
     return () => document.removeEventListener('click', trackContactClick);
   }, []);
-
-  return null;
-}
-
-export default function Layout() {
-  const legal = useLegalHash();
 
   return (
     <div
