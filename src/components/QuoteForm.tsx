@@ -15,6 +15,9 @@ interface QuoteFormProps {
   pageType?: string;
 }
 
+const CONTROL_CLASS =
+  'w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm font-semibold text-slate-800 outline-none transition-all placeholder:text-slate-400 focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-50';
+
 export default function QuoteForm({
   selectedProductName = '',
   serviceType: fixedServiceType,
@@ -135,12 +138,10 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
       cta_location: 'quote_form',
     });
 
-    const whatsappHref = getWhatsappPreFilledLink(newQuote);
-
     navigate('/thank-you', {
       state: {
         quote: newQuote,
-        whatsappHref,
+        whatsappHref: getWhatsappPreFilledLink(newQuote),
         pageType,
         serviceType,
       },
@@ -164,7 +165,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
             احصل على عرض سعر مناسب لاحتياجك
           </h2>
           <p className="mx-auto mt-4 max-w-xl text-sm font-bold leading-7 text-blue-100">
-            املأ البيانات الأساسية، وبعد الإرسال سننقلك إلى صفحة تأكيد مستقلة برابط واضح ليسهل قياس التحويل بدقة.
+            املأ البيانات الأساسية وسنجهز طلبك في خطوة واحدة، ثم تنتقل إلى صفحة تأكيد مستقلة وواضحة.
           </p>
         </div>
 
@@ -178,38 +179,17 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
           <form onSubmit={handleSubmit} className="space-y-6" id="quote-request-form">
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <FieldLabel icon={<User className="h-4 w-4" />} label="الاسم بالكامل" required>
-                <input
-                  type="text"
-                  required
-                  value={fullName}
-                  onChange={(event) => setFullName(event.target.value)}
-                  placeholder="مثال: خالد أحمد"
-                  className="form-control"
-                />
+                <input type="text" required value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="مثال: خالد أحمد" className={CONTROL_CLASS} />
               </FieldLabel>
 
               <FieldLabel icon={<Phone className="h-4 w-4" />} label="رقم الجوال" required>
-                <input
-                  type="tel"
-                  required
-                  value={phone}
-                  onChange={(event) => setPhone(event.target.value)}
-                  placeholder="مثال: 0553033199"
-                  className="form-control text-right font-mono"
-                />
+                <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="مثال: 0553033199" className={`${CONTROL_CLASS} text-right font-mono`} />
               </FieldLabel>
             </div>
 
             <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
               <FieldLabel icon={<MapPin className="h-4 w-4" />} label="المدينة / الحي" required>
-                <input
-                  type="text"
-                  required
-                  value={city}
-                  onChange={(event) => setCity(event.target.value)}
-                  placeholder="مثال: الرياض، حي الياسمين"
-                  className="form-control"
-                />
+                <input type="text" required value={city} onChange={(e) => setCity(e.target.value)} placeholder="مثال: الرياض، حي الياسمين" className={CONTROL_CLASS} />
               </FieldLabel>
 
               <FieldLabel icon={<Sliders className="h-4 w-4" />} label="الخدمة المطلوبة" required={!fixedServiceType}>
@@ -218,11 +198,7 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
                     {getServiceArabicLabel(fixedServiceType)}
                   </div>
                 ) : (
-                  <select
-                    value={serviceType}
-                    onChange={(event) => setServiceType(event.target.value)}
-                    className="form-control"
-                  >
+                  <select value={serviceType} onChange={(e) => setServiceType(e.target.value)} className={CONTROL_CLASS}>
                     <option value="filter">فلاتر وأجهزة تحلية المياه</option>
                     <option value="cooler">برادات وموزعات المياه</option>
                     <option value="mist">أنظمة الرذاذ والتبريد الخارجي</option>
@@ -240,31 +216,17 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
             )}
 
             <FieldLabel icon={<FileText className="h-4 w-4" />} label="تفاصيل إضافية (اختياري)">
-              <textarea
-                rows={4}
-                value={details}
-                onChange={(event) => setDetails(event.target.value)}
-                placeholder="اكتب أي تفاصيل تساعدنا على تجهيز العرض المناسب لك..."
-                className="form-control resize-none"
-              />
+              <textarea rows={4} value={details} onChange={(e) => setDetails(e.target.value)} placeholder="اكتب أي تفاصيل تساعدنا على تجهيز العرض المناسب لك..." className={`${CONTROL_CLASS} resize-none`} />
             </FieldLabel>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-              id="submit-proposal-btn"
-              className="btn-primary mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl py-4 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70"
-            >
+            <button type="submit" disabled={isLoading} id="submit-proposal-btn" className="btn-primary mx-auto flex w-full max-w-xl items-center justify-center gap-2 rounded-2xl py-4 text-sm font-extrabold disabled:cursor-not-allowed disabled:opacity-70">
               <span>{isLoading ? 'جاري تجهيز الطلب...' : 'إرسال الطلب ومتابعة التأكيد'}</span>
               {!isLoading && <ArrowLeft className="h-4 w-4" />}
             </button>
 
             <p className="mx-auto max-w-2xl text-center text-[10px] font-bold leading-5 text-slate-500">
               بالضغط على «إرسال الطلب» فإنك توافق على{' '}
-              <a href="#privacy" className="font-extrabold text-blue-700 underline underline-offset-2">
-                سياسة الخصوصية
-              </a>
-              . نستخدم بياناتك فقط للتواصل معك بخصوص طلبك.
+              <a href="#privacy" className="font-extrabold text-blue-700 underline underline-offset-2">سياسة الخصوصية</a>. نستخدم بياناتك فقط للتواصل معك بخصوص طلبك.
             </p>
           </form>
         </div>
@@ -273,24 +235,12 @@ ${quote.details ? `- *التفاصيل:* ${quote.details}` : ''}
   );
 }
 
-function FieldLabel({
-  icon,
-  label,
-  required = false,
-  children,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-}) {
+function FieldLabel({ icon, label, required = false, children }: { icon: React.ReactNode; label: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="flex flex-col gap-2 text-right">
       <span className="flex items-center gap-2 text-xs font-extrabold text-slate-700">
         <span className="text-blue-600">{icon}</span>
-        <span>
-          {label} {required && <span className="text-red-500">*</span>}
-        </span>
+        <span>{label} {required && <span className="text-red-500">*</span>}</span>
       </span>
       {children}
     </label>
