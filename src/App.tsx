@@ -8,6 +8,7 @@ import ProductPage from './pages/ProductPage';
 import AboutPage from './pages/AboutPage';
 import ProjectsPage from './pages/ProjectsPage';
 import QuotePage from './pages/QuotePage';
+import ThankYouPage from './pages/ThankYouPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
         <Route path="/about" element={<AboutPage />} />
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/quote" element={<QuotePage />} />
+        <Route path="/thank-you" element={<ThankYouPage />} />
 
         <Route path="*" element={<NotFoundPage />} />
       </Route>
