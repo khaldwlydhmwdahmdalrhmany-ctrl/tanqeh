@@ -41,6 +41,10 @@ export default function Layout() {
         pushGtmEvent('click_whatsapp', {
           element_id: link.id || 'unidentified_whatsapp_link',
           product_id: link.dataset.productId || undefined,
+          product_name: link.dataset.productName || undefined,
+          service_type: link.dataset.serviceType || undefined,
+          page_type: link.dataset.pageType || undefined,
+          cta_location: link.dataset.ctaLocation || undefined,
           page_path: window.location.pathname,
         });
       }
@@ -87,11 +91,15 @@ export default function Layout() {
         </a>
 
         <a
-          href="https://wa.me/966553033199"
+          href={`https://wa.me/966553033199?text=${encodeURIComponent(
+            'السلام عليكم، أرغب في الاستفسار عن خدمات ومنتجات مؤسسة نثال لتنقية وتحلية المياه. يرجى التواصل معي، وشكراً.',
+          )}`}
           target="_blank"
           rel="noreferrer"
           className="bg-emerald-600 hover:bg-emerald-700 text-white p-4 rounded-full shadow-2xl transition-all duration-300 hover:scale-110 cursor-pointer flex items-center justify-center relative group"
           id="floating-whatsapp-btn"
+          data-page-type="global"
+          data-cta-location="floating_whatsapp"
           aria-label="تواصل مع مبيعات نثال عبر واتساب"
         >
           <MessageSquare className="w-6 h-6 stroke-[2.5]" />
