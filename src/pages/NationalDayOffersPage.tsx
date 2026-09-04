@@ -25,13 +25,16 @@ function pushCampaignCta(location: string, method: 'whatsapp' | 'call', offer?: 
     service_type: 'filter',
     cta_location: location,
     contact_method: method,
+    conversion_action: method === 'whatsapp' ? 'whatsapp_click' : 'website_call_click',
+    conversion_category: 'lead',
+    conversion_priority: 'primary',
     offer_id: offer?.id || 'all_offers',
     offer_name: offer?.name || 'عروض اليوم الوطني',
     offer_price: offer?.currentPrice,
   };
 
   pushGtmEvent('offer_cta_click', parameters);
-  if (offer && method === 'whatsapp') {
+  if (offer) {
     pushGtmEvent(offer.trackingEvent, parameters);
   }
 }
@@ -42,7 +45,7 @@ export default function NationalDayOffersPage() {
   useSeo({
     title: 'عروض اليوم الوطني على أجهزة تنقية المياه | مؤسسة نثال',
     description:
-      'استفد من عروض اليوم الوطني على أجهزة تنقية المياه بأسعار خاصة لفترة محدودة. اختر العرض المناسب واطلب الآن.',
+      'استفد من عروض اليوم الوطني على أجهزة تنقية المياه لفترة محدودة وحتى نفاد الكمية. العرضان يشملان التركيب والتوصيل.',
     path: NATIONAL_DAY_CAMPAIGN.path,
     image: NATIONAL_DAY_CAMPAIGN.socialImage,
     jsonLd: {
@@ -52,7 +55,7 @@ export default function NationalDayOffersPage() {
           '@type': 'WebPage',
           name: 'عروض اليوم الوطني على أجهزة تنقية المياه',
           description:
-            'عرضان موسميان على أجهزة تنقية المياه من مؤسسة نثال لفترة محدودة.',
+            'عرضان موسميان على أجهزة تنقية المياه من مؤسسة نثال، يشملان التركيب والتوصيل، لفترة محدودة وحتى نفاد الكمية.',
           url: `${SITE_URL}${NATIONAL_DAY_CAMPAIGN.path}`,
         },
         {
@@ -165,7 +168,7 @@ export default function NationalDayOffersPage() {
               عروض اليوم الوطني على أجهزة تنقية المياه
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base font-medium leading-8 text-emerald-50 lg:mx-0">
-              نقاء أفضل لمنزلك بأسعار خاصة لفترة محدودة بمناسبة اليوم الوطني السعودي.
+              نقاء أفضل لمنزلك بأسعار خاصة تشمل التركيب والتوصيل، لفترة محدودة وحتى نفاد الكمية.
             </p>
 
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
@@ -264,7 +267,7 @@ export default function NationalDayOffersPage() {
             </div>
 
             <p className="mx-auto mt-8 max-w-2xl text-center text-sm font-bold text-slate-600">
-              العروض {NATIONAL_DAY_CAMPAIGN.period.label} وتخضع للتوفر.
+              العروض {NATIONAL_DAY_CAMPAIGN.period.label}.
             </p>
           </div>
         </section>
@@ -278,7 +281,7 @@ export default function NationalDayOffersPage() {
             <div className="grid gap-5 md:grid-cols-3">
               {[
                 ['سعر واضح', 'تعرف السعر السابق والحالي وقيمة التوفير لكل عرض.'],
-                ['خياران محددان', 'قارن بين العرضين واختر ما يناسب احتياجك اليومي.'],
+                ['التركيب والتوصيل مشمولان', 'يشمل العرضان خدمة التركيب والتوصيل دون إضافة موعد زمني غير مؤكد.'],
                 ['تواصل مباشر', 'اطلب عبر واتساب أولًا أو تواصل هاتفيًا للاستفسار.'],
               ].map(([title, description]) => (
                 <article key={title} className="rounded-3xl border border-slate-200 bg-slate-50 p-7 text-center">
@@ -319,7 +322,8 @@ export default function NationalDayOffersPage() {
             <div className="space-y-4">
               {[
                 ['كيف أطلب العرض؟', 'اختر العرض واضغط زر واتساب، أو اتصل بنا مباشرة للاستفسار.'],
-                ['هل العرض متاح دائمًا؟', 'العروض لفترة محدودة وتخضع للتوفر.'],
+                ['هل العرض متاح دائمًا؟', 'العروض لفترة محدودة وحتى نفاد الكمية.'],
+                ['هل يشمل العرض التركيب والتوصيل؟', 'نعم، يشمل العرضان التركيب والتوصيل.'],
                 ['هل يمكنني الاستفسار قبل الطلب؟', 'نعم، يمكنك التواصل عبر واتساب أو الاتصال قبل اختيار العرض.'],
               ].map(([question, answer]) => (
                 <details key={question} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
@@ -422,7 +426,7 @@ function FinalCta() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-[32px] bg-[#0d4d37] px-6 py-10 text-center text-white shadow-xl sm:px-10 md:py-14">
           <h2 id="final-cta-heading" className="text-3xl font-black text-white">اختر عرضك قبل انتهاء المدة</h2>
-          <p className="mx-auto mt-4 text-base font-medium leading-7 text-emerald-50">العروض لفترة محدودة وتخضع للتوفر.</p>
+          <p className="mx-auto mt-4 text-base font-medium leading-7 text-emerald-50">لفترة محدودة وحتى نفاد الكمية — والتركيب والتوصيل مشمولان.</p>
           <div className="mx-auto mt-7 flex max-w-xl flex-col justify-center gap-3 sm:flex-row">
             <a
               id="national-day-final-whatsapp"
