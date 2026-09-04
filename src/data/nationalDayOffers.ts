@@ -46,7 +46,7 @@ export const NATIONAL_DAY_CAMPAIGN = {
       previousPrice: 650,
       currentPrice: 596,
       savings: 54,
-      description: 'نقاء أفضل لمنزلك بسعر خاص، ويشمل العرض التركيب والتوصيل.',
+      description: 'مياه أنقى لبيتك بسعر اليوم الوطني، مع التركيب والتوصيل داخل الرياض.',
       ctaLabel: 'أبغى عرض Anmax',
       whatsappMessage:
         'السلام عليكم، أبغى عرض جهاز Anmax بسعر 596 ريال شامل التركيب والتوصيل في الرياض.',
@@ -60,7 +60,8 @@ export const NATIONAL_DAY_CAMPAIGN = {
       previousPrice: 1200,
       currentPrice: 999,
       savings: 201,
-      description: 'حل متكامل لمياه أنقى، ويشمل العرض التركيب والتوصيل.',
+      description:
+        'حل متكامل لمياه أنقى واستخدام يومي أسهل، مع التركيب والتوصيل داخل الرياض.',
       ctaLabel: 'أبغى عرض الجهاز والبرادة',
       whatsappMessage:
         'السلام عليكم، أبغى عرض جهاز Purerena مع البرادة بسعر 999 ريال شامل التركيب والتوصيل في الرياض.',
@@ -72,6 +73,6 @@ export const NATIONAL_DAY_CAMPAIGN = {
   trustItems: [
     { value: '+10', label: 'سنوات من الخبرة' },
     { value: '+5,000', label: 'عميل يثق بنا' },
-    { value: '+10,000', label: 'جهاز وفلتر تم تركيبه' },
+    { value: '+10,000', label: 'جهاز وفلاتر تم تركيبها' },
   ],
 } as const;

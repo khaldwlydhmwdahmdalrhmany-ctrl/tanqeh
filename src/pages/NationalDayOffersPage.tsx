@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import {
   ArrowLeft,
   BadgePercent,
@@ -11,8 +11,29 @@ import {
 import { NATIONAL_DAY_CAMPAIGN, NationalDayOffer } from '../data/nationalDayOffers';
 import { pushGtmEvent } from '../lib/gtm';
 import { breadcrumb, SITE_URL, useSeo } from '../lib/seo';
+import logoDark from '@/assets/brand/logo-dark.svg';
 
 const PAGE_TYPE = 'national_day_offers';
+
+const FAQ_ITEMS = [
+  {
+    question: 'هل السعر شامل التركيب والتوصيل؟',
+    answer: 'نعم، العرضان يشملان التركيب والتوصيل داخل الرياض.',
+  },
+  {
+    question: 'هل العرض متوفر داخل الرياض؟',
+    answer: 'نعم، هذه العروض مخصصة داخل الرياض وتخضع للتوفر.',
+  },
+  {
+    question: 'هل أقدر أطلب عبر واتساب؟',
+    answer: 'نعم، يمكنك التواصل مباشرة عبر واتساب واختيار العرض المناسب.',
+  },
+  {
+    question: 'ما الفرق بين العرضين؟',
+    answer:
+      'عرض Anmax لجهاز تنقية المياه بسعر 596 ريال، وعرض Purerena يشمل جهاز التنقية مع البرادة بسعر 999 ريال.',
+  },
+] as const;
 
 function whatsappHref(message: string) {
   return `https://wa.me/${NATIONAL_DAY_CAMPAIGN.whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -44,7 +65,7 @@ export default function NationalDayOffersPage() {
   const offerCards = useRef<Record<string, HTMLElement | null>>({});
 
   useSeo({
-    title: 'عروض اليوم الوطني على أجهزة تنقية المياه | مؤسسة نثال',
+    title: 'عروض اليوم الوطني لأجهزة تنقية المياه بالرياض | نثال',
     description:
       'عروض اليوم الوطني على أجهزة تنقية المياه في الرياض لفترة محدودة وحتى نفاد الكمية، شاملة التركيب والتوصيل.',
     path: NATIONAL_DAY_CAMPAIGN.path,
@@ -58,6 +79,10 @@ export default function NationalDayOffersPage() {
           description:
             'عرضان موسميان على أجهزة تنقية المياه في الرياض من مؤسسة نثال، يشملان التركيب والتوصيل، لفترة محدودة وحتى نفاد الكمية.',
           url: `${SITE_URL}${NATIONAL_DAY_CAMPAIGN.path}`,
+          areaServed: {
+            '@type': 'City',
+            name: 'الرياض',
+          },
         },
         {
           '@type': 'ItemList',
@@ -66,7 +91,29 @@ export default function NationalDayOffersPage() {
           itemListElement: NATIONAL_DAY_CAMPAIGN.offers.map((offer, index) => ({
             '@type': 'ListItem',
             position: index + 1,
-            name: offer.name,
+            item: {
+              '@type': 'Offer',
+              name: `عرض اليوم الوطني — ${offer.name}`,
+              price: offer.currentPrice,
+              priceCurrency: 'SAR',
+              availability: 'https://schema.org/InStock',
+              url: `${SITE_URL}${NATIONAL_DAY_CAMPAIGN.path}#offer-${offer.id}`,
+              itemOffered: {
+                '@type': 'Product',
+                name: offer.name,
+              },
+            },
+          })),
+        },
+        {
+          '@type': 'FAQPage',
+          mainEntity: FAQ_ITEMS.map((item) => ({
+            '@type': 'Question',
+            name: item.question,
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: item.answer,
+            },
           })),
         },
         breadcrumb([
@@ -84,6 +131,16 @@ export default function NationalDayOffersPage() {
       campaign_status: NATIONAL_DAY_CAMPAIGN.mode,
       page_path: NATIONAL_DAY_CAMPAIGN.path,
     });
+  }, []);
+
+  useLayoutEffect(() => {
+    const globalHeader = document.getElementById('main-header');
+    const previousDisplay = globalHeader?.style.display || '';
+    if (globalHeader) globalHeader.style.display = 'none';
+
+    return () => {
+      if (globalHeader) globalHeader.style.display = previousDisplay;
+    };
   }, []);
 
   useEffect(() => {
@@ -153,7 +210,9 @@ export default function NationalDayOffersPage() {
 
   return (
     <div className="bg-white pb-8 md:pb-0" dir="rtl" data-national-day-page>
-      <section className="relative overflow-hidden bg-[#0d4d37] pb-16 pt-32 text-white sm:pt-36 lg:pb-20 lg:pt-40">
+      <CampaignHeader />
+
+      <section className="relative overflow-hidden bg-[#0d4d37] pb-16 pt-28 text-white sm:pt-32 lg:pb-20 lg:pt-36">
         <div className="absolute inset-0 opacity-30 [background-image:linear-gradient(135deg,rgba(255,255,255,0.06)_25%,transparent_25%),linear-gradient(315deg,rgba(255,255,255,0.04)_25%,transparent_25%)] [background-position:0_0,28px_28px] [background-size:56px_56px]" />
         <div className="absolute -left-24 top-16 h-80 w-80 rounded-full bg-[#0072ff]/20 blur-3xl" />
         <div className="absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-emerald-300/15 blur-3xl" />
@@ -165,11 +224,11 @@ export default function NationalDayOffersPage() {
               عروض اليوم الوطني لأهل الرياض
             </span>
 
-            <h1 className="mx-auto mt-6 max-w-3xl text-4xl font-black leading-tight text-white sm:text-5xl lg:mx-0">
-              خلّ مويتكم أنقى بعروض اليوم الوطني
+            <h1 className="mx-auto mt-5 max-w-3xl text-3xl font-black leading-tight text-white sm:mt-6 sm:text-5xl lg:mx-0">
+              عروض اليوم الوطني على أجهزة تنقية المياه
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-base font-medium leading-8 text-emerald-50 lg:mx-0">
-              وفر على جهاز تنقية المياه لبيتك في الرياض، وخذ العرض شامل التركيب والتوصيل.
+              استفد من أسعار خاصة على أجهزة تنقية المياه مع التركيب والتوصيل داخل الرياض.
             </p>
 
             <div
@@ -184,23 +243,31 @@ export default function NationalDayOffersPage() {
               متاح الآن في الرياض — الكمية محدودة
             </div>
 
-            <div className="mt-7 grid gap-3 sm:grid-cols-2">
+            <div className="mt-6 grid grid-cols-2 gap-2 sm:mt-7 sm:gap-3">
               {NATIONAL_DAY_CAMPAIGN.offers.map((offer) => (
                 <a
                   key={offer.id}
                   href={`#offer-${offer.id}`}
-                  className="rounded-2xl border border-white/15 bg-white/10 p-4 text-right transition-colors hover:bg-white/15"
+                  className="rounded-2xl border border-white/15 bg-white/10 p-3 text-right transition-colors hover:bg-white/15 sm:p-4"
                   aria-label={`عرض ${offer.name} بسعر ${offer.currentPrice} ريال`}
                 >
-                  <span className="block text-xs font-bold text-emerald-100">{offer.name}</span>
-                  <span className="mt-1 block text-3xl font-black text-white" dir="ltr">
-                    {offer.currentPrice} <small className="text-sm">ريال</small>
+                  <span className="block text-sm font-extrabold text-white">
+                    {offer.id === 'anmax' ? 'Anmax' : 'Purerena + برادة'}
+                  </span>
+                  <span className="mt-2 block text-2xl font-black text-white sm:text-3xl" dir="ltr">
+                      {offer.currentPrice} <small className="text-sm">ريال</small>
+                  </span>
+                  <del className="mt-1 block text-sm font-bold text-emerald-100/80" dir="ltr">
+                    {offer.previousPrice} ريال
+                  </del>
+                  <span className="mt-2 inline-flex rounded-full bg-emerald-300 px-2.5 py-1 text-xs font-extrabold text-emerald-950">
+                    وفر {offer.savings} ريال
                   </span>
                 </a>
               ))}
             </div>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row lg:justify-start">
+            <div className="mt-6 grid grid-cols-[minmax(0,1fr)_auto] gap-2 sm:mt-8 sm:flex sm:gap-3 lg:justify-start">
               <a
                 id="national-day-hero-whatsapp"
                 href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)}
@@ -210,7 +277,7 @@ export default function NationalDayOffersPage() {
                 data-page-type={PAGE_TYPE}
                 data-service-type="filter"
                 data-cta-location="hero"
-                className="btn-whatsapp flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base sm:max-w-xs"
+                className="btn-whatsapp flex min-h-14 items-center justify-center gap-2 rounded-2xl px-4 py-4 text-sm sm:flex-1 sm:px-6 sm:text-base sm:max-w-xs"
                 aria-label="احصل على عرض اليوم الوطني عبر واتساب"
               >
                 <MessageSquare className="h-5 w-5" />
@@ -220,11 +287,11 @@ export default function NationalDayOffersPage() {
                 id="national-day-hero-call"
                 href={NATIONAL_DAY_CAMPAIGN.phoneHref}
                 onClick={() => pushCampaignCta('hero', 'call')}
-                className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white px-6 py-4 text-base font-extrabold text-[#0a1e36] transition-colors hover:bg-emerald-50"
+                className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white px-4 py-4 text-base font-extrabold text-[#0a1e36] transition-colors hover:bg-emerald-50 sm:px-6"
                 aria-label="اتصل بمؤسسة نثال للاستفسار عن عروض اليوم الوطني"
               >
                 <Phone className="h-5 w-5 text-[#0072ff]" />
-                كلّمنا الآن
+                <span className="hidden sm:inline">كلّمنا الآن</span>
               </a>
             </div>
 
@@ -247,8 +314,8 @@ export default function NationalDayOffersPage() {
               />
               <div className="mt-4 flex items-center justify-between gap-4 rounded-2xl bg-emerald-50 px-4 py-3 text-right">
                 <div>
-                  <span className="block text-xs font-bold text-emerald-800">فرصة اليوم الوطني</span>
-                  <span className="block text-sm font-extrabold text-[#0a1e36]">عرضان لأهل الرياض بأسعار خاصة</span>
+                  <span className="block text-xs font-bold text-emerald-800">عرض اليوم الوطني</span>
+                  <span className="block text-sm font-extrabold text-[#0a1e36]">التركيب والتوصيل مشمولان داخل الرياض</span>
                 </div>
                 <BadgePercent className="h-9 w-9 shrink-0 text-emerald-700" />
               </div>
@@ -293,9 +360,9 @@ export default function NationalDayOffersPage() {
             </div>
             <div className="grid gap-5 md:grid-cols-3">
               {[
-                ['السعر قدّامك', 'تشوف السعر السابق والحالي وقيمة التوفير لكل عرض بوضوح.'],
+                ['السعر واضح من البداية', 'تشوف السعر السابق والحالي وقيمة التوفير لكل عرض بوضوح.'],
                 ['التركيب والتوصيل مشمولان', 'العرضان يشملان التركيب والتوصيل داخل الرياض.'],
-                ['تواصل على طول', 'أرسل لنا واتساب أو كلّمنا من الموقع واسأل عن العرض اللي يناسبك.'],
+                ['تواصل معنا مباشرة', 'راسلنا واتساب أو اتصل بنا واسأل عن العرض المناسب لك.'],
               ].map(([title, description]) => (
                 <article key={title} className="rounded-3xl border border-slate-200 bg-slate-50 p-7 text-center">
                   <CheckCircle2 className="mx-auto h-9 w-9 text-emerald-700" />
@@ -333,15 +400,10 @@ export default function NationalDayOffersPage() {
               <h2 id="faq-heading" className="section-heading-main mt-3">قبل ما تطلب العرض</h2>
             </div>
             <div className="space-y-4">
-              {[
-                ['كيف أطلب العرض؟', 'اختر العرض واضغط واتساب، أو كلّمنا مباشرة من الموقع.'],
-                ['هل العرض متاح دائمًا؟', 'العروض لفترة محدودة وحتى نفاد الكمية.'],
-                ['هل يشمل العرض التركيب والتوصيل؟', 'نعم، يشمل العرضان التركيب والتوصيل.'],
-                ['هل يمكنني الاستفسار قبل الطلب؟', 'نعم، يمكنك التواصل عبر واتساب أو الاتصال قبل اختيار العرض.'],
-              ].map(([question, answer]) => (
-                <details key={question} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
-                  <summary className="cursor-pointer text-base font-extrabold text-[#0a1e36]">{question}</summary>
-                  <p className="pt-4 text-base font-medium leading-7 text-slate-600">{answer}</p>
+              {FAQ_ITEMS.map((item) => (
+                <details key={item.question} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                  <summary className="cursor-pointer text-base font-extrabold text-[#0a1e36]">{item.question}</summary>
+                  <p className="pt-4 text-base font-medium leading-7 text-slate-600">{item.answer}</p>
                 </details>
               ))}
             </div>
@@ -438,8 +500,8 @@ function FinalCta() {
     <section className="bg-emerald-50 py-16 text-white md:py-20" aria-labelledby="final-cta-heading">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <div className="rounded-[32px] bg-[#0d4d37] px-6 py-10 text-center text-white shadow-xl sm:px-10 md:py-14">
-          <h2 id="final-cta-heading" className="text-3xl font-black text-white">لا تفوّت العرض — خلّنا نجهّز لك الأنسب</h2>
-          <p className="mx-auto mt-4 text-base font-medium leading-7 text-emerald-50">الكمية محدودة، والعرض يشمل التركيب والتوصيل داخل الرياض.</p>
+          <h2 id="final-cta-heading" className="text-3xl font-black text-white">لا تفوّت عرض اليوم الوطني</h2>
+          <p className="mx-auto mt-4 text-base font-medium leading-7 text-emerald-50">العروض لفترة محدودة وتخضع للتوفر، مع التركيب والتوصيل داخل الرياض.</p>
           <div className="mx-auto mt-7 flex max-w-xl flex-col justify-center gap-3 sm:flex-row">
             <a
               id="national-day-final-whatsapp"
@@ -468,6 +530,51 @@ function FinalCta() {
         </div>
       </div>
     </section>
+  );
+}
+
+function CampaignHeader() {
+  return (
+    <header className="fixed inset-x-0 top-0 z-[130] border-b border-slate-200/80 bg-white/95 shadow-sm backdrop-blur-md" aria-label="رأس صفحة عروض اليوم الوطني">
+      <div className="mx-auto flex min-h-20 max-w-7xl items-center justify-between gap-3 px-3 sm:px-6 lg:px-8">
+        <a href="/" className="flex shrink-0 items-center gap-2" aria-label="العودة إلى موقع مؤسسة نثال">
+          <span className="flex h-11 w-11 items-center justify-center rounded-xl border border-slate-100 bg-white p-1 shadow-sm">
+            <img src={logoDark} alt="مؤسسة نثال لتنقية المياه" className="h-full w-auto object-contain" />
+          </span>
+          <span className="hidden text-right sm:block">
+            <strong className="block text-base font-black leading-tight text-[#0a1e36]">مؤسسة نثال</strong>
+            <span className="block text-[11px] font-bold text-[#0072ff]">لأنظمة وحلول تنقية المياه</span>
+          </span>
+        </a>
+
+        <div className="flex items-center gap-2">
+          <a
+            id="national-day-header-call"
+            href={NATIONAL_DAY_CAMPAIGN.phoneHref}
+            onClick={() => pushCampaignCta('campaign_header', 'call')}
+            className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-extrabold text-[#0a1e36] transition-colors hover:bg-slate-50"
+            aria-label="كلمنا الآن عن عروض اليوم الوطني"
+          >
+            <Phone className="h-4 w-4 text-[#0072ff]" />
+            <span className="hidden md:inline">كلمنا الآن</span>
+          </a>
+          <a
+            id="national-day-header-whatsapp"
+            href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)}
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => pushCampaignCta('campaign_header', 'whatsapp')}
+            data-page-type={PAGE_TYPE}
+            data-service-type="filter"
+            data-cta-location="campaign_header"
+            className="btn-whatsapp flex min-h-11 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-2.5 text-[11px] sm:px-5 sm:text-sm"
+          >
+            <MessageSquare className="h-4 w-4 shrink-0" />
+            احصل على عرض اليوم الوطني
+          </a>
+        </div>
+      </div>
+    </header>
   );
 }
 
@@ -507,6 +614,7 @@ function MobileStickyCta() {
 function ExpiredCampaign() {
   return (
     <div className="bg-slate-50 pb-8 pt-28 md:pb-0 md:pt-32" dir="rtl" data-national-day-page>
+      <CampaignHeader />
       <div className="mx-auto max-w-5xl px-4 py-20 text-center sm:px-6 lg:px-8">
         <div className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm sm:p-12">
           <BadgePercent className="mx-auto h-14 w-14 text-emerald-700" />
