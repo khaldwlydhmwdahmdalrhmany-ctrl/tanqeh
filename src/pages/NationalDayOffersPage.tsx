@@ -39,28 +39,6 @@ function whatsappHref(message: string) {
   return `https://wa.me/${NATIONAL_DAY_CAMPAIGN.whatsappNumber}?text=${encodeURIComponent(message)}`;
 }
 
-function pushCampaignCta(location: string, method: 'whatsapp' | 'call', offer?: NationalDayOffer) {
-  const parameters = {
-    campaign_name: PAGE_TYPE,
-    page_type: PAGE_TYPE,
-    service_type: 'filter',
-    cta_location: location,
-    contact_method: method,
-    conversion_action: method === 'whatsapp' ? 'whatsapp_click' : 'website_call_click',
-    conversion_category: 'lead',
-    conversion_priority: 'primary',
-    campaign_city: 'riyadh',
-    offer_id: offer?.id || 'all_offers',
-    offer_name: offer?.name || 'عروض اليوم الوطني',
-    offer_price: offer?.currentPrice,
-  };
-
-  pushGtmEvent('offer_cta_click', parameters);
-  if (offer) {
-    pushGtmEvent(offer.trackingEvent, parameters);
-  }
-}
-
 export default function NationalDayOffersPage() {
   const offerCards = useRef<Record<string, HTMLElement | null>>({});
 
@@ -273,7 +251,6 @@ export default function NationalDayOffersPage() {
                 href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => pushCampaignCta('hero', 'whatsapp')}
                 data-page-type={PAGE_TYPE}
                 data-service-type="filter"
                 data-cta-location="hero"
@@ -286,7 +263,6 @@ export default function NationalDayOffersPage() {
               <a
                 id="national-day-hero-call"
                 href={NATIONAL_DAY_CAMPAIGN.phoneHref}
-                onClick={() => pushCampaignCta('hero', 'call')}
                 className="flex min-h-14 items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white px-4 py-4 text-base font-extrabold text-[#0a1e36] transition-colors hover:bg-emerald-50 sm:px-6"
                 aria-label="اتصل بمؤسسة نثال للاستفسار عن عروض اليوم الوطني"
               >
@@ -465,7 +441,6 @@ function OfferCard({ offer, cardRef }: { offer: NationalDayOffer; cardRef: (elem
               href={whatsappHref(offer.whatsappMessage)}
               target="_blank"
               rel="noreferrer"
-              onClick={() => pushCampaignCta(`offer_card_${offer.id}`, 'whatsapp', offer)}
               data-product-id={offer.id}
               data-product-name={offer.name}
               data-service-type="filter"
@@ -481,7 +456,6 @@ function OfferCard({ offer, cardRef }: { offer: NationalDayOffer; cardRef: (elem
             <a
               id={`national-day-${offer.id}-call`}
               href={NATIONAL_DAY_CAMPAIGN.phoneHref}
-              onClick={() => pushCampaignCta(`offer_card_${offer.id}`, 'call', offer)}
               className="btn-secondary flex min-h-12 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-base"
               aria-label={`اتصل للاستفسار عن ${offer.name}`}
             >
@@ -508,7 +482,6 @@ function FinalCta() {
               href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)}
               target="_blank"
               rel="noreferrer"
-              onClick={() => pushCampaignCta('final_cta', 'whatsapp')}
               data-page-type={PAGE_TYPE}
               data-service-type="filter"
               data-cta-location="final_cta"
@@ -520,7 +493,6 @@ function FinalCta() {
             <a
               id="national-day-final-call"
               href={NATIONAL_DAY_CAMPAIGN.phoneHref}
-              onClick={() => pushCampaignCta('final_cta', 'call')}
               className="flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl bg-white px-6 py-4 text-base font-extrabold text-[#0a1e36] hover:bg-emerald-50"
             >
               <Phone className="h-5 w-5 text-[#0072ff]" />
@@ -551,7 +523,6 @@ function CampaignHeader() {
           <a
             id="national-day-header-call"
             href={NATIONAL_DAY_CAMPAIGN.phoneHref}
-            onClick={() => pushCampaignCta('campaign_header', 'call')}
             className="flex min-h-11 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-sm font-extrabold text-[#0a1e36] transition-colors hover:bg-slate-50"
             aria-label="كلمنا الآن عن عروض اليوم الوطني"
           >
@@ -563,7 +534,6 @@ function CampaignHeader() {
             href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)}
             target="_blank"
             rel="noreferrer"
-            onClick={() => pushCampaignCta('campaign_header', 'whatsapp')}
             data-page-type={PAGE_TYPE}
             data-service-type="filter"
             data-cta-location="campaign_header"
@@ -587,7 +557,6 @@ function MobileStickyCta() {
           href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)}
           target="_blank"
           rel="noreferrer"
-          onClick={() => pushCampaignCta('mobile_sticky', 'whatsapp')}
           data-page-type={PAGE_TYPE}
           data-service-type="filter"
           data-cta-location="mobile_sticky"
@@ -600,7 +569,6 @@ function MobileStickyCta() {
         <a
           id="national-day-sticky-call"
           href={NATIONAL_DAY_CAMPAIGN.phoneHref}
-          onClick={() => pushCampaignCta('mobile_sticky', 'call')}
           className="btn-secondary flex min-h-12 min-w-12 items-center justify-center rounded-xl px-4 py-3"
           aria-label="اتصل الآن"
         >
@@ -622,11 +590,11 @@ function ExpiredCampaign() {
           <h1 className="mt-5 text-4xl font-black text-[#0a1e36]">انتهت عروض هذه المناسبة</h1>
           <p className="mx-auto mt-4 max-w-xl text-base font-medium leading-8 text-slate-600">تواصل معنا لمعرفة العروض المتاحة حاليًا على أجهزة تنقية المياه.</p>
           <div className="mx-auto mt-8 flex max-w-xl flex-col gap-3 sm:flex-row">
-            <a href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)} target="_blank" rel="noreferrer" onClick={() => pushCampaignCta('expired_state', 'whatsapp')} data-page-type={PAGE_TYPE} data-service-type="filter" data-cta-location="expired_state" className="btn-whatsapp flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base">
+            <a id="national-day-expired-whatsapp" href={whatsappHref(NATIONAL_DAY_CAMPAIGN.generalWhatsappMessage)} target="_blank" rel="noreferrer" data-page-type={PAGE_TYPE} data-service-type="filter" data-cta-location="expired_state" className="btn-whatsapp flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base">
               <MessageSquare className="h-5 w-5" />
               اسأل عن العروض الحالية
             </a>
-            <a href={NATIONAL_DAY_CAMPAIGN.phoneHref} onClick={() => pushCampaignCta('expired_state', 'call')} className="btn-secondary flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base">
+            <a id="national-day-expired-call" href={NATIONAL_DAY_CAMPAIGN.phoneHref} className="btn-secondary flex min-h-14 flex-1 items-center justify-center gap-2 rounded-2xl px-6 py-4 text-base">
               <Phone className="h-5 w-5 text-[#0072ff]" />
               اتصل الآن
             </a>
