@@ -11,6 +11,8 @@ import QuotePage from './pages/QuotePage';
 import ThankYouPage from './pages/ThankYouPage';
 import NotFoundPage from './pages/NotFoundPage';
 
+const NationalDayOffersPage = React.lazy(() => import('./pages/NationalDayOffersPage'));
+
 export default function App() {
   return (
     <Routes>
@@ -28,6 +30,21 @@ export default function App() {
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/quote" element={<QuotePage />} />
         <Route path="/thank-you" element={<ThankYouPage />} />
+
+        <Route
+          path="/national-day-offers"
+          element={
+            <React.Suspense
+              fallback={
+                <div className="flex min-h-screen items-center justify-center bg-white px-4 text-center text-sm font-bold text-slate-600">
+                  جاري تحميل العروض...
+                </div>
+              }
+            >
+              <NationalDayOffersPage />
+            </React.Suspense>
+          }
+        />
 
         <Route path="*" element={<NotFoundPage />} />
       </Route>
