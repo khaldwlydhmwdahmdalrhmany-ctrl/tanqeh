@@ -36,7 +36,7 @@ export const NATIONAL_DAY_CAMPAIGN = {
   phoneHref: 'tel:+966553033199',
   whatsappNumber: '966553033199',
   generalWhatsappMessage:
-    'مرحبًا، أرغب بالاستفادة من عرض اليوم الوطني على أجهزة تنقية المياه.',
+    'السلام عليكم، أبغى أستفيد من عرض اليوم الوطني على أجهزة تنقية المياه في الرياض.',
   socialImage: nationalDayHeroImage,
   heroProductImage: purerenaBundleProductImage,
   offers: [
@@ -47,8 +47,9 @@ export const NATIONAL_DAY_CAMPAIGN = {
       currentPrice: 596,
       savings: 54,
       description: 'نقاء أفضل لمنزلك بسعر خاص، ويشمل العرض التركيب والتوصيل.',
-      ctaLabel: 'احصل على العرض',
-      whatsappMessage: 'مرحبًا، أرغب بعرض جهاز Anmax بسعر 596 ريال.',
+      ctaLabel: 'أبغى عرض Anmax',
+      whatsappMessage:
+        'السلام عليكم، أبغى عرض جهاز Anmax بسعر 596 ريال شامل التركيب والتوصيل في الرياض.',
       image: anmaxOfferImage,
       imageAlt: 'عرض جهاز تنقية مياه Anmax بسعر 596 ريال',
       trackingEvent: 'offer_anmax_click',
@@ -60,8 +61,9 @@ export const NATIONAL_DAY_CAMPAIGN = {
       currentPrice: 999,
       savings: 201,
       description: 'حل متكامل لمياه أنقى، ويشمل العرض التركيب والتوصيل.',
-      ctaLabel: 'اطلب العرض الآن',
-      whatsappMessage: 'مرحبًا، أرغب بعرض جهاز Purerena مع البرادة بسعر 999 ريال.',
+      ctaLabel: 'أبغى عرض الجهاز والبرادة',
+      whatsappMessage:
+        'السلام عليكم، أبغى عرض جهاز Purerena مع البرادة بسعر 999 ريال شامل التركيب والتوصيل في الرياض.',
       image: purerenaOfferImage,
       imageAlt: 'عرض جهاز Purerena مع برادة بسعر 999 ريال',
       trackingEvent: 'offer_purerena_click',
