@@ -16,7 +16,6 @@ export interface NationalDayOffer {
   whatsappMessage: string;
   image: string;
   imageAlt: string;
-  trackingEvent: 'offer_anmax_click' | 'offer_purerena_click';
 }
 
 /**
@@ -52,7 +51,6 @@ export const NATIONAL_DAY_CAMPAIGN = {
         'السلام عليكم، أبغى عرض جهاز Anmax بسعر 596 ريال شامل التركيب والتوصيل في الرياض.',
       image: anmaxOfferImage,
       imageAlt: 'عرض جهاز تنقية مياه Anmax بسعر 596 ريال',
-      trackingEvent: 'offer_anmax_click',
     },
     {
       id: 'purerena-bundle',
@@ -67,7 +65,6 @@ export const NATIONAL_DAY_CAMPAIGN = {
         'السلام عليكم، أبغى عرض جهاز Purerena مع البرادة بسعر 999 ريال شامل التركيب والتوصيل في الرياض.',
       image: purerenaOfferImage,
       imageAlt: 'عرض جهاز Purerena مع برادة بسعر 999 ريال',
-      trackingEvent: 'offer_purerena_click',
     },
   ] satisfies NationalDayOffer[],
   trustItems: [
