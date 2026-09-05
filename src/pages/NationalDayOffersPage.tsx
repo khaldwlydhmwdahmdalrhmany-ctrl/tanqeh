@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import {
   ArrowLeft,
   BadgePercent,
@@ -9,7 +9,6 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { NATIONAL_DAY_CAMPAIGN, NationalDayOffer } from '../data/nationalDayOffers';
-import { pushGtmEvent } from '../lib/gtm';
 import { breadcrumb, SITE_URL, useSeo } from '../lib/seo';
 import logoDark from '@/assets/brand/logo-dark.svg';
 
@@ -40,8 +39,6 @@ function whatsappHref(message: string) {
 }
 
 export default function NationalDayOffersPage() {
-  const offerCards = useRef<Record<string, HTMLElement | null>>({});
-
   useSeo({
     title: 'عروض اليوم الوطني لأجهزة تنقية المياه بالرياض | نثال',
     description:
@@ -102,15 +99,6 @@ export default function NationalDayOffersPage() {
     },
   });
 
-  useEffect(() => {
-    pushGtmEvent('national_day_page_view', {
-      campaign_name: PAGE_TYPE,
-      page_type: PAGE_TYPE,
-      campaign_status: NATIONAL_DAY_CAMPAIGN.mode,
-      page_path: NATIONAL_DAY_CAMPAIGN.path,
-    });
-  }, []);
-
   useLayoutEffect(() => {
     const globalHeader = document.getElementById('main-header');
     const previousDisplay = globalHeader?.style.display || '';
@@ -144,42 +132,6 @@ export default function NationalDayOffersPage() {
       if (globalFloatingCtas) globalFloatingCtas.style.display = previousDisplay;
       document.body.style.paddingBottom = previousBodyPadding;
     };
-  }, []);
-
-  useEffect(() => {
-    if (NATIONAL_DAY_CAMPAIGN.mode !== 'active' || !('IntersectionObserver' in window)) return;
-
-    const seen = new Set<string>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const offerId = (entry.target as HTMLElement).dataset.offerId;
-          if (!offerId || seen.has(offerId)) return;
-
-          seen.add(offerId);
-          const offer = NATIONAL_DAY_CAMPAIGN.offers.find((item) => item.id === offerId);
-          if (offer) {
-            pushGtmEvent('offer_view', {
-              campaign_name: PAGE_TYPE,
-              page_type: PAGE_TYPE,
-              offer_id: offer.id,
-              offer_name: offer.name,
-              offer_price: offer.currentPrice,
-              page_path: NATIONAL_DAY_CAMPAIGN.path,
-            });
-          }
-          observer.unobserve(entry.target);
-        });
-      },
-      { threshold: 0.45 },
-    );
-
-    NATIONAL_DAY_CAMPAIGN.offers.forEach((offer) => {
-      const card = offerCards.current[offer.id];
-      if (card) observer.observe(card);
-    });
-    return () => observer.disconnect();
   }, []);
 
   if (NATIONAL_DAY_CAMPAIGN.mode === 'expired') {
@@ -312,12 +264,7 @@ export default function NationalDayOffersPage() {
             <div className="grid gap-8 lg:grid-cols-2">
               {NATIONAL_DAY_CAMPAIGN.offers.map((offer) => (
                 <React.Fragment key={offer.id}>
-                  <OfferCard
-                    offer={offer}
-                    cardRef={(element) => {
-                      offerCards.current[offer.id] = element;
-                    }}
-                  />
+                  <OfferCard offer={offer} />
                 </React.Fragment>
               ))}
             </div>
@@ -394,11 +341,10 @@ export default function NationalDayOffersPage() {
   );
 }
 
-function OfferCard({ offer, cardRef }: { offer: NationalDayOffer; cardRef: (element: HTMLElement | null) => void }) {
+function OfferCard({ offer }: { offer: NationalDayOffer }) {
   return (
     <article
       id={`offer-${offer.id}`}
-      ref={cardRef}
       data-offer-id={offer.id}
       className="scroll-mt-28 overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-[0_20px_50px_-30px_rgba(10,30,54,0.35)]"
     >
