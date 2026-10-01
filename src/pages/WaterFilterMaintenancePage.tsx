@@ -273,10 +273,9 @@ export default function WaterFilterMaintenancePage() {
       <section className="bg-blue-950 py-14 text-white md:py-16">
         <div className="mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 text-center sm:px-6 lg:flex-row lg:justify-between lg:text-right lg:px-8">
           <div>
-            <span className="text-sm font-extrabold text-sky-300">تحتاج مساعدة الآن؟</span>
-            <h2 className="mt-2 text-2xl font-extrabold sm:text-3xl">تواصل معنا لطلب الخدمة</h2>
+            <h2 className="text-2xl font-extrabold sm:text-3xl">تحتاج مساعدة الآن؟</h2>
             <p className="mt-3 max-w-2xl text-sm font-bold leading-7 text-blue-100">
-              تواصل عبر واتساب أو الاتصال للاستفسار عن الخدمة المناسبة لنوع الفلتر أو الجهاز لديك.
+              تواصل عبر واتساب أو الاتصال للاستفسار عن الخدمة المتاحة لنوع الفلتر أو الجهاز لديك.
             </p>
           </div>
           <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
