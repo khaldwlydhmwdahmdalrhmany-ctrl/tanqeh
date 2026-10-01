@@ -4,6 +4,7 @@ import Layout from './components/Layout';
 
 import HomePage from './pages/HomePage';
 import HomeWaterFiltersPage from './pages/HomeWaterFiltersPage';
+import WaterFilterMaintenancePage from './pages/WaterFilterMaintenancePage';
 import CategoryPage from './pages/CategoryPage';
 import ProductPage from './pages/ProductPage';
 import AboutPage from './pages/AboutPage';
@@ -22,6 +23,7 @@ export default function App() {
 
         <Route path="/filters" element={<CategoryPage />} />
         <Route path="/home-water-filters" element={<HomeWaterFiltersPage />} />
+        <Route path="/water-filter-maintenance-riyadh" element={<WaterFilterMaintenancePage />} />
         <Route path="/coolers" element={<CategoryPage />} />
         <Route path="/mist" element={<CategoryPage />} />
         <Route path="/maintenance" element={<CategoryPage />} />
