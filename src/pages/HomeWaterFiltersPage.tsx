@@ -70,7 +70,8 @@ export default function HomeWaterFiltersPage() {
   const [selectedFilter, setSelectedFilter] = useState<ProductFilterId>('all');
   const activeFilter =
     PRODUCT_FILTERS.find((filter) => filter.id === selectedFilter) ?? PRODUCT_FILTERS[0];
-  const featuredProduct = FILTER_PRODUCTS[0];
+  const featuredProduct =
+    FILTER_PRODUCTS.find((product) => product.brand === 'PureRena') ?? FILTER_PRODUCTS[0];
 
   useSeo({
     title: 'فلاتر مياه منزلية وأجهزة تحلية | نثال الحياة',
