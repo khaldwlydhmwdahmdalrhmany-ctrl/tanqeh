@@ -172,6 +172,20 @@ export default function LocalSearchPage() {
           .local-search-page .local-search-enter { animation: local-search-rise .65s cubic-bezier(.2,.75,.25,1) both; }
           .local-search-page .local-search-direction-cta { animation: local-search-soft-glow 3.4s ease-in-out infinite; }
         }
+        /* Keep the shared fixed header readable on this dark hero, and place its breadcrumb below it. */
+        body:has(.local-search-page) #main-header {
+          background: rgba(255, 255, 255, .97) !important;
+          background-image: none !important;
+          -webkit-backdrop-filter: blur(14px);
+          backdrop-filter: blur(14px);
+          border-bottom: 1px solid rgba(226, 232, 240, .9);
+          box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+          padding-top: .55rem !important;
+          padding-bottom: .55rem !important;
+        }
+        .local-search-page > nav[aria-label="مسار التنقل"] {
+          padding-top: 5.25rem !important;
+        }
         .local-search-page .local-search-contact-card h2 { color: #ffffff !important; }
         .local-search-page .local-search-contact-card p { color: #dbeafe !important; }
         .local-search-page .local-search-store-caption h3 { color: #ffffff !important; }
