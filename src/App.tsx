@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Layout from './components/Layout';
 
 import HomePage from './pages/HomePage';
+import HomeWaterFiltersPage from './pages/HomeWaterFiltersPage';
 import CategoryPage from './pages/CategoryPage';
 import ProductPage from './pages/ProductPage';
 import AboutPage from './pages/AboutPage';
@@ -20,6 +21,7 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
 
         <Route path="/filters" element={<CategoryPage />} />
+        <Route path="/home-water-filters" element={<HomeWaterFiltersPage />} />
         <Route path="/coolers" element={<CategoryPage />} />
         <Route path="/mist" element={<CategoryPage />} />
         <Route path="/maintenance" element={<CategoryPage />} />
