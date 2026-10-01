@@ -1,10 +1,9 @@
 import { Link } from 'react-router-dom';
 import {
   ArrowLeft,
-  CheckCircle2,
+  ChevronDown,
   ChevronLeft,
   Clock3,
-  Droplets,
   MapPin,
   MessageSquare,
   Navigation,
@@ -14,6 +13,7 @@ import {
 import type { MouseEvent } from 'react';
 import { PRODUCTS } from '../data';
 import type { Product } from '../types';
+import storefrontPhoto from '../assets/nethal-storefront.webp';
 import { BUSINESS_LOCATION } from '../data/businessLocation';
 import { pushGtmEvent } from '../lib/gtm';
 import { PHONE } from '../lib/schema';
@@ -24,6 +24,12 @@ const PAGE_TITLE = 'محل فلاتر وتحلية مياه بالرياض | ن�
 const PAGE_DESCRIPTION =
   'تبحث عن محل فلاتر أو تحلية مياه في الرياض؟ تواصل مع نثال الحياة، اتصل بنا أو افتح الاتجاهات للوصول إلى الموقع بسهولة.';
 const WHATSAPP_NUMBER = PHONE.replace(/\D/g, '');
+const DISPLAY_PHONE = (() => {
+  const digits = PHONE.replace(/\D/g, '');
+  return digits.startsWith('966') && digits.length === 12
+    ? `+${digits.slice(0, 3)} ${digits.slice(3, 5)} ${digits.slice(5, 8)} ${digits.slice(8)}`
+    : PHONE;
+})();
 
 const FILTER_PRODUCTS = PRODUCTS.filter((product) => product.type === 'filter');
 const SEVEN_STAGE_PRODUCTS = FILTER_PRODUCTS.filter((product) => product.stagesCount === 7);
@@ -38,14 +44,12 @@ const REVERSE_OSMOSIS_PRODUCTS = FILTER_PRODUCTS.filter((product) => {
   return /\bRO\b|reverse\s+osmosis|التناضح العكسي/i.test(searchableText);
 });
 const FILTER_ACCESSORY_PRODUCTS = PRODUCTS.filter((product) => product.type === 'maintenance');
-const FEATURED_PRODUCT =
-  FILTER_PRODUCTS.find((product) => product.brand === 'PureRena') ?? FILTER_PRODUCTS[0];
 
 type LocalProductCategory = {
   id: string;
   title: string;
   description: string;
-  count: number;
+  eyebrow: string;
   product: Product;
   href: string;
 };
@@ -54,41 +58,38 @@ function makeProductCategory(
   id: string,
   title: string,
   description: string,
+  eyebrow: string,
   products: Product[],
   href: string,
 ): LocalProductCategory | null {
   const product = products[0];
   if (!product) return null;
 
-  return { id, title, description, count: products.length, product, href };
+  return { id, title, description, eyebrow, product, href };
 }
 
 const PRODUCT_CATEGORIES = [
   makeProductCategory(
     'home-filters',
-    'فلاتر المياه وأجهزة التحلية',
-    'تعرّف على فلاتر وأجهزة التحلية المنشورة ضمن منتجات نثال الحياة.',
-    FILTER_PRODUCTS,
-    '/filters',
-  ),
-  makeProductCategory(
-    'seven-stage',
-    'فلاتر 7 مراحل',
-    'خيارات مدرجة لفلاتر التحلية ذات السبع مراحل، مع تفاصيل كل منتج.',
+    'فلاتر المياه المنزلية و7 مراحل',
+    'استعرض فلاتر المياه المنزلية متعددة المراحل، ومنها خيارات 7 مراحل المنشورة في الموقع.',
+    'فلاتر منزلية',
     SEVEN_STAGE_PRODUCTS,
     '/home-water-filters#products-section',
   ),
   makeProductCategory(
     'reverse-osmosis',
-    'أنظمة RO والتناضح العكسي',
-    'أنظمة ومحطات تحلية بالتناضح العكسي مدرجة ضمن المنتجات.',
+    'أجهزة تحلية المياه وأنظمة RO',
+    'تعرّف على أجهزة ومحطات التحلية بالتناضح العكسي المتاحة ضمن المنتجات المنشورة.',
+    'تقنية RO',
     REVERSE_OSMOSIS_PRODUCTS,
     '/home-water-filters#products-section',
   ),
   makeProductCategory(
     'filter-supplies',
-    'الفلاتر والمستلزمات',
-    'فلاتر ومستلزمات مياه منشورة، ومنها أطقم التحلية وفلاتر حماية الغسالات.',
+    'شمعات الفلاتر ومستلزمات الصيانة',
+    'استعرض مستلزمات الفلاتر المنشورة، ومنها أطقم التحلية وفلاتر حماية الغسالات.',
+    'مستلزمات الفلاتر',
     FILTER_ACCESSORY_PRODUCTS,
     '/maintenance',
   ),
@@ -157,7 +158,31 @@ export default function LocalSearchPage() {
   ];
 
   return (
-    <div dir="rtl">
+    <div dir="rtl" className="local-search-page">
+      <style>{`
+        @keyframes local-search-rise {
+          from { opacity: 0; transform: translateY(14px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes local-search-soft-glow {
+          0%, 100% { box-shadow: 0 8px 24px rgba(2, 132, 199, .16); }
+          50% { box-shadow: 0 12px 32px rgba(2, 132, 199, .3); }
+        }
+        @media (prefers-reduced-motion: no-preference) {
+          .local-search-page .local-search-enter { animation: local-search-rise .65s cubic-bezier(.2,.75,.25,1) both; }
+          .local-search-page .local-search-direction-cta { animation: local-search-soft-glow 3.4s ease-in-out infinite; }
+        }
+        .local-search-page summary::-webkit-details-marker { display: none; }
+        .local-search-page details[open] .local-search-faq-answer { animation: local-search-rise .25s ease-out both; }
+        @media (prefers-reduced-motion: reduce) {
+          .local-search-page *, .local-search-page *::before, .local-search-page *::after {
+            scroll-behavior: auto !important;
+            animation-duration: .01ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: .01ms !important;
+          }
+        }
+      `}</style>
       <nav className="border-b border-slate-100 bg-white" aria-label="مسار التنقل">
         <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-3 text-[11px] font-bold text-slate-500 sm:px-6 lg:px-8">
           <Link to="/" className="transition-colors hover:text-blue-700">
@@ -168,86 +193,72 @@ export default function LocalSearchPage() {
         </div>
       </nav>
 
-      <section className="relative overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-blue-700 text-white">
-        <div className="absolute -left-24 -top-28 h-96 w-96 rounded-full bg-sky-400/10 blur-3xl" />
-        <div className="absolute -right-20 bottom-0 h-72 w-72 rounded-full bg-blue-400/10 blur-3xl" />
-        <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 py-8 sm:px-6 sm:py-12 lg:grid-cols-2 lg:gap-12 lg:px-8 lg:py-16">
-          <div className="text-center lg:text-right">
-            <span className="inline-flex items-center gap-2 rounded-full border border-sky-300/20 bg-sky-400/10 px-4 py-2 text-xs font-extrabold text-sky-200">
-              <MapPin className="h-4 w-4" aria-hidden="true" />
-              نثال الحياة — الرياض
-            </span>
-            <h1 className="mx-auto mt-4 max-w-2xl text-3xl font-extrabold leading-tight sm:text-4xl lg:mx-0 lg:text-5xl">
-              محل فلاتر وتحلية مياه في الرياض
-            </h1>
-            <p className="mx-auto mt-4 max-w-2xl text-sm font-bold leading-7 text-blue-100 sm:text-base sm:leading-8 lg:mx-0">
-              تبحث عن محل فلاتر أو تحلية مياه قريب منك؟ تواصل مع نثال الحياة وتعرّف على الخيارات
-              المتاحة، أو افتح الاتجاهات للوصول إلى الموقع مباشرة.
-            </p>
-            <p className="mt-3 text-xs font-extrabold text-sky-200 sm:text-sm">
-              {BUSINESS_LOCATION.district}
-            </p>
-            <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row sm:flex-wrap lg:justify-start">
-              <a
-                href={BUSINESS_LOCATION.directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                id="local-search-hero-directions"
-                data-page-type="local_search"
-                data-cta-location="hero"
-                onClick={trackDirections}
-                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-extrabold text-blue-950 shadow-lg transition-colors hover:bg-blue-50 sm:w-auto"
-              >
-                <Navigation className="h-5 w-5" aria-hidden="true" />
-                احصل على الاتجاهات
-              </a>
-              <a
-                href={'tel:' + PHONE}
-                id="local-search-hero-call"
-                data-page-type="local_search"
-                data-cta-location="hero"
-                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-5 py-3.5 text-sm font-extrabold text-white transition-colors hover:bg-white/15 sm:w-auto"
-              >
-                <Phone className="h-5 w-5" aria-hidden="true" />
-                اتصل الآن
-              </a>
-              <a
-                href={whatsappLink('أرغب في معرفة خيارات فلاتر وتحلية المياه وموقع المعرض في الرياض.')}
-                target="_blank"
-                rel="noopener noreferrer"
-                id="local-search-hero-whatsapp"
-                data-page-type="local_search"
-                data-cta-location="hero"
-                className="inline-flex min-h-[52px] w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-extrabold text-white transition-colors hover:bg-emerald-700 sm:w-auto"
-              >
-                <MessageSquare className="h-5 w-5" aria-hidden="true" />
-                واتساب
-              </a>
-            </div>
+      <section
+        className="relative isolate overflow-hidden text-white"
+        style={{ background: 'linear-gradient(135deg, #0c4a6e 0%, #0369a1 52%, #0284c7 100%)' }}
+      >
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 opacity-[0.1] [background-image:radial-gradient(#fff_1px,transparent_1px)] [background-size:18px_18px]"
+        />
+        <div aria-hidden="true" className="absolute -left-20 -top-28 h-72 w-72 rounded-full bg-cyan-200/10 blur-3xl" />
+        <div aria-hidden="true" className="absolute -right-16 bottom-0 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
+        <div className="local-search-enter relative mx-auto max-w-5xl px-4 py-12 text-center sm:px-6 sm:py-16 lg:px-8 lg:py-[76px]">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-extrabold text-white shadow-sm backdrop-blur sm:text-sm">
+            <span className="h-2 w-2 rounded-full bg-emerald-300 motion-safe:animate-pulse" aria-hidden="true" />
+            محل فلاتر وتحلية مياه في حي النسيم الشرقي — الرياض
+          </span>
+          <h1 className="mx-auto mt-5 max-w-4xl text-3xl font-extrabold leading-[1.3] tracking-tight sm:text-4xl md:text-5xl lg:text-[3.4rem]">
+            محل فلاتر وتحلية مياه في الرياض
+          </h1>
+          <p className="mx-auto mt-5 max-w-3xl text-base font-medium leading-8 text-sky-50 sm:text-lg sm:leading-9">
+            تبحث عن محل فلاتر أو تحلية مياه قريب منك؟ تواصل مع نثال الحياة للتعرّف على خيارات فلاتر
+            المياه المنزلية وأجهزة التحلية المتاحة، أو افتح الاتجاهات للوصول إلى المعرض في حي النسيم الشرقي.
+          </p>
+          <div className="mt-4 inline-flex items-center gap-2 rounded-full bg-blue-950/20 px-3.5 py-1.5 text-xs font-bold text-sky-100 sm:text-sm">
+            <MapPin className="h-4 w-4" aria-hidden="true" />
+            {BUSINESS_LOCATION.district}
           </div>
-
-          {FEATURED_PRODUCT && (
-            <figure className="mx-auto w-full max-w-xl lg:max-w-none">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] border border-white/20 bg-white/10 shadow-2xl">
-                <img
-                  src={FEATURED_PRODUCT.image}
-                  alt={FEATURED_PRODUCT.name}
-                  className="h-full w-full object-cover"
-                  loading="eager"
-                  fetchPriority="high"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-blue-950/95 via-blue-950/60 to-transparent px-5 pb-5 pt-16 text-right sm:px-7 sm:pb-7">
-                  <span className="text-xs font-extrabold text-sky-200">
-                    من خيارات الفلاتر المنشورة
-                  </span>
-                  <div className="mt-2 text-lg font-extrabold leading-7 text-white sm:text-xl">
-                    {FEATURED_PRODUCT.name}
-                  </div>
-                </div>
-              </div>
-            </figure>
-          )}
+          <div className="mx-auto mt-7 grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+            <a
+              href={BUSINESS_LOCATION.directionsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              id="local-search-hero-directions"
+              data-page-type="local_search"
+              data-cta-location="hero"
+              onClick={trackDirections}
+              className="local-search-direction-cta inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-white px-5 py-4 text-sm font-extrabold text-sky-900 shadow-lg transition duration-200 hover:-translate-y-0.5 hover:bg-sky-50 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 active:translate-y-0 active:scale-[.99] sm:text-base"
+            >
+              <Navigation className="h-5 w-5" aria-hidden="true" />
+              احصل على الاتجاهات
+            </a>
+            <a
+              href={'tel:' + PHONE}
+              id="local-search-hero-call"
+              data-page-type="local_search"
+              data-cta-location="hero"
+              className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl border border-white/25 bg-white/10 px-5 py-4 text-sm font-extrabold text-white shadow-sm backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:bg-white/20 hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/40 active:translate-y-0 active:scale-[.99] sm:text-base"
+            >
+              <Phone className="h-5 w-5" aria-hidden="true" />
+              اتصل الآن
+            </a>
+            <a
+              href={whatsappLink('أرغب في معرفة خيارات فلاتر وتحلية المياه وموقع المعرض في الرياض.')}
+              target="_blank"
+              rel="noopener noreferrer"
+              id="local-search-hero-whatsapp"
+              data-page-type="local_search"
+              data-cta-location="hero"
+              className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-emerald-600 px-5 py-4 text-sm font-extrabold text-white shadow-lg transition duration-200 hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200 active:translate-y-0 active:scale-[.99] sm:text-base"
+            >
+              <MessageSquare className="h-5 w-5" aria-hidden="true" />
+              تواصل عبر واتساب
+            </a>
+          </div>
+          <p className="mt-5 text-xs font-semibold text-sky-100/90 sm:text-sm">
+            فلاتر مياه منزلية، فلاتر 7 مراحل، وأجهزة تحلية متاحة للاستعراض.
+          </p>
         </div>
       </section>
 
@@ -256,15 +267,18 @@ export default function LocalSearchPage() {
           <div className="mx-auto mb-8 max-w-3xl text-center sm:mb-10">
             <span className="section-subheading-tag">الموقع ووسائل التواصل</span>
             <h2 className="section-heading-main mt-3">كل ما تحتاجه للوصول إلينا</h2>
+            <p className="lead-paragraph mt-3">
+              العنوان، أوقات العمل، وطرق التواصل المباشر مع نثال الحياة في الرياض.
+            </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3 md:gap-5">
-            <article className="flex h-full flex-col rounded-[24px] border border-slate-200 bg-slate-50 p-5 text-right shadow-sm sm:p-6">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 xl:grid-cols-4">
+            <article className="group flex min-h-[285px] flex-col rounded-[24px] border border-slate-200 border-t-4 border-t-sky-600 bg-white p-5 text-right shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-sky-200 hover:border-t-sky-600 hover:shadow-[0_16px_40px_rgba(15,23,42,0.10)] sm:p-6">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-sky-50 text-sky-700 ring-1 ring-sky-100 transition group-hover:scale-105">
                 <Store className="h-5 w-5" aria-hidden="true" />
               </div>
-              <h3 className="text-base font-extrabold text-blue-950">موقع المحل</h3>
-              <p className="mt-2 flex-1 text-sm font-bold leading-7 text-slate-600">
+              <h3 className="text-lg font-extrabold text-slate-900">موقع المحل</h3>
+              <p className="mt-2 flex-1 text-sm font-medium leading-7 text-slate-600">
                 {BUSINESS_LOCATION.address}
               </p>
               <a
@@ -275,55 +289,80 @@ export default function LocalSearchPage() {
                 data-page-type="local_search"
                 data-cta-location="quick_access"
                 onClick={trackDirections}
-                className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-3 text-sm font-extrabold text-white transition-colors hover:bg-blue-800"
+                className="mt-5 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-sky-700 px-4 py-3 text-sm font-extrabold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-sky-800 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 active:scale-[.99]"
               >
                 <Navigation className="h-4 w-4" aria-hidden="true" />
-                احصل على الاتجاهات
+                افتح الاتجاهات
               </a>
             </article>
 
-            <article className="flex h-full flex-col rounded-[24px] border border-slate-200 bg-slate-50 p-5 text-right shadow-sm sm:p-6">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
+            <article className="group flex min-h-[285px] flex-col rounded-[24px] border border-slate-200 border-t-4 border-t-blue-700 bg-white p-5 text-right shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-blue-200 hover:border-t-blue-700 hover:shadow-[0_16px_40px_rgba(15,23,42,0.10)] sm:p-6">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-blue-700 ring-1 ring-blue-100 transition group-hover:scale-105">
                 <Phone className="h-5 w-5" aria-hidden="true" />
               </div>
-              <h3 className="text-base font-extrabold text-blue-950">اتصل بنا</h3>
-              <p className="mt-2 flex-1 text-sm font-bold leading-7 text-slate-600">
-                تواصل مع فريق نثال الحياة للاستفسار عن الخيارات المنشورة قبل زيارتك.
+              <h3 className="text-lg font-extrabold text-slate-900">اتصال مباشر</h3>
+              <p className="mt-2 text-sm font-medium leading-7 text-slate-600">
+                اسأل فريق المبيعات عن فلاتر المياه وأجهزة التحلية المتاحة قبل الزيارة.
+              </p>
+              <p className="mt-3 text-sm font-extrabold tracking-wide text-slate-800" dir="ltr">
+                {DISPLAY_PHONE}
               </p>
               <a
                 href={'tel:' + PHONE}
                 id="local-search-access-call"
                 data-page-type="local_search"
                 data-cta-location="quick_access"
-                className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-blue-200 bg-white px-4 py-3 text-sm font-extrabold text-blue-800 transition-colors hover:bg-blue-50"
+                className="mt-auto inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-extrabold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200 active:scale-[.99]"
               >
                 <Phone className="h-4 w-4" aria-hidden="true" />
                 اتصل الآن
               </a>
             </article>
 
-            <article className="flex h-full flex-col rounded-[24px] border border-slate-200 bg-slate-50 p-5 text-right shadow-sm sm:p-6">
-              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-100 text-amber-700">
-                <Clock3 className="h-5 w-5" aria-hidden="true" />
+            <article className="group flex min-h-[285px] flex-col rounded-[24px] border border-slate-200 border-t-4 border-t-emerald-600 bg-white p-5 text-right shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-emerald-200 hover:border-t-emerald-600 hover:shadow-[0_16px_40px_rgba(15,23,42,0.10)] sm:p-6">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700 ring-1 ring-emerald-100 transition group-hover:scale-105">
+                <MessageSquare className="h-5 w-5" aria-hidden="true" />
               </div>
-              <h3 className="text-base font-extrabold text-blue-950">ساعات العمل</h3>
-              <p className="mt-2 text-sm font-bold leading-7 text-slate-600">
-                ساعات العمل الفني: {BUSINESS_LOCATION.technicalHours}
-              </p>
-              <p className="mt-1 text-xs font-bold leading-6 text-slate-500">
-                {BUSINESS_LOCATION.supportHours}
+              <h3 className="text-lg font-extrabold text-slate-900">واتساب</h3>
+              <p className="mt-2 flex-1 text-sm font-medium leading-7 text-slate-600">
+                أرسل استفسارك عن محل الفلاتر أو أجهزة تحلية المياه في الرياض.
               </p>
               <a
-                href={whatsappLink('أرغب في الاستفسار عن خيارات فلاتر المياه قبل زيارة المحل.')}
+                href={whatsappLink('أرغب في الاستفسار عن خيارات فلاتر المياه وأجهزة التحلية.')}
                 target="_blank"
                 rel="noopener noreferrer"
                 id="local-search-access-whatsapp"
                 data-page-type="local_search"
                 data-cta-location="quick_access"
-                className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-extrabold text-white transition-colors hover:bg-emerald-700"
+                className="mt-5 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-extrabold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-emerald-800 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200 active:scale-[.99]"
               >
                 <MessageSquare className="h-4 w-4" aria-hidden="true" />
-                واتساب
+                راسلنا على واتساب
+              </a>
+            </article>
+
+            <article className="group flex min-h-[285px] flex-col rounded-[24px] border border-slate-200 border-t-4 border-t-amber-500 bg-white p-5 text-right shadow-[0_8px_30px_rgba(15,23,42,0.05)] transition duration-300 hover:-translate-y-1 hover:border-amber-200 hover:border-t-amber-500 hover:shadow-[0_16px_40px_rgba(15,23,42,0.10)] sm:p-6">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-50 text-amber-700 ring-1 ring-amber-100 transition group-hover:scale-105">
+                <Clock3 className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <h3 className="text-lg font-extrabold text-slate-900">ساعات العمل</h3>
+              <p className="mt-2 text-sm font-medium leading-7 text-slate-600">
+                ساعات العمل الفني: {BUSINESS_LOCATION.technicalHours}
+              </p>
+              <p className="mt-2 flex-1 text-xs font-semibold leading-6 text-slate-500">
+                {BUSINESS_LOCATION.supportHours}
+              </p>
+              <a
+                href={whatsappLink('أرغب في التأكد من وقت زيارة معرض نثال الحياة.')}
+                target="_blank"
+                rel="noopener noreferrer"
+                id="local-search-access-hours"
+                data-page-type="local_search"
+                data-cta-location="hours_card"
+                className="mt-5 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-extrabold text-amber-900 transition duration-200 hover:-translate-y-0.5 hover:bg-amber-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-amber-200 active:scale-[.99]"
+              >
+                اسأل عن وقت الزيارة
+                <ArrowLeft className="h-4 w-4" aria-hidden="true" />
               </a>
             </article>
           </div>
@@ -340,42 +379,42 @@ export default function LocalSearchPage() {
             </p>
           </div>
 
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
             {PRODUCT_CATEGORIES.map((category) => (
               <article
                 key={category.id}
-                className="group flex h-full flex-col overflow-hidden rounded-[24px] border border-slate-200 bg-white text-right shadow-sm transition-all hover:-translate-y-1 hover:border-blue-100 hover:shadow-lg"
+                className="group flex h-full flex-col overflow-hidden rounded-[26px] border border-slate-200 bg-white text-right shadow-[0_10px_34px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:border-sky-200 hover:shadow-[0_20px_44px_rgba(15,23,42,0.12)]"
               >
                 <Link
                   to={category.href}
-                  className="relative block aspect-[4/3] overflow-hidden bg-blue-50"
+                  className="relative block aspect-[16/10] overflow-hidden bg-gradient-to-br from-sky-50 via-white to-blue-50 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-sky-300"
                   aria-label={'استعراض فئة ' + category.title}
                 >
                   <img
                     src={category.product.image}
                     alt={category.product.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-contain p-5 transition-transform duration-500 group-hover:scale-[1.04] sm:p-7"
                     loading="lazy"
                     referrerPolicy="no-referrer"
                   />
-                  <span className="absolute bottom-3 right-3 rounded-full border border-white/70 bg-white/95 px-3 py-1.5 text-[11px] font-extrabold text-blue-900 shadow-sm">
-                    {category.count.toLocaleString('ar-SA')} منتجات منشورة
+                  <span className="absolute right-4 top-4 rounded-full border border-sky-100 bg-white/95 px-3.5 py-1.5 text-xs font-extrabold text-sky-800 shadow-sm backdrop-blur">
+                    {category.eyebrow}
                   </span>
                 </Link>
-                <div className="flex flex-1 flex-col p-5 sm:p-6">
-                  <h3 className="text-base font-extrabold leading-7 text-blue-950">
+                <div className="flex flex-1 flex-col p-5 sm:p-6 lg:p-7">
+                  <h3 className="text-lg font-extrabold leading-8 text-slate-900 sm:text-xl">
                     {category.title}
                   </h3>
-                  <p className="mt-2 flex-1 text-sm font-bold leading-7 text-slate-600">
+                  <p className="mt-2 flex-1 text-sm font-medium leading-7 text-slate-600">
                     {category.description}
                   </p>
                   <Link
                     to={category.href}
                     data-page-type="local_search"
                     data-cta-location="product_category"
-                    className="mt-5 inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-blue-50 px-4 py-3 text-sm font-extrabold text-blue-800 transition-colors hover:bg-blue-100"
+                    className="mt-6 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-sky-100 bg-sky-50 px-4 py-3 text-sm font-extrabold text-sky-900 transition duration-200 hover:-translate-y-0.5 hover:border-sky-200 hover:bg-sky-100 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 active:scale-[.99]"
                   >
-                    استعرض المنتجات
+                    استعرض الفئة والمنتجات
                     <ArrowLeft className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>
@@ -386,79 +425,81 @@ export default function LocalSearchPage() {
       </section>
 
       <section className="bg-white py-12 sm:py-16 md:py-20">
-        <div className="mx-auto grid max-w-7xl items-center gap-8 px-4 sm:px-6 lg:grid-cols-2 lg:gap-12 lg:px-8">
-          <div className="rounded-[28px] bg-blue-950 p-6 text-white shadow-xl sm:p-9">
-            <span className="inline-flex rounded-full border border-sky-300/20 bg-sky-400/10 px-4 py-2 text-xs font-extrabold text-sky-200">
-              محل فلاتر وتحلية في الرياض
-            </span>
-            <h2 className="mt-4 text-2xl font-extrabold leading-tight sm:text-3xl">
-              وصول أسرع وتواصل مباشر
-            </h2>
-            <p className="mt-4 text-sm font-bold leading-7 text-blue-100 sm:text-base sm:leading-8">
-              إذا كان هدفك العثور على محل فلاتر أو تحلية مياه في الرياض، يمكنك التواصل مباشرة مع
-              نثال الحياة أو استخدام الاتجاهات للوصول إلى الموقع دون خطوات إضافية.
-            </p>
-            <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <a
-                href={BUSINESS_LOCATION.directionsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                id="local-search-direct-directions"
-                data-page-type="local_search"
-                data-cta-location="local_contact"
-                onClick={trackDirections}
-                className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-white px-5 py-3.5 text-sm font-extrabold text-blue-950 transition-colors hover:bg-blue-50"
-              >
-                <Navigation className="h-5 w-5" aria-hidden="true" />
-                احصل على الاتجاهات
-              </a>
-              <a
-                href={'tel:' + PHONE}
-                id="local-search-direct-call"
-                data-page-type="local_search"
-                data-cta-location="local_contact"
-                className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-white/25 bg-white/10 px-5 py-3.5 text-sm font-extrabold text-white transition-colors hover:bg-white/15"
-              >
-                <Phone className="h-5 w-5" aria-hidden="true" />
-                اتصل الآن
-              </a>
-              <a
-                href={whatsappLink('أرغب في الاستفسار عن خيارات فلاتر وتحلية المياه قبل زيارة الموقع.')}
-                target="_blank"
-                rel="noopener noreferrer"
-                id="local-search-direct-whatsapp"
-                data-page-type="local_search"
-                data-cta-location="local_contact"
-                className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-extrabold text-white transition-colors hover:bg-emerald-700"
-              >
-                <MessageSquare className="h-5 w-5" aria-hidden="true" />
-                واتساب
-              </a>
+        <div className="mx-auto grid max-w-7xl items-stretch gap-5 px-4 sm:px-6 lg:grid-cols-2 lg:gap-7 lg:px-8">
+          <div className="relative isolate flex flex-col justify-center overflow-hidden rounded-[28px] bg-blue-950 p-6 text-white shadow-[0_20px_55px_rgba(15,23,42,0.18)] sm:p-9 lg:p-10">
+            <div aria-hidden="true" className="absolute -left-16 -top-16 h-56 w-56 rounded-full bg-sky-400/15 blur-3xl" />
+            <div aria-hidden="true" className="absolute -bottom-24 right-1/3 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
+            <div className="relative z-10">
+              <span className="inline-flex items-center gap-2 rounded-full border border-sky-300/20 bg-sky-400/10 px-4 py-2 text-xs font-extrabold text-sky-200">
+                <MapPin className="h-4 w-4" aria-hidden="true" />
+                موقعنا في {BUSINESS_LOCATION.district}
+              </span>
+              <h2 className="mt-5 text-2xl font-extrabold leading-[1.35] sm:text-3xl">
+                وصول أسرع وتواصل مباشر
+              </h2>
+              <p className="mt-4 max-w-xl text-sm font-medium leading-8 text-blue-100 sm:text-base">
+                إذا كنت تبحث عن محل فلاتر أو تحلية مياه في الرياض، تواصل مع نثال الحياة لمعرفة
+                الخيارات المتاحة، أو افتح الاتجاهات للوصول إلى المعرض مباشرة.
+              </p>
+              <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-3">
+                <a
+                  href={BUSINESS_LOCATION.directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  id="local-search-direct-directions"
+                  data-page-type="local_search"
+                  data-cta-location="local_contact"
+                  onClick={trackDirections}
+                  className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-extrabold text-blue-950 shadow-md transition duration-200 hover:-translate-y-0.5 hover:bg-sky-50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 active:scale-[.99]"
+                >
+                  <Navigation className="h-4 w-4" aria-hidden="true" />
+                  الاتجاهات
+                </a>
+                <a
+                  href={'tel:' + PHONE}
+                  id="local-search-direct-call"
+                  data-page-type="local_search"
+                  data-cta-location="local_contact"
+                  className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-sm font-extrabold text-white transition duration-200 hover:-translate-y-0.5 hover:bg-white/20 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-white/30 active:scale-[.99]"
+                >
+                  <Phone className="h-4 w-4" aria-hidden="true" />
+                  اتصل الآن
+                </a>
+                <a
+                  href={whatsappLink('أرغب في الاستفسار عن خيارات فلاتر وتحلية المياه قبل زيارة الموقع.')}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  id="local-search-direct-whatsapp"
+                  data-page-type="local_search"
+                  data-cta-location="local_contact"
+                  className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-emerald-600 px-4 py-3 text-sm font-extrabold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-emerald-700 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200 active:scale-[.99]"
+                >
+                  <MessageSquare className="h-4 w-4" aria-hidden="true" />
+                  واتساب
+                </a>
+              </div>
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-6 sm:p-8">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
-              <CheckCircle2 className="h-6 w-6" aria-hidden="true" />
-            </div>
-            <h2 className="mt-5 text-xl font-extrabold text-blue-950 sm:text-2xl">
-              موقع واضح وخيارات موثقة
-            </h2>
-            <p className="mt-3 text-sm font-bold leading-7 text-slate-600">
-              اعرف موقع المحل قبل الانطلاق، واستعرض فئات المنتجات المسجلة في الموقع، أو اسأل فريق
-              نثال عن الخيارات المتاحة قبل الزيارة.
-            </p>
-            <div className="mt-5 space-y-3">
-              <p className="flex items-start gap-3 text-sm font-bold leading-6 text-slate-700">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" aria-hidden="true" />
-                <span>{BUSINESS_LOCATION.address}</span>
+          <figure className="group relative min-h-[300px] overflow-hidden rounded-[28px] border border-slate-200 bg-slate-100 shadow-[0_16px_42px_rgba(15,23,42,0.12)] sm:min-h-[360px] lg:min-h-0">
+            <img
+              src={storefrontPhoto}
+              alt="واجهة معرض نثال الحياة لتنقية المياه في الرياض"
+              className="absolute inset-0 h-full w-full object-cover object-center brightness-110 contrast-[1.03] transition duration-700 group-hover:scale-[1.025]"
+              loading="lazy"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/15 to-transparent" />
+            <figcaption className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+              <span className="inline-flex rounded-full border border-white/25 bg-blue-950/35 px-3 py-1.5 text-xs font-bold backdrop-blur">
+                المعرض الفعلي — الرياض
+              </span>
+              <h3 className="mt-3 text-xl font-extrabold sm:text-2xl">نثال الحياة لتنقية المياه</h3>
+              <p className="mt-1.5 flex items-center gap-2 text-sm font-semibold text-blue-50">
+                <MapPin className="h-4 w-4 shrink-0" aria-hidden="true" />
+                {BUSINESS_LOCATION.address}
               </p>
-              <p className="flex items-start gap-3 text-sm font-bold leading-6 text-slate-700">
-                <Droplets className="mt-0.5 h-5 w-5 shrink-0 text-blue-700" aria-hidden="true" />
-                <span>فلاتر منزلية، أجهزة تحلية، فلاتر مراحل ومستلزمات مدرجة في الموقع.</span>
-              </p>
-            </div>
-          </div>
+            </figcaption>
+          </figure>
         </div>
       </section>
 
@@ -493,7 +534,7 @@ export default function LocalSearchPage() {
                   data-page-type="local_search"
                   data-cta-location="map"
                   onClick={trackDirections}
-                  className="inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-blue-700 px-6 py-4 text-sm font-extrabold text-white shadow-xl transition-colors hover:bg-blue-800"
+                  className="inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-sky-700 px-6 py-4 text-sm font-extrabold text-white shadow-xl transition duration-200 hover:-translate-y-0.5 hover:bg-sky-800 hover:shadow-2xl focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 active:scale-[.99] sm:text-base"
                 >
                   <Navigation className="h-5 w-5" aria-hidden="true" />
                   افتح الاتجاهات في الخرائط
@@ -501,16 +542,23 @@ export default function LocalSearchPage() {
               </div>
             </div>
 
-            <article className="flex flex-col justify-center rounded-[28px] border border-slate-200 bg-white p-6 text-right shadow-sm sm:p-8">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-700">
-                <MapPin className="h-6 w-6" aria-hidden="true" />
-              </div>
-              <h3 className="mt-5 text-xl font-extrabold text-blue-950">موقع المعرض</h3>
-              <p className="mt-3 text-sm font-bold leading-7 text-slate-600">
+            <article className="flex flex-col justify-center rounded-[28px] border border-slate-200 bg-white p-6 text-right shadow-[0_10px_34px_rgba(15,23,42,0.06)] sm:p-8">
+              <span className="inline-flex w-fit items-center gap-2 rounded-full bg-sky-50 px-3.5 py-2 text-xs font-extrabold text-sky-800 ring-1 ring-sky-100">
+                <MapPin className="h-4 w-4" aria-hidden="true" />
+                {BUSINESS_LOCATION.district}
+              </span>
+              <h3 className="mt-5 text-xl font-extrabold text-slate-900 sm:text-2xl">عنوان المحل</h3>
+              <p className="mt-3 text-sm font-medium leading-7 text-slate-600">
                 {BUSINESS_LOCATION.address}
               </p>
-              <p className="mt-4 text-sm font-bold leading-7 text-slate-600">
-                افتح الموقع في خرائط جوجل لبدء الاتجاهات من مكانك.
+              <div className="mt-5 rounded-2xl bg-slate-50 p-4 ring-1 ring-slate-100">
+                <p className="flex items-start gap-3 text-sm font-semibold leading-7 text-slate-700">
+                  <Clock3 className="mt-1 h-4 w-4 shrink-0 text-sky-700" aria-hidden="true" />
+                  <span>ساعات العمل الفني: {BUSINESS_LOCATION.technicalHours}</span>
+                </p>
+              </div>
+              <p className="mt-4 text-sm font-medium leading-7 text-slate-600">
+                افتح الاتجاهات في الخرائط للوصول إلى محل فلاتر المياه في الرياض.
               </p>
               <a
                 href={BUSINESS_LOCATION.mapCardUrl}
@@ -520,7 +568,7 @@ export default function LocalSearchPage() {
                 data-page-type="local_search"
                 data-cta-location="map_card"
                 onClick={trackDirections}
-                className="mt-6 inline-flex min-h-[52px] items-center justify-center gap-2 rounded-xl bg-blue-700 px-5 py-4 text-sm font-extrabold text-white transition-colors hover:bg-blue-800"
+                className="mt-6 inline-flex min-h-[56px] items-center justify-center gap-2 rounded-2xl bg-sky-700 px-5 py-4 text-sm font-extrabold text-white shadow-sm transition duration-200 hover:-translate-y-0.5 hover:bg-sky-800 hover:shadow-md focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-sky-200 active:scale-[.99] sm:text-base"
               >
                 <Navigation className="h-5 w-5" aria-hidden="true" />
                 افتح الاتجاهات في الخرائط
@@ -540,12 +588,15 @@ export default function LocalSearchPage() {
             {faqItems.map((item) => (
               <details
                 key={item.question}
-                className="group rounded-2xl border border-slate-200 bg-white p-5 text-right shadow-sm"
+                className="group rounded-2xl border border-slate-200 bg-white p-5 text-right shadow-[0_6px_22px_rgba(15,23,42,0.04)] transition duration-200 open:border-sky-200 open:shadow-md sm:p-6"
               >
-                <summary className="cursor-pointer text-sm font-extrabold text-blue-950">
-                  {item.question}
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-extrabold leading-7 text-slate-900 marker:content-none sm:text-lg">
+                  <span>{item.question}</span>
+                  <ChevronDown className="h-5 w-5 shrink-0 text-sky-700 transition-transform duration-200 group-open:rotate-180" aria-hidden="true" />
                 </summary>
-                <p className="pt-4 text-sm font-bold leading-7 text-slate-600">{item.answer}</p>
+                <p className="local-search-faq-answer border-t border-slate-100 pt-4 text-sm font-medium leading-8 text-slate-600 sm:text-base">
+                  {item.answer}
+                </p>
               </details>
             ))}
           </div>
@@ -554,5 +605,3 @@ export default function LocalSearchPage() {
     </div>
   );
 }
-
-
