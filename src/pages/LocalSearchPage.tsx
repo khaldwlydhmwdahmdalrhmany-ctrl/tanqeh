@@ -172,6 +172,10 @@ export default function LocalSearchPage() {
           .local-search-page .local-search-enter { animation: local-search-rise .65s cubic-bezier(.2,.75,.25,1) both; }
           .local-search-page .local-search-direction-cta { animation: local-search-soft-glow 3.4s ease-in-out infinite; }
         }
+        .local-search-page .local-search-contact-card h2 { color: #ffffff !important; }
+        .local-search-page .local-search-contact-card p { color: #dbeafe !important; }
+        .local-search-page .local-search-store-caption h3 { color: #ffffff !important; }
+        .local-search-page .local-search-store-caption p { color: #eff6ff !important; }
         .local-search-page summary::-webkit-details-marker { display: none; }
         .local-search-page details[open] .local-search-faq-answer { animation: local-search-rise .25s ease-out both; }
         @media (prefers-reduced-motion: reduce) {
@@ -426,7 +430,7 @@ export default function LocalSearchPage() {
 
       <section className="bg-white py-12 sm:py-16 md:py-20">
         <div className="mx-auto grid max-w-7xl items-stretch gap-5 px-4 sm:px-6 lg:grid-cols-2 lg:gap-7 lg:px-8">
-          <div className="relative isolate flex flex-col justify-center overflow-hidden rounded-[28px] bg-blue-950 p-6 text-white shadow-[0_20px_55px_rgba(15,23,42,0.18)] sm:p-9 lg:p-10">
+          <div className="local-search-contact-card relative isolate flex flex-col justify-center overflow-hidden rounded-[28px] bg-blue-950 p-6 text-white shadow-[0_20px_55px_rgba(15,23,42,0.18)] sm:p-9 lg:p-10">
             <div aria-hidden="true" className="absolute -left-16 -top-16 h-56 w-56 rounded-full bg-sky-400/15 blur-3xl" />
             <div aria-hidden="true" className="absolute -bottom-24 right-1/3 h-56 w-56 rounded-full bg-blue-500/20 blur-3xl" />
             <div className="relative z-10">
@@ -502,7 +506,7 @@ export default function LocalSearchPage() {
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/15 to-transparent" />
-            <figcaption className="absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
+            <figcaption className="local-search-store-caption absolute inset-x-0 bottom-0 p-5 text-white sm:p-7">
               <span className="inline-flex rounded-full border border-white/25 bg-blue-950/35 px-3 py-1.5 text-xs font-bold backdrop-blur">
                 المعرض الفعلي — الرياض
               </span>
