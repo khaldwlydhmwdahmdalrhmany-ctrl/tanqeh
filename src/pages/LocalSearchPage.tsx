@@ -432,12 +432,18 @@ export default function LocalSearchPage() {
             <div className="relative z-10">
               <span className="inline-flex items-center gap-2 rounded-full border border-sky-300/20 bg-sky-400/10 px-4 py-2 text-xs font-extrabold text-sky-200">
                 <MapPin className="h-4 w-4" aria-hidden="true" />
-                موقعنا في {BUSINESS_LOCATION.district}
+                المعرض في {BUSINESS_LOCATION.district}
               </span>
-              <h2 className="mt-5 text-2xl font-extrabold leading-[1.35] sm:text-3xl">
+              <h2
+                className="mt-5 text-2xl font-extrabold leading-[1.35] sm:text-3xl"
+                style={{ color: '#ffffff' }}
+              >
                 وصول أسرع وتواصل مباشر
               </h2>
-              <p className="mt-4 max-w-xl text-sm font-medium leading-8 text-blue-100 sm:text-base">
+              <p
+                className="mt-4 max-w-xl text-sm font-medium leading-8 text-blue-100 sm:text-base"
+                style={{ color: '#dbeafe' }}
+              >
                 إذا كنت تبحث عن محل فلاتر أو تحلية مياه في الرياض، تواصل مع نثال الحياة لمعرفة
                 الخيارات المتاحة، أو افتح الاتجاهات للوصول إلى المعرض مباشرة.
               </p>
@@ -481,11 +487,18 @@ export default function LocalSearchPage() {
             </div>
           </div>
 
-          <figure className="group relative min-h-[300px] overflow-hidden rounded-[28px] border border-slate-200 bg-slate-100 shadow-[0_16px_42px_rgba(15,23,42,0.12)] sm:min-h-[360px] lg:min-h-0">
+          <figure className="group relative min-h-[300px] overflow-hidden rounded-[28px] border border-slate-200 bg-slate-950 shadow-[0_16px_42px_rgba(15,23,42,0.12)] sm:min-h-[360px] lg:min-h-0">
+            <img
+              src={storefrontPhoto}
+              alt=""
+              aria-hidden="true"
+              className="absolute inset-0 h-full w-full scale-110 object-cover blur-xl brightness-50"
+              loading="lazy"
+            />
             <img
               src={storefrontPhoto}
               alt="واجهة معرض نثال الحياة لتنقية المياه في الرياض"
-              className="absolute inset-0 h-full w-full object-cover object-center brightness-110 contrast-[1.03] transition duration-700 group-hover:scale-[1.025]"
+              className="absolute inset-0 h-full w-full object-contain brightness-110 contrast-[1.03] transition duration-700 group-hover:scale-[1.025]"
               loading="lazy"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-blue-950/90 via-blue-950/15 to-transparent" />
@@ -493,8 +506,13 @@ export default function LocalSearchPage() {
               <span className="inline-flex rounded-full border border-white/25 bg-blue-950/35 px-3 py-1.5 text-xs font-bold backdrop-blur">
                 المعرض الفعلي — الرياض
               </span>
-              <h3 className="mt-3 text-xl font-extrabold sm:text-2xl">نثال الحياة لتنقية المياه</h3>
-              <p className="mt-1.5 flex items-center gap-2 text-sm font-semibold text-blue-50">
+              <h3 className="mt-3 text-xl font-extrabold sm:text-2xl" style={{ color: '#ffffff' }}>
+                نثال الحياة لتنقية المياه
+              </h3>
+              <p
+                className="mt-1.5 flex items-center gap-2 text-sm font-semibold text-blue-50"
+                style={{ color: '#eff6ff' }}
+              >
                 <MapPin className="h-4 w-4 shrink-0" aria-hidden="true" />
                 {BUSINESS_LOCATION.address}
               </p>
