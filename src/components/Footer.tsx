@@ -13,6 +13,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import logoWhite from "@/assets/brand/logo-white.svg";
+import { BUSINESS_LOCATION } from "../data/businessLocation";
 
 interface FooterProps {
   onOpenLegal: (tab: 'privacy' | 'terms') => void;
@@ -55,12 +56,12 @@ export default function Footer({ onOpenLegal }: FooterProps) {
               <div className="flex items-center gap-2.5 text-xs">
                 <Clock className="w-4.5 h-4.5 text-blue-400 flex-shrink-0" />
                 <span>
-                  ساعات العمل الفني: يومياً من ٨:٠٠ صباحاً وحتى ١٠:٠٠ مساءً
+                  ساعات العمل الفني: {BUSINESS_LOCATION.technicalHours}
                 </span>
               </div>
               <div className="flex items-center gap-2.5 text-xs">
                 <CheckCircle className="w-4.5 h-4.5 text-emerald-400 flex-shrink-0" />
-                <span>طاقم مبيعات وخدمة عملاء طوارئ متوفر ٢٤/٧</span>
+                <span>{BUSINESS_LOCATION.supportHours}</span>
               </div>
             </div>
           </div>
@@ -103,7 +104,7 @@ export default function Footer({ onOpenLegal }: FooterProps) {
               </a>
 
               <a
-                href="https://www.google.com/maps/place/%D9%86%D8%AB%D8%A7%D9%84+%D8%A7%D9%84%D9%8A%D8%A7%D8%A9+%D9%84%D8%AA%D9%86%D9%82%D9%8A%D8%A9+%D8%A7%D9%84%D9%85%D9%8A%D8%A7%D9%87%E2%80%AD/@24.7458668,46.841739,17.5z/data=!4m6!3m5!1s0x3e2fab4b4d5d438d:0x5c44e336d6406038!8m2!3d24.7455363!4d46.8388651!16s%2Fg%2F11w1d__hg_?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYxMC4wIKXMDSoASAFQAw%3D%3D"
+                href={BUSINESS_LOCATION.directionsUrl}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-start gap-2.5 hover:text-blue-450 transition-colors text-xs text-slate-300 group"
@@ -114,7 +115,7 @@ export default function Footer({ onOpenLegal }: FooterProps) {
                     الموقع ومعرضنا الرئيسي بالرياض (اضغط للخريطة):
                   </span>
                   <span className="text-slate-300 group-hover:text-slate-100">
-                    شارع أبي الأسود الدؤلي، حي النسيم الشرقي، الرياض 14223
+                    {BUSINESS_LOCATION.address}
                   </span>
                 </div>
               </a>
@@ -133,7 +134,7 @@ export default function Footer({ onOpenLegal }: FooterProps) {
             </h4>
 
             <a
-              href="https://www.google.com/maps/place/%D9%86%D8%AB%D8%A7%D9%84+%D8%A7%D9%84%D9%8A%D8%A7%D8%A9+%D9%84%D8%AA%D9%86%D9%82%D9%8A%D9%8E%D8%A9+%D8%A7%D9%84%D9%85%D9%8A%D8%A7%D9%87%E2%80%AD/@24.7458668,46.841739,17.5z/data=!4m6!3m5!1s0x3e2fab4b4d5d438d:0x5c44e336d6406038!8m2!3d24.7455363!4d46.8388651!16s%2Fg%2F11w1d__hg_?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYxMC4wIKXMDSoASAFQAw%3D%3D"
+              href={BUSINESS_LOCATION.mapCardUrl}
               target="_blank"
               rel="noreferrer"
               className="relative block w-full aspect-[16/9] lg:aspect-auto lg:h-44 rounded-2xl overflow-hidden shadow-md border border-slate-800 bg-slate-950 group/map cursor-pointer"
@@ -148,7 +149,7 @@ export default function Footer({ onOpenLegal }: FooterProps) {
               {/* Underlying visual iframe with disabled pointerEvents to allow clicking the anchor tag */}
               <iframe
                 title="موقع مؤسسة نثال لتنقية المياه على خرائط جوجل"
-                src="https://maps.google.com/maps?q=24.7455363,46.8388651&hl=ar&z=16&t=&ie=UTF8&iwloc=&output=embed"
+                src={BUSINESS_LOCATION.mapEmbedUrl}
                 width="100%"
                 height="100%"
                 style={{ border: 0, pointerEvents: "none" }}
