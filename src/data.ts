@@ -43,8 +43,8 @@ export const ACHIEVEMENTS: Achievement[] = [
 export const PRODUCTS: Product[] = [
   {
     id: 'gulden-pro-7',
-    name: 'جهاز تحلية غولدن برو (7 مراحل المتقدم)',
-    brand: 'Gulden PRO',
+    name: 'جهاز تحلية بيورينا 7 مراحل',
+    brand: 'PureRena',
     type: 'filter',
     image: guldenPro7Img,
     tagline: 'نقاء يستحقه بيتك بـ 7 مراحل احترافية وتقنية فيتنامية متطورة.',
@@ -142,8 +142,8 @@ export const PRODUCTS: Product[] = [
   },
   {
     id: 'gulden-pro-6',
-    name: 'جهاز تحلية غولدن برو 6 مراحل',
-    brand: 'Gulden PRO',
+    name: 'جهاز تحلية بيورينا 6 مراحل',
+    brand: 'PureRena',
     type: 'filter',
     image: guldenPro7Img,
     tagline: 'مياه نقية وصحية بنظام تحلية متطور من 6 مراحل وتقنية RO عالية الكفاءة.',
